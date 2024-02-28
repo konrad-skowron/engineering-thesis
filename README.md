@@ -1,1 +1,1 @@
-# Konrad Skowron 260654, Wtorek 13 TN
+# Konrad Skowron 260654, wtorek 13 TN
