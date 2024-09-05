@@ -9,7 +9,7 @@ export default function Account() {
     <>
       <p>Hello {user}</p>
       <Link href="/create">
-        <button>+ Create poll</button>
+        <button>+ Create survey</button>
       </Link>
     </>
   );

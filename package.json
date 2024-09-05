@@ -9,10 +9,14 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@mantine/charts": "^7.12.2",
+    "@mantine/core": "^7.12.2",
+    "@mantine/hooks": "^7.12.2",
     "firebase": "^10.13.1",
     "next": "14.2.7",
     "react": "^18",
-    "react-dom": "^18"
+    "react-dom": "^18",
+    "recharts": "^2.12.7"
   },
   "devDependencies": {
     "@types/node": "^20",
@@ -20,6 +24,9 @@
     "@types/react-dom": "^18",
     "eslint": "^8",
     "eslint-config-next": "14.2.7",
+    "postcss": "^8.4.45",
+    "postcss-preset-mantine": "^1.17.0",
+    "postcss-simple-vars": "^7.0.1",
     "typescript": "^5"
   }
 }
