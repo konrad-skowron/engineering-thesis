@@ -8,6 +8,8 @@ import {
   onAuthStateChanged
 } from "@/lib/auth";
 import { User } from "firebase/auth";
+import { Center } from '@mantine/core';
+import { AuthenticationForm } from "@/components/AuthenticationForm";
 
 function useUserSession(initialUser: User | null) {
   const [user, setUser] = useState<User | null>(initialUser);
@@ -36,9 +38,11 @@ function useUserSession(initialUser: User | null) {
 
 export default function Login({ initialUser }: { initialUser: User | null }) {
   const user = useUserSession(initialUser);
+  const router = useRouter();
 
   const handleSignOut = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
+    router.push('/');
     signOut();
   };
 
@@ -48,9 +52,9 @@ export default function Login({ initialUser }: { initialUser: User | null }) {
   };
 
   return (
-    <header>
+    <>
       {user ? (
-        <>
+        <header>
           <div className="profile">
             <div className="menu">
               ...
@@ -64,15 +68,12 @@ export default function Login({ initialUser }: { initialUser: User | null }) {
               </ul>
             </div>
           </div>
-        </>
+        </header>
       ) : (
-        <div className="profile">
-          <a href="#" onClick={handleSignIn}>
-            <Image src="/profile.svg" alt="A placeholder user image" width={48} height={48} />
-            Sign In with Google
-          </a>
-        </div>
+        <Center>
+          <AuthenticationForm w={420} onGoogleButtonClick={handleSignIn} />
+        </Center>
       )}
-    </header>
+    </>
   );
 }
