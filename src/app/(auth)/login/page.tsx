@@ -38,11 +38,9 @@ function useUserSession(initialUser: User | null) {
 
 export default function Login({ initialUser }: { initialUser: User | null }) {
   const user = useUserSession(initialUser);
-  const router = useRouter();
 
   const handleSignOut = (event: React.MouseEvent<HTMLAnchorElement>) => {
     event.preventDefault();
-    router.push('/');
     signOut();
   };
 

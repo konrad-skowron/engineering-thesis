@@ -20,7 +20,7 @@ interface AuthenticationFormProps extends PaperProps {
 }
 
 export function AuthenticationForm({ onGoogleButtonClick, ...props }: AuthenticationFormProps) {
-  const [type, toggle] = useToggle(['login', 'sign up']);
+  const [type, toggle] = useToggle(['log in', 'sign up']);
   const form = useForm({
     initialValues: {
       email: '',
@@ -93,7 +93,7 @@ export function AuthenticationForm({ onGoogleButtonClick, ...props }: Authentica
         <Group justify="space-between" mt="xl">
           <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
             {type === 'sign up'
-              ? 'Already have an account? Login'
+              ? 'Already have an account? Log in'
               : "Don't have an account? Sign up"}
           </Anchor>
           <Button type="submit" radius="xl">

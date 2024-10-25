@@ -2,7 +2,7 @@
 import { db } from '@/lib/firebase';
 import { doc, getDoc } from 'firebase/firestore';
 import { notFound } from 'next/navigation';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, use } from 'react';
 
 interface Question {
   question: string;
@@ -15,7 +15,8 @@ interface Survey {
   questions: Question[];
 }
 
-export default function SurveyPage({ params }: { params: { surveyId: string } }) {
+export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
+  const params = use(props.params);
   const [survey, setSurvey] = useState<Survey>({ title: '', questions: [] });
 
   useEffect(() => {

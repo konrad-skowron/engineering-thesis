@@ -1,26 +1,22 @@
 'use client'
 import Link from "next/link";
-import { useRouter } from 'next/navigation';
-import { Group, Button } from '@mantine/core';
-
+import { Group, Button, Container, Title, Text } from '@mantine/core';
 
 export default function Home() {
-  const router = useRouter()
-
   return (
-    <>
-      <h1>Survey App</h1>
+    <Container>
+      <Title order={1}>Survey App</Title>
 
-      <Group>
-        <Button type="button" onClick={() => router.push('/account')}>
-          SKIP
-        </Button>
-
-        <Link href="/login">
-          <Button>Login</Button>
+      <Group mt="md">
+        <Link href="/account" style={{ textDecoration: 'none' }}>
+          <Button>SKIP</Button>
         </Link>
 
-        <Link href="/signup">
+        <Link href="/login" style={{ textDecoration: 'none' }}>
+          <Button>Log in</Button>
+        </Link>
+
+        <Link href="/signup" style={{ textDecoration: 'none' }}>
           <Button>Sign up</Button>
         </Link>
       </Group>
@@ -28,6 +24,6 @@ export default function Home() {
       <p>
         Conduct surveys using a continuous Likert scale
       </p>
-    </>
+    </Container>
   );
 }
