@@ -1,5 +1,6 @@
 import '@mantine/core/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
+import { AuthProvider } from '@/components/AuthProvider';
 
 export const metadata = {
   title: "Survey App",
@@ -17,7 +18,11 @@ export default function RootLayout({
         <ColorSchemeScript defaultColorScheme="light" />
       </head>
       <body>
-        <MantineProvider defaultColorScheme="light">{children}</MantineProvider>
+        <MantineProvider defaultColorScheme="light">
+          <AuthProvider>
+            {children}
+          </AuthProvider>
+        </MantineProvider>
       </body>
     </html>
   );

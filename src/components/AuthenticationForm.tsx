@@ -1,4 +1,8 @@
-import { useToggle, upperFirst } from '@mantine/hooks';
+import {
+  signInWithGoogle,
+} from "@/lib/auth";
+import { redirect } from 'next/navigation'
+import { upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
   TextInput,
@@ -16,11 +20,11 @@ import {
 import { GoogleButton } from './GoogleButton';
 
 interface AuthenticationFormProps extends PaperProps {
-  onGoogleButtonClick?: (event: React.MouseEvent<HTMLAnchorElement>) => void;
+  type: 'sign in' | 'sign up';
 }
 
-export function AuthenticationForm({ onGoogleButtonClick, ...props }: AuthenticationFormProps) {
-  const [type, toggle] = useToggle(['log in', 'sign up']);
+export function AuthenticationForm({ type, ...props }: AuthenticationFormProps) {
+
   const form = useForm({
     initialValues: {
       email: '',
@@ -35,6 +39,11 @@ export function AuthenticationForm({ onGoogleButtonClick, ...props }: Authentica
     },
   });
 
+  const handleSignIn = async () => {
+    await signInWithGoogle();
+    return redirect('/account');
+  };
+
   return (
     <Paper radius="md" p="xl" withBorder {...props}>
       <Text size="lg" fw={500}>
@@ -42,14 +51,14 @@ export function AuthenticationForm({ onGoogleButtonClick, ...props }: Authentica
       </Text>
 
       <Group grow mb="md" mt="md">
-        <a href="#" onClick={onGoogleButtonClick}>
+        <a href="#" onClick={handleSignIn}>
           <GoogleButton radius="xl" style={{ width: '100%' }}>Google</GoogleButton>
         </a>
       </Group>
 
       <Divider label="Or continue with email" labelPosition="center" my="lg" />
 
-      <form onSubmit={form.onSubmit(() => {})}>
+      <form onSubmit={form.onSubmit(() => { })}>
         <Stack>
           {type === 'sign up' && (
             <TextInput
@@ -91,9 +100,9 @@ export function AuthenticationForm({ onGoogleButtonClick, ...props }: Authentica
         </Stack>
 
         <Group justify="space-between" mt="xl">
-          <Anchor component="button" type="button" c="dimmed" onClick={() => toggle()} size="xs">
+          <Anchor component="button" type="button" c="dimmed" onClick={() => type === 'sign in' ? redirect('/register') : redirect('/login')} size="xs">
             {type === 'sign up'
-              ? 'Already have an account? Log in'
+              ? 'Already have an account? Sign in'
               : "Don't have an account? Sign up"}
           </Anchor>
           <Button type="submit" radius="xl">

@@ -8,16 +8,8 @@ export default function Home() {
       <Title order={1}>Survey App</Title>
 
       <Group mt="md">
-        <Link href="/account" style={{ textDecoration: 'none' }}>
-          <Button>SKIP</Button>
-        </Link>
-
         <Link href="/login" style={{ textDecoration: 'none' }}>
-          <Button>Log in</Button>
-        </Link>
-
-        <Link href="/signup" style={{ textDecoration: 'none' }}>
-          <Button>Sign up</Button>
+          <Button>Sign in</Button>
         </Link>
       </Group>
 

@@ -6,7 +6,7 @@ import { Center } from '@mantine/core';
 import { AuthenticationForm } from "@/components/AuthenticationForm";
 import { useAuth } from '@/components/AuthProvider';
 
-export default function Login() {
+export default function SignUp() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
@@ -20,7 +20,7 @@ export default function Login() {
     <>
       { !loading && !user ? (
         <Center>
-          <AuthenticationForm w={420} type={'sign in'} />
+          <AuthenticationForm w={420} type={'sign up'} />
         </Center>
       ) : <div>Loading...</div> }
     </>

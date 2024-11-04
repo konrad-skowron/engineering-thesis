@@ -1,16 +1,37 @@
 'use client'
 import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from 'next/navigation';
+import { useEffect } from "react";
+import { useAuth } from '@/components/AuthProvider';
+import { signOut } from "@/lib/auth";
 
 export default function Account() {
-  const [user, setUser] = useState("Anonymous");
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading && !user) {
+      router.push('/login');
+    }
+  }, [user, loading, router]);
 
   return (
     <>
-      <p>Hello {user}</p>
-      <Link href="/create">
-        <button>+ Create survey</button>
-      </Link>
+      { user ? (
+        <>
+          <header>
+            <div>Hello {user?.displayName}</div>
+            
+            <Link href="#" onClick={signOut}>
+              <button>Sign Out</button>
+            </Link>
+          </header>
+
+          <Link href="/create">
+            <button>+ Create survey</button>
+          </Link> 
+        </>
+      ) : <div>Loading...</div> }
     </>
   );
 }
