@@ -1,6 +1,7 @@
 'use client'
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 import { useEffect } from "react";
 import { useAuth } from '@/components/AuthProvider';
 import { signOut } from "@/lib/auth";
@@ -20,8 +21,10 @@ export default function Account() {
       { user ? (
         <>
           <header>
-            <div>Hello {user?.displayName}</div>
-            
+            Hello {user?.displayName}
+
+            <Image src={user?.photoURL || "/profile.svg"} alt="user photo" width={36} height={36} style={{ borderRadius: '50%' }} />  
+          
             <Link href="#" onClick={signOut}>
               <button>Sign Out</button>
             </Link>
