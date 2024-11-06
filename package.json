@@ -13,6 +13,7 @@
     "@mantine/core": "^7.13.4",
     "@mantine/form": "^7.13.4",
     "@mantine/hooks": "^7.13.4",
+    "@tabler/icons-react": "^3.21.0",
     "firebase": "^10.13.1",
     "next": "15.0.1",
     "react": "19.0.0-rc-69d4b800-20241021",
