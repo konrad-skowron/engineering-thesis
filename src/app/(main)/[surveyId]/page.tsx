@@ -1,46 +1,23 @@
 'use client'
-import { db } from '@/lib/firebase';
-import { doc, getDoc } from 'firebase/firestore';
 import { notFound } from 'next/navigation';
 import React, { useState, useEffect, use } from 'react';
-
-interface Question {
-  question: string;
-  type: 'text' | 'multipleChoice';
-  options?: string[];
-}
-
-interface Survey {
-  title: string;
-  questions: Question[];
-}
+import { fetchSurvey, Survey, Question } from '@/lib/fetchSurvey';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
+  const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [answers, setAnswers] = useState<any>({});
 
   useEffect(() => {
-    const fetchSurvey = async () => {
-      try {
-        const docSnap = await getDoc(doc(db, 'surveys', params.surveyId));
-        
-        if (docSnap.exists()) {
-          setSurvey(docSnap.data() as Survey);
-        }
-      } catch (error) {
-        console.error('Error fetching data:', error);
-      }
+    const getSurvey = async () => {
+      const fetchedSurvey = await fetchSurvey(params.surveyId);
+      setSurvey(fetchedSurvey);
+      setLoading(false);
     };
 
-    fetchSurvey();
+    getSurvey();
   }, [params.surveyId]);
-
-  useEffect(() => {
-    if (!survey) {
-      notFound();
-    }
-  }, [survey]);
 
   const handleInputChange = (questionIndex: number, value: string) => {
     setAnswers({ ...answers, [questionIndex]: value });
@@ -51,15 +28,19 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
     console.log(answers);
   };
 
-  if (!survey) {
+  if (loading) {
     return <div>Loading...</div>;
+  }
+
+  if (!survey && !loading) {
+    notFound();
   }
 
   return (
     <div className="survey-container">
-      <h1>{survey.title}</h1>
+      <h1>{survey?.title}</h1>
       <form onSubmit={handleSubmit}>
-        {survey.questions.map((question, index) => (
+        {survey?.questions.map((question, index) => (
           <div key={index} className="question-container">
             <h3>{question.question}</h3>
             {question.type === 'text' ? (

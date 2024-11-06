@@ -26,6 +26,8 @@ import {
   UnstyledButton,
   Text,
   rem,
+  Skeleton,
+  useMantineTheme,
 } from '@mantine/core';
 import Link from "next/link";
 import { useAuth } from '@/components/AuthProvider';
@@ -48,8 +50,9 @@ const links = [
 export function Header() {
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
-  const { user, signOut } = useAuth();
+  const { user, loading, signOut } = useAuth();
   const router = useRouter();
+  const theme = useMantineTheme();
 
   const handleSignOut = () => {
     router.push('/');
@@ -101,114 +104,119 @@ export function Header() {
             {items}
           </Group>
 
-          {!user ? (
-            <Group visibleFrom="sm">
-              <Link href="/login" style={{ textDecoration: 'none' }}>
-                <Button variant="default">Log in</Button>
-              </Link>
-              <Link href="/register" style={{ textDecoration: 'none' }}>
-                <Button>Sign up</Button>
-              </Link>
-            </Group>
-          ) : (
-            <Group justify="space-between">
-              <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
-              <Menu
-                width={260}
-                position="bottom-end"
-                transitionProps={{ transition: 'pop-top-right' }}
-                onClose={() => setUserMenuOpened(false)}
-                onOpen={() => setUserMenuOpened(true)}
-                withinPortal
-              >
-                <Menu.Target>
-                  <UnstyledButton
-                    className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
-                  >
-                    <Group gap={7}>
-                      <Avatar src={user?.photoURL} alt={user?.displayName || 'user photo'} radius="xl" size={32} />
-                      <Text fw={500} size="sm" lh={1} mr={3}>
-                        {user?.displayName}
-                      </Text>
-                      <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
-                    </Group>
-                  </UnstyledButton>
-                </Menu.Target>
-                <Menu.Dropdown>
-                  <Menu.Item
-                    leftSection={
-                      <IconHeart
-                        style={{ width: rem(16), height: rem(16) }}
-                        stroke={1.5}
-                      />
-                    }
-                  >
-                    Liked posts
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={
-                      <IconStar
-                        style={{ width: rem(16), height: rem(16) }}
-                        stroke={1.5}
-                      />
-                    }
-                  >
-                    Saved posts
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={
-                      <IconMessage
-                        style={{ width: rem(16), height: rem(16) }}
-                        stroke={1.5}
-                      />
-                    }
-                  >
-                    Your comments
-                  </Menu.Item>
+          <Skeleton visible={loading} width={ loading ? '20%' : 'auto'} height={ loading ? 35 : 'auto'}>
+            {!user && !loading ? (
+              <Group visibleFrom="sm">
+                <Link href="/login" style={{ textDecoration: 'none' }}>
+                  <Button variant="default">Log in</Button>
+                </Link>
+                <Link href="/register" style={{ textDecoration: 'none' }}>
+                  <Button>Sign up</Button>
+                </Link>
+              </Group>
+            ) : (
+              <Group justify="space-between">
+                <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+                <Menu
+                  width={260}
+                  position="bottom-end"
+                  transitionProps={{ transition: 'pop-top-right' }}
+                  onClose={() => setUserMenuOpened(false)}
+                  onOpen={() => setUserMenuOpened(true)}
+                  withinPortal
+                >
+                  <Menu.Target>
+                    <UnstyledButton
+                      className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
+                    >
+                      <Group gap={7}>
+                        <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={32} />
+                        <Text fw={500} size="sm" lh={1} mr={3}>
+                          {user?.displayName}
+                        </Text>
+                        <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
+                      </Group>
+                    </UnstyledButton>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item
+                      leftSection={
+                        <IconHeart
+                          style={{ width: rem(16), height: rem(16) }}
+                          color={theme.colors.red[6]}
+                          stroke={1.5}
+                        />
+                      }
+                    >
+                      Liked posts
+                    </Menu.Item>
+                    <Menu.Item
+                      leftSection={
+                        <IconStar
+                          style={{ width: rem(16), height: rem(16) }}
+                          color={theme.colors.yellow[6]}
+                          stroke={1.5}
+                        />
+                      }
+                    >
+                      Saved posts
+                    </Menu.Item>
+                    <Menu.Item
+                      leftSection={
+                        <IconMessage
+                          style={{ width: rem(16), height: rem(16) }}
+                          color={theme.colors.blue[6]}
+                          stroke={1.5}
+                        />
+                      }
+                    >
+                      Your comments
+                    </Menu.Item>
 
-                  <Menu.Label>Settings</Menu.Label>
-                  <Menu.Item
-                    leftSection={
-                      <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                    }
-                  >
-                    Account settings
-                  </Menu.Item>
-                  <Menu.Item
-                    leftSection={
-                      <IconSwitchHorizontal style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                    }
-                  >
-                    Change account
-                  </Menu.Item>
-                  <Menu.Item
-                    onClick={handleSignOut}
-                    leftSection={
-                      <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                    }
-                  >
-                    Sign out
-                  </Menu.Item>
+                    <Menu.Label>Settings</Menu.Label>
+                    <Menu.Item
+                      leftSection={
+                        <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      }
+                    >
+                      Account settings
+                    </Menu.Item>
+                    <Menu.Item
+                      leftSection={
+                        <IconSwitchHorizontal style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      }
+                    >
+                      Change account
+                    </Menu.Item>
+                    <Menu.Item
+                      onClick={handleSignOut}
+                      leftSection={
+                        <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      }
+                    >
+                      Sign out
+                    </Menu.Item>
 
-                  <Menu.Divider />
+                    <Menu.Divider />
 
-                  <Menu.Label>Danger zone</Menu.Label>
-                  <Menu.Item
-                    leftSection={
-                      <IconPlayerPause style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                    }
-                  >
-                    Pause subscription
-                  </Menu.Item>
-                  <Menu.Item
-                    color="red"
-                    leftSection={<IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-                  >
-                    Delete account
-                  </Menu.Item>
-                </Menu.Dropdown>
-              </Menu>
-            </Group>)}
+                    <Menu.Label>Danger zone</Menu.Label>
+                    <Menu.Item
+                      leftSection={
+                        <IconPlayerPause style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
+                      }
+                    >
+                      Pause subscription
+                    </Menu.Item>
+                    <Menu.Item
+                      color="red"
+                      leftSection={<IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
+                    >
+                      Delete account
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
+              </Group>)}
+          </Skeleton>
         </div>
       </Container>
     </header>
