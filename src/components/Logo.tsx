@@ -7,7 +7,7 @@ export function Logo() {
     <Link href="/" style={{ textDecoration: 'none', color: 'inherit' }}>
       <Group>
         <Image src="/favicon.ico" alt="logo" width={36} height={36} />
-        <b>Survey App</b>
+        <b>Survey Maker</b>
       </Group>
     </Link>
   );

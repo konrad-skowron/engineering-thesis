@@ -49,7 +49,7 @@ export function AuthenticationForm({ type, ...props }: AuthenticationFormProps) 
   return (
     <Container size={440} my={40}>
       <Title ta="center" className={classes.title}>
-        Welcome to Survey App
+        Welcome to Survey Maker
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
         {type === 'log in'

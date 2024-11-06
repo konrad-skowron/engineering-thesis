@@ -3,7 +3,7 @@ import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { AuthProvider } from '@/components/AuthProvider';
 
 export const metadata = {
-  title: "Survey App",
+  title: "Survey Maker",
   description: "Conduct surveys using a continuous Likert scale",
 };
 

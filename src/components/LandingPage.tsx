@@ -20,7 +20,7 @@ export function LandingPage() {
         </Text>
 
         <Group className={classes.controls}>
-          <Link href="/login" style={{ textDecoration: 'none' }}>      
+          <Link href="/account" style={{ textDecoration: 'none' }}>      
             <Button
               size="xl"
               className={classes.control}
