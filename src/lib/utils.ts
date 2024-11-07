@@ -24,3 +24,11 @@ export const fetchSurvey = async (surveyId: string): Promise<Survey | null> => {
   }
   return null;
 };
+
+export const fetchUserSurveys = async (userId: string) => {
+
+};
+
+export const addUserToDb = async (userId: string) => {
+
+};

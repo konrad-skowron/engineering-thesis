@@ -1,7 +1,7 @@
 'use client'
 import { notFound } from 'next/navigation';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, Survey, Question } from '@/lib/fetchSurvey';
+import { fetchSurvey, Survey, Question } from '@/lib/utils';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);

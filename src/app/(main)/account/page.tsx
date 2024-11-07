@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { Container, Button } from '@mantine/core';
+import { Container, Button, Center, Group } from '@mantine/core';
 import { useEffect } from "react";
 
 export default function Account() {
@@ -16,14 +16,31 @@ export default function Account() {
   }, [user, loading, signingOut, router]);
 
   if (!user) {
-    return <div>Loading...</div>;
+    return (
+      <Center>
+        <div>Loading...</div>
+      </Center>
+    );
   }
 
   return (
     <Container>
-      <Link href="/create">
-        <Button>+ Create survey</Button>
-      </Link> 
+      <div>
+        <h2>Dashboard</h2>
+        <Link href="/create">
+          <Button>+ Create survey</Button>
+        </Link> 
+      </div>
+
+      <Group justify="space-between" mt="xl">
+				<div>Surveys</div>
+				<div>Participants</div>
+				<div>Deadline</div>
+				<div>Status</div>
+				<div></div>
+			</Group>
+
+      <div></div>
     </Container>
   );
 }

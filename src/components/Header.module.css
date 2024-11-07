@@ -37,12 +37,12 @@
 
 .user {
   color: light-dark(var(--mantine-color-black), var(--mantine-color-dark-0));
-  padding: var(--mantine-spacing-xs) var(--mantine-spacing-sm);
+  padding:  rem(8px) rem(12px);
   border-radius: var(--mantine-radius-sm);
   transition: background-color 100ms ease;
 
   &:hover {
-    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+    background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
   }
 
   @media (max-width: $mantine-breakpoint-xs) {
@@ -51,7 +51,7 @@
 }
 
 .userActive {
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-6));
 }
 
 .tabsList {
