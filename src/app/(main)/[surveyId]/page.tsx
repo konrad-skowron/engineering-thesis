@@ -1,13 +1,15 @@
 'use client'
-import { notFound } from 'next/navigation';
+import { notFound, useRouter } from 'next/navigation';
 import React, { useState, useEffect, use } from 'react';
 import { fetchSurvey, Survey, Question } from '@/lib/utils';
+import { Loading } from '@/components/Loading';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [answers, setAnswers] = useState<any>({});
+  const router = useRouter();
 
   useEffect(() => {
     const getSurvey = async () => {
@@ -29,11 +31,12 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <Loading />;
   }
 
   if (!survey && !loading) {
-    notFound();
+    router.replace('/' + params.surveyId + '/not-found');
+    return <Loading />;
   }
 
   return (

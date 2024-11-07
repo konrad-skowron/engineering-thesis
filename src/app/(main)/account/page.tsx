@@ -4,6 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import { Container, Button, Center, Group } from '@mantine/core';
 import { useEffect } from "react";
+import { Loading } from '@/components/Loading';
 
 export default function Account() {
   const { user, loading, signingOut } = useAuth();
@@ -16,11 +17,7 @@ export default function Account() {
   }, [user, loading, signingOut, router]);
 
   if (!user) {
-    return (
-      <Center>
-        <div>Loading...</div>
-      </Center>
-    );
+    return <Loading />;
   }
 
   return (
