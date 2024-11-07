@@ -1,7 +1,7 @@
 'use client'
 import { notFound, useRouter } from 'next/navigation';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, Survey, Question } from '@/lib/utils';
+import { fetchSurvey, Survey, Question } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {

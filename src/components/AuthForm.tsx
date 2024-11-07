@@ -18,13 +18,13 @@ import {
 } from '@mantine/core';
 import { GoogleButton } from './GoogleButton';
 import { useAuth } from '@/components/AuthProvider';
-import classes from './AuthenticationForm.module.css';
+import classes from './AuthForm.module.css';
 
 interface AuthenticationFormProps extends PaperProps {
   type: 'log in' | 'sign up';
 }
 
-export function AuthenticationForm({ type, ...props }: AuthenticationFormProps) {
+export function AuthForm({ type, ...props }: AuthenticationFormProps) {
   const { logInWithGoogle } = useAuth();
 
   const form = useForm({

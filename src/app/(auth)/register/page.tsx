@@ -2,7 +2,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useRouter } from 'next/navigation';
-import { AuthenticationForm } from "@/components/AuthenticationForm";
+import { AuthForm } from "@/components/AuthForm";
 import { useAuth } from '@/components/AuthProvider';
 
 export default function SignUp() {
@@ -16,6 +16,6 @@ export default function SignUp() {
   }, [user, router]);
 
   return (
-    <AuthenticationForm type={'sign up'} />
+    <AuthForm type={'sign up'} />
   );
 }
