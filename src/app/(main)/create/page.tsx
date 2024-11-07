@@ -1,27 +1,23 @@
 'use client'
-import React, { useState } from 'react';
-import { db } from '@/lib/firebase';
-import { collection, addDoc } from 'firebase/firestore';
-
-type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'ranking' | 'discreteScale' | 'continousScale';
-
-interface Question {
-  type: QuestionType;
-  question: string;
-  options?: string[];
-}
-
-interface Survey {
-  title: string;
-  questions: Question[];
-  createdAt: Date;
-}
+import React, { useState, useEffect, use } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/components/AuthProvider';
+import { Loading } from '@/components/Loading';
+import { Question, QuestionType, saveSurvey } from '@/lib/firestore';
 
 export default function Create() {
+  const router = useRouter();
+  const { user, loading, signingOut } = useAuth();
   const [surveyTitle, setSurveyTitle] = useState<string>('');
   const [surveyDescription, setSurveyDescription] = useState<string>('');
   const [questions, setQuestions] = useState<Question[]>([]);
 
+  useEffect(() => {
+    if (!user && !loading && !signingOut) {
+      router.replace("/login");
+    }
+  }, [user, loading, signingOut, router]);
+  
   const addQuestion = () => {
     setQuestions([...questions, { type: 'text', question: '' }]);
   };
@@ -55,19 +51,17 @@ export default function Create() {
     setQuestions(updatedQuestions);
   };
 
-  const saveSurvey = async () => {
-    try {
-      const survey: Survey = {
-        title: surveyTitle,
-        questions: questions,
-        createdAt: new Date()
-      };
-      const docRef = await addDoc(collection(db, 'surveys'), survey);
-      console.log("Survey saved with ID: ", docRef.id);
-    } catch (e) {
-      console.error("Error saving survey: ", e);
+  const saveAndRedirect = async () => {
+    if (!user) {
+      return;
     }
+    const surveyId = await saveSurvey(surveyTitle, questions, user);
+    router.push(`/${surveyId}`);
   };
+
+  if (!user) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -121,7 +115,7 @@ export default function Create() {
       ))}
       <p></p>
       <button onClick={addQuestion}>Add Question</button>
-      <button onClick={saveSurvey}>Save Survey</button>
+      <button onClick={saveAndRedirect}>Save Survey</button>
     </>
   );
 }

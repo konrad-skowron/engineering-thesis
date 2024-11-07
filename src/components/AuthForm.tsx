@@ -47,7 +47,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
   };
 
   return (
-    <Container size={440} my={40}>
+    <Container size={480} my={40}>
       <Title ta="center" className={classes.title}>
         Welcome to Survey Maker
       </Title>
