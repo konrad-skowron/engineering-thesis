@@ -172,7 +172,7 @@ export function Header() {
         </div>
       </Container>
 
-      <Drawer opened={opened} onClose={toggle} size="xs" title="Survey Maker" position="top" offset={8} radius="md" overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}>
+      <Drawer opened={opened} onClose={toggle} size="xs" title="Survey Maker" position="top" offset={10} radius="md" overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}>
         <Group mt="md">
           <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={64} />
           <Text fw={500} size="m" lh={1} mr={3}>

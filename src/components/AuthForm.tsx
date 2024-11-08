@@ -25,7 +25,7 @@ interface AuthenticationFormProps extends PaperProps {
 }
 
 export function AuthForm({ type, ...props }: AuthenticationFormProps) {
-  const { logInWithGoogle } = useAuth();
+  const { logInWithGoogle, logIn, signUp } = useAuth();
 
   const form = useForm({
     initialValues: {
@@ -42,6 +42,15 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
   });
 
   const handleSignIn = async () => {
+    if (type === 'log in') {
+      await logIn(form.values.email, form.values.password);
+    } else {
+      await signUp(form.values.email, form.values.password);
+    }
+    redirect('/account');
+  };
+
+  const handleGoogleSignIn = async () => {
     await logInWithGoogle();
     redirect('/account');
   };
@@ -112,7 +121,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
           </Group>
 
           <Group justify="space-between" mb="lg" mt="xl">
-            <Button type="submit" radius="xl" fullWidth>
+            <Button type="submit" radius="xl" fullWidth onClick={handleSignIn}>
               {upperFirst(type)}
             </Button>
           </Group>
@@ -120,7 +129,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
           <Divider label="Or continue with" labelPosition="center" my="lg" />
 
           <Group grow mb="sm" mt="lg">
-            <a onClick={handleSignIn}>
+            <a onClick={handleGoogleSignIn}>
               <GoogleButton radius="xl" style={{ width: '100%' }}>Google</GoogleButton>
             </a>
           </Group>
