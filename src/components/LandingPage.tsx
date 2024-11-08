@@ -63,7 +63,7 @@ export function LandingPage() {
           {items}
         </SimpleGrid>
 
-        <Group className={classes.controls}>
+        <Group className={classes.controls} mt="lg">
           <Link href="/account" style={{ textDecoration: 'none' }}>      
             <Button
               size="xl"

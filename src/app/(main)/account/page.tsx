@@ -53,7 +53,7 @@ export default function Account() {
 
       <div>
         {surveys.map((survey, index) => (
-          <div key={index} style={{ borderRadius: '10px', padding: '10px', marginTop: '10px', backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))' }}>
+          <div key={index} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', marginTop: '10px', backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))' }}>
             <pre>{JSON.stringify(survey, null, 2)}</pre>
           </div>
         ))}

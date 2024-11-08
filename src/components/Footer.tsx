@@ -17,13 +17,13 @@ export function Footer() {
 
         <Group gap={0} className={classes.links} justify="flex-end" wrap="nowrap">
           <ActionIcon size="lg" color="gray" variant="subtle">
-            <a href="mailto:260654@student.pwr.edu.pl" style={{ color: 'inherit' }}>
-                <IconMail style={{ width: rem(18), height: rem(18) }} stroke={1.5} title="Email" />
+            <a href="https://github.com/konrad-skowron/engineering-thesis" style={{ color: 'inherit' }}>
+                <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} title="Source code" />
             </a>
           </ActionIcon>
           <ActionIcon size="lg" color="gray" variant="subtle">
-            <a href="https://github.com/konrad-skowron/engineering-thesis" style={{ color: 'inherit' }}>
-                <IconBrandGithub style={{ width: rem(18), height: rem(18) }} stroke={1.5} title="Source code" />
+            <a href="mailto:260654@student.pwr.edu.pl" style={{ color: 'inherit' }}>
+                <IconMail style={{ width: rem(18), height: rem(18) }} stroke={1.5} title="Email" />
             </a>
           </ActionIcon>
           <ActionIcon size="lg" color="gray" variant="subtle"

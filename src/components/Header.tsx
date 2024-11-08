@@ -6,13 +6,8 @@ import { useDisclosure } from '@mantine/hooks';
 import { Logo } from './Logo';
 import {
   IconLogout,
-  IconHeart,
-  IconStar,
-  IconMessage,
+  IconHome,
   IconSettings,
-  IconPlayerPause,
-  IconTrash,
-  IconSwitchHorizontal,
   IconChevronDown
 } from '@tabler/icons-react';
 import {
@@ -27,7 +22,8 @@ import {
   Text,
   rem,
   Skeleton,
-  useMantineTheme,
+  Drawer,
+  SimpleGrid
 } from '@mantine/core';
 import Link from "next/link";
 import { useAuth } from '@/components/AuthProvider';
@@ -52,7 +48,6 @@ export function Header() {
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
-  const theme = useMantineTheme();
 
   const handleSignOut = () => {
     router.push('/');
@@ -106,12 +101,12 @@ export function Header() {
 
           <Skeleton visible={loading} width={ loading ? '20%' : 'auto'} height={ loading ? 35 : 'auto'}>
             {!user && !loading ? (
-              <Group visibleFrom="sm">
+              <Group>
                 <Link href="/login" style={{ textDecoration: 'none' }}>
                   <Button variant="default">Log in</Button>
                 </Link>
                 <Link href="/register" style={{ textDecoration: 'none' }}>
-                  <Button>Sign up</Button>
+                  <Button visibleFrom="xs">Sign up</Button>
                 </Link>
               </Group>
             ) : (
@@ -131,7 +126,7 @@ export function Header() {
                     >
                       <Group gap={7}>
                         <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={32} />
-                        <Text fw={500} size="sm" lh={1} mr={3}>
+                        <Text fw={500} size="sm" lh={1} mr={3} visibleFrom="xs">
                           {user?.displayName}
                         </Text>
                         <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
@@ -139,55 +134,29 @@ export function Header() {
                     </UnstyledButton>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Item
+                    <Menu.Item 
+                      onClick={() => router.push('/account')}
                       leftSection={
-                        <IconHeart
+                        <IconHome
                           style={{ width: rem(16), height: rem(16) }}
-                          color={theme.colors.red[6]}
                           stroke={1.5}
                         />
                       }
                     >
-                      Liked posts
-                    </Menu.Item>
-                    <Menu.Item
-                      leftSection={
-                        <IconStar
-                          style={{ width: rem(16), height: rem(16) }}
-                          color={theme.colors.yellow[6]}
-                          stroke={1.5}
-                        />
-                      }
-                    >
-                      Saved posts
-                    </Menu.Item>
-                    <Menu.Item
-                      leftSection={
-                        <IconMessage
-                          style={{ width: rem(16), height: rem(16) }}
-                          color={theme.colors.blue[6]}
-                          stroke={1.5}
-                        />
-                      }
-                    >
-                      Your comments
+                      Dashboard
                     </Menu.Item>
 
-                    <Menu.Label>Settings</Menu.Label>
                     <Menu.Item
+                      onClick={() => router.push('/settings')}
                       leftSection={
                         <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                       }
                     >
-                      Account settings
+                      Settings
                     </Menu.Item>
-                    <Menu.Item
-                      leftSection={
-                        <IconSwitchHorizontal style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                      }
-                    >
-                      Change account
-                    </Menu.Item>
+
+                    <Menu.Divider />
+
                     <Menu.Item
                       onClick={handleSignOut}
                       leftSection={
@@ -196,29 +165,30 @@ export function Header() {
                     >
                       Sign out
                     </Menu.Item>
-
-                    <Menu.Divider />
-
-                    <Menu.Label>Danger zone</Menu.Label>
-                    <Menu.Item
-                      leftSection={
-                        <IconPlayerPause style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
-                      }
-                    >
-                      Pause subscription
-                    </Menu.Item>
-                    <Menu.Item
-                      color="red"
-                      leftSection={<IconTrash style={{ width: rem(16), height: rem(16) }} stroke={1.5} />}
-                    >
-                      Delete account
-                    </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
               </Group>)}
           </Skeleton>
         </div>
       </Container>
+
+      <Drawer opened={opened} onClose={toggle} size="xs" title="Survey Maker" position="top" offset={8} radius="md" overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}>
+        <Group mt="md">
+          <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={64} />
+          <Text fw={500} size="m" lh={1} mr={3}>
+            {user?.displayName}
+            <br />
+            <Text size="xs" c="dimmed" component="span">
+              {user?.email}
+            </Text>
+          </Text>
+        </Group>
+        <SimpleGrid cols={2} mt="xl">
+          <Button variant="default" justify="left" onClick={() => router.push('/account')} leftSection={<IconHome />}>Dashboard</Button>
+          <Button variant="default" justify="left" onClick={() => router.push('/settings')} leftSection={<IconSettings />}>Settings</Button>
+          <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout />}>Sign out</Button>
+        </SimpleGrid>
+      </Drawer>
     </header>
   );
 }

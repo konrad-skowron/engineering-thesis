@@ -4,6 +4,8 @@
   background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
   margin-top: rem(-40px);
   margin-bottom: rem(-40px);
+  padding-left: rem(5px);
+  padding-right: rem(5px);
 }
 
 .inner {
