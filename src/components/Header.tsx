@@ -50,6 +50,9 @@ export function Header() {
   const router = useRouter();
 
   const handleSignOut = () => {
+    if (opened) {
+      toggle();
+    }
     router.push('/');
     signOut();
   };
@@ -127,7 +130,7 @@ export function Header() {
                       <Group gap={7}>
                         <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={32} />
                         <Text fw={500} size="sm" lh={1} mr={3} visibleFrom="xs">
-                          {user?.displayName}
+                          {user?.displayName || user?.email}
                         </Text>
                         <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
                       </Group>
@@ -176,11 +179,14 @@ export function Header() {
         <Group mt="md">
           <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={64} />
           <Text fw={500} size="m" lh={1} mr={3}>
-            {user?.displayName}
-            <br />
-            <Text size="xs" c="dimmed" component="span">
-              {user?.email}
-            </Text>
+            {user?.displayName || user?.email}
+            {user?.displayName &&
+            <>
+              <br />
+              <Text size="xs" c="dimmed" component="span">
+                {user?.email}
+              </Text>
+            </>}
           </Text>
         </Group>
         <SimpleGrid cols={2} mt="xl">

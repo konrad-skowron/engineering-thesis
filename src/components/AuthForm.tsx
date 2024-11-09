@@ -106,6 +106,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
 
             {type === 'sign up' && (
               <Checkbox
+                mt="xs"
                 required
                 label="I accept terms and conditions"
                 onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
@@ -121,7 +122,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
           </Group>
 
           <Group justify="space-between" mb="lg" mt="xl">
-            <Button type="submit" radius="xl" fullWidth onClick={handleSignIn}>
+            <Button type="submit" radius="xl" fullWidth onClick={() => handleSignIn()}>
               {upperFirst(type)}
             </Button>
           </Group>
