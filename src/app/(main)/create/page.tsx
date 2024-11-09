@@ -19,7 +19,7 @@ export default function Create() {
   }, [user, loading, signingOut, router]);
   
   const addQuestion = () => {
-    setQuestions([...questions, { type: 'text', question: '' }]);
+    setQuestions([...questions, { type: 'text', question: '', required: false }]);
   };
 
   const updateQuestion = (index: number, field: keyof Question, value: string) => {
@@ -28,6 +28,7 @@ export default function Create() {
       updatedQuestions[index] = {
         type: value as QuestionType,
         question: updatedQuestions[index].question,
+        required: updatedQuestions[index].required,
         options: value === 'multipleChoice' ? [''] : undefined
       };
     } else {

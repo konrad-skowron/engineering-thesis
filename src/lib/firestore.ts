@@ -2,26 +2,40 @@ import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion } from "firebase/firestore";
 import { User } from "firebase/auth";
 
-export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'ranking' | 'discreteScale' | 'continousScale';
+export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'list' | 'ranking' | 'discreteScale' | 'continousScale';
 
 export interface Question {
   type: QuestionType;
   question: string;
+  required: boolean;
   options?: string[];
 }
 
 export interface Survey {
-  title: string;
-  questions: Question[];
   createdAt: Date;
+  author: string;
+  title: string;
+  discription: string;
+  questions: Question[];
+}
+
+export interface Answer {
+  [questionIndex: string]: string;
+}
+
+export interface Results {
+  answers: Answer[];
+  updatedAt: Date;
 }
 
 export const saveSurvey = async (surveyTitle: string, questions: Question[], user : User) : Promise<string> => {
   try {
     const survey: Survey = {
+      createdAt: new Date(),
+      author: user.uid,
       title: surveyTitle,
-      questions: questions,
-      createdAt: new Date()
+      discription: '',
+      questions: questions
     };
 
     const docRef = await addDoc(collection(db, 'surveys'), survey);
@@ -73,4 +87,28 @@ export const fetchUserSurveys = async (user : User) => {
     console.error('Error fetching user surveys: ', e);
     return [];
   }
+};
+
+export const saveSurveyAnswers = async (surveyId: string, answers: any) => {
+  try {
+    await setDoc(doc(db, 'results', surveyId), {
+      answers: arrayUnion(answers),
+      updatedAt: new Date()
+    }, { merge: true });
+  } catch (e) {   
+    console.error('Error saving survey answers: ', e);
+  }
+};
+
+export const fetchSurveyAnswers = async (surveyId: string): Promise<Answer[]> => {
+  try {
+    const docSnap = await getDoc(doc(db, 'results', surveyId));
+
+    if (docSnap.exists()) {
+      return docSnap.data().answers || [];
+    }
+  } catch (error) {
+    console.error('Error fetching survey answers:', error);
+  }
+  return [];
 };

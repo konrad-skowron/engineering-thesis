@@ -102,7 +102,7 @@ export function Header() {
             {items}
           </Group>
 
-          <Skeleton visible={loading} width={ loading ? '20%' : 'auto'} height={ loading ? 35 : 'auto'}>
+          <Skeleton visible={loading} width={loading ? '20%' : 'auto'} height={loading ? 35 : 'auto'}>
             {!user && !loading ? (
               <Group>
                 <Link href="/login" style={{ textDecoration: 'none' }}>
@@ -137,7 +137,7 @@ export function Header() {
                     </UnstyledButton>
                   </Menu.Target>
                   <Menu.Dropdown>
-                    <Menu.Item 
+                    <Menu.Item
                       onClick={() => router.push('/account')}
                       leftSection={
                         <IconHome
@@ -175,21 +175,21 @@ export function Header() {
         </div>
       </Container>
 
-      <Drawer opened={opened} onClose={toggle} size="xs" title="Survey Maker" position="top" offset={10} radius="md" overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}>
-        <Group mt="md">
+      <Drawer opened={opened} onClose={toggle} size="16rem" title="Survey Maker" position="top" offset={10} radius="md" overlayProps={{ backgroundOpacity: 0.5, blur: 4 }}>
+        <Group>
           <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={64} />
           <Text fw={500} size="m" lh={1} mr={3}>
             {user?.displayName || user?.email}
             {user?.displayName &&
-            <>
-              <br />
-              <Text size="xs" c="dimmed" component="span">
-                {user?.email}
-              </Text>
-            </>}
+              <>
+                <br />
+                <Text size="xs" c="dimmed" component="span">
+                  {user?.email}
+                </Text>
+              </>}
           </Text>
         </Group>
-        <SimpleGrid cols={2} mt="xl">
+        <SimpleGrid cols={2} mt="lg">
           <Button variant="default" justify="left" onClick={() => router.push('/account')} leftSection={<IconHome />}>Dashboard</Button>
           <Button variant="default" justify="left" onClick={() => router.push('/settings')} leftSection={<IconSettings />}>Settings</Button>
           <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout />}>Sign out</Button>

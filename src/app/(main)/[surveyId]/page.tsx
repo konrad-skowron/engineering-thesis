@@ -1,11 +1,15 @@
 'use client'
 import { notFound, useRouter } from 'next/navigation';
+import Link from 'next/link';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, Survey, Question } from '@/lib/firestore';
+import { fetchSurvey, Survey, saveSurveyAnswers } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
+import { useAuth } from '@/components/AuthProvider';
+import { Button } from '@mantine/core';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
+  const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [answers, setAnswers] = useState<any>({});
@@ -21,13 +25,13 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
     getSurvey();
   }, [params.surveyId]);
 
-  const handleInputChange = (questionIndex: number, value: string) => {
-    setAnswers({ ...answers, [questionIndex]: value });
+  const handleInputChange = (questionIndex: number, answer: string) => {
+    setAnswers({ ...answers, [questionIndex]: answer });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    console.log(answers);
+  const handleSubmit = () => {
+    saveSurveyAnswers(params.surveyId, answers);
+    alert('Your answers have been saved. Thank you for participating in this poll.');
   };
 
   if (loading) {
@@ -72,7 +76,11 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
             ) : null}
           </div>
         ))}
-        <button type="submit">Submit</button>
+        <Button type="submit">Submit</Button>
+        { user && user.uid === survey?.author &&
+          <Link href={`/${params.surveyId}/results`}>
+            <Button variant='default'>Show results</Button>
+          </Link> }
       </form>
     </div>
   );
