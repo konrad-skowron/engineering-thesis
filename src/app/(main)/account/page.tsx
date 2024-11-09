@@ -2,8 +2,8 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { Container, Button, Center, Group } from '@mantine/core';
-import { useState,useEffect } from "react";
+import { Container, Button, Group } from '@mantine/core';
+import { useState, useEffect } from "react";
 import { Loading } from '@/components/Loading';
 import { fetchUserSurveys } from '@/lib/firestore';
 
@@ -50,11 +50,15 @@ export default function Account() {
 				<div>Status</div>
 				<div></div>
 			</Group>
-
+      
       <div>
         {surveys.map((survey, index) => (
           <div key={index} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', marginTop: '10px', backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))' }}>
-            <pre>{JSON.stringify(survey, null, 2)}</pre>
+            <Link href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <pre style={{ margin: 0 }}>
+                {JSON.stringify(survey, null, 2)}
+              </pre>
+            </Link>
           </div>
         ))}
       </div>

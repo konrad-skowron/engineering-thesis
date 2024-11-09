@@ -1,9 +1,13 @@
 import '@mantine/core/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { AuthProvider } from '@/components/AuthProvider';
+import { Metadata } from 'next';
 
-export const metadata = {
-  title: "Survey Maker",
+export const metadata: Metadata = {
+  title: {
+    default: "Survey Maker",
+    template: "%s | Survey Maker"
+  },
   description: "Conduct surveys using a continuous Likert scale",
 };
 

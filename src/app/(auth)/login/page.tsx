@@ -1,20 +1,11 @@
-'use client'
-import React from "react";
-import { useEffect } from "react";
-import { useRouter } from 'next/navigation';
 import { AuthForm } from "@/components/AuthForm";
-import { useAuth } from '@/components/AuthProvider';
+import { Metadata } from 'next';
+
+export const metadata: Metadata = {
+  title: 'Log in to your account'
+};
 
 export default function Login() {
-  const { user } = useAuth();
-  const router = useRouter();
-
-  useEffect(() => {
-    if (user) {
-      router.replace('/account');
-    }
-  }, [user, router]);
-
   return (
     <AuthForm type={'log in'} />
   );

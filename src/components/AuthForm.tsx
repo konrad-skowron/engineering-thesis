@@ -1,4 +1,4 @@
-import { redirect } from 'next/navigation'
+'use client'
 import { upperFirst } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import {
@@ -19,13 +19,22 @@ import {
 import { GoogleButton } from './GoogleButton';
 import { useAuth } from '@/components/AuthProvider';
 import classes from './AuthForm.module.css';
+import { useRouter } from 'next/navigation';
+import { useEffect } from 'react';
 
 interface AuthenticationFormProps extends PaperProps {
   type: 'log in' | 'sign up';
 }
 
 export function AuthForm({ type, ...props }: AuthenticationFormProps) {
-  const { logInWithGoogle, logIn, signUp } = useAuth();
+  const { user, logInWithGoogle, logIn, signUp } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (user) {
+      router.replace('/account');
+    }
+  }, [user, router]);
 
   const form = useForm({
     initialValues: {
@@ -47,12 +56,12 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
     } else {
       await signUp(form.values.email, form.values.password);
     }
-    redirect('/account');
+    router.replace('/account');
   };
 
   const handleGoogleSignIn = async () => {
     await logInWithGoogle();
-    redirect('/account');
+    router.replace('/account');
   };
 
   return (
@@ -64,7 +73,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
         {type === 'log in'
           ? "Don't have an account yet? "
           : 'Already have an account? '}
-        <Anchor size="sm" component="button" onClick={() => type === 'log in' ? redirect('/register') : redirect('/login')}>
+        <Anchor size="sm" component="button" onClick={() => type === 'log in' ? router.replace('/register') : router.replace('/login')}>
           {type === 'log in'
             ? 'Sign up'
             : 'Log in'}
