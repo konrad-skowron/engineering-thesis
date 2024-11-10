@@ -6,7 +6,7 @@ import { useEffect } from 'react';
 import { Container, Button } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 
-export default function Settings() {
+export default function AccountSettings() {
   const { user, loading, signingOut, signOut } = useAuth();
   const router = useRouter();
 

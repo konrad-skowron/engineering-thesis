@@ -2,7 +2,8 @@
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, Survey, saveSurveyAnswers } from '@/lib/firestore';
+import { fetchSurvey, saveSurveyAnswers } from '@/lib/firestore';
+import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
 import { Button } from '@mantine/core';

@@ -3,7 +3,8 @@ import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
 import { Loading } from '@/components/Loading';
-import { Question, QuestionType, saveSurvey } from '@/lib/firestore';
+import { saveSurvey } from '@/lib/firestore';
+import { Question, QuestionType } from '@/lib/types';
 
 export default function Create() {
   const router = useRouter();

@@ -6,7 +6,7 @@ import { Metadata } from 'next';
 export const metadata: Metadata = {
   title: {
     default: "Survey Maker",
-    template: "%s | Survey Maker"
+    template: "%s - Survey Maker"
   },
   description: "Conduct surveys using a continuous Likert scale",
 };

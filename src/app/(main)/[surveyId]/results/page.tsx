@@ -1,9 +1,10 @@
 'use client'
 import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchSurvey, fetchSurveyAnswers, Survey, Answer } from '@/lib/firestore';
+import { fetchSurvey, fetchSurveyAnswers } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
+import { Survey, Answer } from '@/lib/types';
 import { Box, Paper, Title, Text, Group, Stack, Button, MantineTheme } from '@mantine/core';
 
 export default function ResultsPage(props: { params: Promise<{ surveyId: string }> }) {
