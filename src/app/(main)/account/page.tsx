@@ -22,17 +22,24 @@ export default function Account() {
       }
       const fetchedSurveys = await fetchUserSurveys(user);
       setSurveys(fetchedSurveys);
+    };
 
+    const getParticipants = async () => {
+      if (!user || participants.length === surveys.length) {
+        return;
+      }
       const surveyParticipants: number[] = [];
       for (const survey of surveys) {
         const answers = await fetchSurveyAnswers(survey.id);
         surveyParticipants.push(answers.length);
       }
       setParticipants(surveyParticipants);
+      console.warn("FETCHED PARTICIPANTS");
     };
 
     getSurveys();
-  }, [user, surveys]);
+    getParticipants();
+  }, [user, surveys, participants]);
 
   useEffect(() => {
     if (!user && !loading && !signingOut) {
