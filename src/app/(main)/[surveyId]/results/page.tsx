@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyAnswers } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
 import { Survey, Answer } from '@/lib/types';
-import { Box, Paper, Title, Text, Group, Stack, Button, MantineTheme } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme } from '@mantine/core';
 
 export default function ResultsPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -70,7 +70,7 @@ export default function ResultsPage(props: { params: Promise<{ surveyId: string 
   };
 
   return (
-    <Box p="md">
+    <Container p="md">
       <Title order={1} mb="xl">{survey?.title} - Results</Title>
       <Text mb="xl">Total responses: {answers.length}</Text>
 
@@ -119,6 +119,6 @@ export default function ResultsPage(props: { params: Promise<{ surveyId: string 
       >
         Back to Survey
       </Button>
-    </Box>
+    </Container>
   );
 }

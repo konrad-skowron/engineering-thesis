@@ -6,7 +6,7 @@ import { fetchSurvey, saveSurveyAnswers } from '@/lib/firestore';
 import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
-import { Button } from '@mantine/core';
+import { Button, Container, Group } from '@mantine/core';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -45,7 +45,7 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
   }
 
   return (
-    <div className="survey-container">
+    <Container>
       <h1>{survey?.title}</h1>
       <form onSubmit={handleSubmit}>
         {survey?.questions.map((question, index) => (
@@ -58,7 +58,7 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
                 onChange={(e) => handleInputChange(index, e.target.value)}
                 required
               />
-            ) : question.type === 'multipleChoice' ? (
+            ) : question.type === 'multipleChoice' && (
               <div>
                 {question.options?.map((option, optionIndex) => (
                   <label key={optionIndex}>
@@ -74,15 +74,17 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
                   </label>
                 ))}
               </div>
-            ) : null}
+            )}
           </div>
         ))}
-        <Button type="submit">Submit</Button>
-        { user && user.uid === survey?.author &&
-          <Link href={`/${params.surveyId}/results`}>
-            <Button variant='default'>Show results</Button>
-          </Link> }
+        <Group mt="xl">
+          <Button type="submit">Submit</Button>
+          {user && user.uid === survey?.author &&
+            <Link href={`/${params.surveyId}/results`}>
+              <Button variant='default'>Show results</Button>
+            </Link>}
+        </Group>
       </form>
-    </div>
+    </Container>
   );
 }

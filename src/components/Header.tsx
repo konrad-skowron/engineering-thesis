@@ -36,9 +36,9 @@ const links = [
     link: '#1',
     label: 'Support',
     links: [
+      { link: '/about', label: 'About' },
+      { link: '/contact', label: 'Contact' },
       { link: '/faq', label: 'FAQ' },
-      { link: '/demo', label: 'Book a demo' },
-      { link: '/forums', label: 'Forums' },
     ],
   },
 ];
