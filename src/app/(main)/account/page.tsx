@@ -14,6 +14,7 @@ export default function Account() {
   const router = useRouter();
   const [surveys, setSurveys] = useState<any[]>([]);
   const [participants, setParticipants] = useState<Record<string, number>>({});
+  const [gettingSurveys, setGettingSurveys ] = useState(true);
 
   useEffect(() => {
     const getSurveys = async () => {
@@ -27,6 +28,8 @@ export default function Account() {
       const surveyIds = fetchedSurveys.map(survey => survey.id);
       const participantsMap = await fetchAllSurveyParticipants(surveyIds);
       setParticipants(participantsMap);
+
+      setGettingSurveys(false);
     };
 
     getSurveys();
@@ -43,6 +46,9 @@ export default function Account() {
   }
 
   const createSurvey = () => {
+    if (gettingSurveys) {
+      return;
+    }
     if (surveys.length >= 10) {
       alert('You have reached the limit of 10 surveys');
       return;
