@@ -5,7 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { Container, Button, Group, Text } from '@mantine/core';
 import { useState, useEffect } from "react";
 import { Loading } from '@/components/Loading';
-import { fetchUserSurveys, fetchSurveyAnswers } from '@/lib/firestore';
+import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firestore';
 import { IconDots } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 
@@ -13,7 +13,7 @@ export default function Account() {
   const { user, loading, signingOut } = useAuth();
   const router = useRouter();
   const [surveys, setSurveys] = useState<any[]>([]);
-  const [participants, setParticipants] = useState<number[]>([]);
+  const [participants, setParticipants] = useState<Record<string, number>>({});
 
   useEffect(() => {
     const getSurveys = async () => {
@@ -21,25 +21,16 @@ export default function Account() {
         return;
       }
       const fetchedSurveys = await fetchUserSurveys(user);
+      fetchedSurveys.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
       setSurveys(fetchedSurveys);
-    };
 
-    const getParticipants = async () => {
-      if (!user || participants.length === surveys.length) {
-        return;
-      }
-      const surveyParticipants: number[] = [];
-      for (const survey of surveys) {
-        const answers = await fetchSurveyAnswers(survey.id);
-        surveyParticipants.push(answers.length);
-      }
-      setParticipants(surveyParticipants);
-      console.warn("FETCHED PARTICIPANTS");
+      const surveyIds = fetchedSurveys.map(survey => survey.id);
+      const participantsMap = await fetchAllSurveyParticipants(surveyIds);
+      setParticipants(participantsMap);
     };
 
     getSurveys();
-    getParticipants();
-  }, [user, surveys, participants]);
+  }, [user]);
 
   useEffect(() => {
     if (!user && !loading && !signingOut) {
@@ -51,13 +42,19 @@ export default function Account() {
     return <Loading />;
   }
 
+  const createSurvey = () => {
+    if (surveys.length >= 10) {
+      alert('You have reached the limit of 10 surveys');
+      return;
+    }
+    router.push('/create');
+  };
+
   return (
     <Container>
       <div>
         <h2>Dashboard</h2>
-        <Link href="/create">
-          <Button>+ Create survey</Button>
-        </Link>
+        <Button onClick={createSurvey}>+ Create survey</Button>
       </div>
 
       <Group justify="space-between" mt="xl" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', paddingLeft: "20px", paddingRight: "20px" }}>
@@ -83,7 +80,7 @@ export default function Account() {
                   {formatTimestamp(survey.createdAt)}
                 </Text>
               </Text></div>
-            <div>{participants[index]}</div>
+            <div>{participants[survey.id]}</div>
             <div>-</div>
             <div>🔴<b>Live</b></div>
             <div>

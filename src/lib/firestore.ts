@@ -3,13 +3,13 @@ import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUn
 import { User } from "firebase/auth";
 import { Survey, Question, Answer } from "@/lib/types";
 
-export const saveSurvey = async (surveyTitle: string, questions: Question[], user : User) : Promise<string> => {
+export const saveSurvey = async (surveyTitle: string, surveyDescription: string, questions: Question[], user : User) : Promise<string> => {
   try {
     const survey: Survey = {
       createdAt: new Date(),
       author: user.uid,
       title: surveyTitle,
-      discription: '',
+      discription: surveyDescription,
       questions: questions
     };
 
@@ -39,7 +39,7 @@ export const fetchSurvey = async (surveyId: string): Promise<Survey | null> => {
   return null;
 };
 
-export const fetchUserSurveys = async (user : User) => {
+export const fetchUserSurveys = async (user : User): Promise<any[]> => {
   try {
     const userRef = doc(db, 'users', user.uid);
     const userDoc = await getDoc(userRef);
@@ -87,3 +87,21 @@ export const fetchSurveyAnswers = async (surveyId: string): Promise<Answer[]> =>
   }
   return [];
 };
+
+export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Record<string, number>> => {
+  try {
+    const resultsQuery = query(collection(db, 'results'), where('__name__', 'in', surveyIds));
+    const resultsSnapshot = await getDocs(resultsQuery);
+
+    const participantsMap: Record<string, number> = {};
+    resultsSnapshot.forEach(doc => {
+      participantsMap[doc.id] = doc.data().answers.length;
+    });
+
+    return participantsMap;
+  } catch (error) {
+    console.error('Error fetching all survey answers:', error);
+    return {};
+  }
+};
+

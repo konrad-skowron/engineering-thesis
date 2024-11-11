@@ -5,6 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { Loading } from '@/components/Loading';
 import { saveSurvey } from '@/lib/firestore';
 import { Question, QuestionType } from '@/lib/types';
+import { Container } from '@mantine/core';
 
 export default function Create() {
   const router = useRouter();
@@ -57,7 +58,7 @@ export default function Create() {
     if (!user) {
       return;
     }
-    const surveyId = await saveSurvey(surveyTitle, questions, user);
+    const surveyId = await saveSurvey(surveyTitle, surveyDescription, questions, user);
     router.push(`/${surveyId}`);
   };
 
@@ -66,7 +67,7 @@ export default function Create() {
   }
 
   return (
-    <>
+    <Container>
       <h1>Complete the below fields to create your survey</h1>
       <input
         type="text"
@@ -118,6 +119,6 @@ export default function Create() {
       <p></p>
       <button onClick={addQuestion}>Add Question</button>
       <button onClick={saveAndRedirect}>Save Survey</button>
-    </>
+    </Container>
   );
 }
