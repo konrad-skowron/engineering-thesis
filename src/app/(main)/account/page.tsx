@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 import { Loading } from '@/components/Loading';
 import { fetchUserSurveys, fetchSurveyAnswers } from '@/lib/firestore';
 import { IconDots } from '@tabler/icons-react';
+import { formatTimestamp } from "@/lib/utils";
 
 export default function Account() {
   const { user, loading, signingOut } = useAuth();
@@ -39,11 +40,6 @@ export default function Account() {
     }
   }, [user, loading, signingOut, router]);
 
-  const printTimestamp = (createdAt : any) => {
-    const date = new Date(createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1e6));
-    return date.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-  }
-
   if (!user) {
     return <Loading />;
   }
@@ -57,38 +53,40 @@ export default function Account() {
         </Link>
       </div>
 
-      <Group justify="space-between" mt="xl">
+      <Group justify="space-between" mt="xl" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', paddingLeft: "20px", paddingRight: "20px" }}>
         <div>Survey</div>
         <div>Participants</div>
         <div>Deadline</div>
         <div>Status</div>
-        <div></div>
+        <div style={{ visibility: "hidden" }}>
+          <Button variant="subtle" color="gray" size="xs">
+            <IconDots />
+          </Button>
+        </div>
       </Group>
 
-      <div>
-        {surveys.map((survey, index) => (
-          <div key={index} style={{ border: '1px solid gray', borderRadius: '10px', padding: '10px', marginTop: '10px', backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))' }}>
-            <Link href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <Group justify="space-between" mt={0}>
-                <div>
-                  <Text fw={500} size="m" lh={1} mr={3}>
-                    {survey.title}
-                    <br />
-                    <Text size="xs" c="dimmed" component="span">
-                      {printTimestamp(survey.createdAt)}
-                    </Text>
-                  </Text></div>
-                <div>{participants[index]}</div>
-                <div>-</div>
-                <div>🔴<b>Live</b></div>
-                <div>
-                  <Button variant="subtle" color="gray" size="xs"><IconDots /></Button>
-                </div>
-              </Group>
-            </Link>
-          </div>
-        ))}
-      </div>
+      {surveys.map((survey, index) => (
+        <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+          <Group justify="space-between" mt="lg" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', border: '1px solid gray', borderRadius: '10px', padding: '20px', backgroundColor: 'light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8))' }}>
+            <div>
+              <Text fw={500} size="m" lh={1} mr={3}>
+                {survey.title}
+                <br />
+                <Text size="xs" c="dimmed" component="span">
+                  {formatTimestamp(survey.createdAt)}
+                </Text>
+              </Text></div>
+            <div>{participants[index]}</div>
+            <div>-</div>
+            <div>🔴<b>Live</b></div>
+            <div>
+              <Button variant="subtle" color="gray" size="xs">
+                <IconDots />
+              </Button>
+            </div>
+          </Group>
+        </Link>
+      ))}
     </Container>
   );
 }
