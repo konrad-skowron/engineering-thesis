@@ -1,5 +1,5 @@
 'use client'
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { saveSurvey } from '@/lib/firestore';
@@ -141,6 +141,7 @@ export default function Create() {
   
                 <Select
                   label="Type"
+                  allowDeselect={false}
                   placeholder="Select question type"
                   value={q.type}
                   w="20rem"

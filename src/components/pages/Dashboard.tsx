@@ -87,7 +87,7 @@ export default function Dashboard() {
         </Group>
 
         {surveys.length === 0 && !gettingSurveys &&
-          <Text mt="xl" pl="10px">You have not created any surveys yet.</Text>}
+          <Text mt="sm" pl="10px">You have not created any surveys yet.</Text>}
 
         {surveys.map((survey, index) => (
           <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>

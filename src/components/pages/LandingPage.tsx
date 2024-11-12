@@ -1,5 +1,5 @@
 import { Container, Text, Button, Group, ThemeIcon, SimpleGrid, rem } from '@mantine/core';
-import { IconBrandOpenSource, IconBrandTypescript, IconAdCircleOff } from '@tabler/icons-react';
+import { IconBrandOpenSource, IconShieldCheck, IconAdCircleOff } from '@tabler/icons-react';
 import classes from './LandingPage.module.css';
 import Link from 'next/link';
 
@@ -7,18 +7,18 @@ const features = [
   {
     icon: IconBrandOpenSource,
     title: 'Free and open source',
-    description: 'All packages are published under MIT license, you can use Mantine in any project',
+    description: 'No hidden costs or subscription fees, published under MIT license',
   },
   {
-    icon: IconBrandTypescript,
-    title: 'TypeScript based',
-    description: 'Build type safe applications, all components and hooks export types',
+    icon: IconShieldCheck,
+    title: 'Privacy-focused',
+    description: 'No intrusive tracking or analytics—prioritizing user privacy and providing fluent survey experience',
   },
   {
     icon: IconAdCircleOff,
     title: 'No annoying ads',
     description:
-      'With new focus-visible selector focus ring will appear only when user navigates with keyboard',
+      'Enjoy a clean, distraction-free experience with absolutely no advertisements',
   }
 ];
 
@@ -55,8 +55,9 @@ export function LandingPage() {
         </h1>
 
         <Text className={classes.description} c="dimmed">
-          Build fully functional accessible web applications with ease. Service includes more than
-          100 customizable components and hooks to cover you in any situation
+          Build fully functional and accessible web surveys with ease. 
+          The service includes all the needed tools for conducting surveys 
+          using a continuous as well as a discrete Likert scale.
         </Text>
 
         <SimpleGrid cols={3} spacing="xl" mt="xl">
