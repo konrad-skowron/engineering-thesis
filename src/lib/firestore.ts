@@ -89,15 +89,22 @@ export const fetchSurveyAnswers = async (surveyId: string): Promise<Answer[]> =>
 };
 
 export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Record<string, number>> => {
+  if (surveyIds.length === 0) {
+    return {};
+  }
   try {
     const resultsQuery = query(collection(db, 'results'), where('__name__', 'in', surveyIds));
     const resultsSnapshot = await getDocs(resultsQuery);
 
     const participantsMap: Record<string, number> = {};
     resultsSnapshot.forEach(doc => {
-      participantsMap[doc.id] = doc.data().answers.length;
+      participantsMap[doc.id] = doc.data().answers.length || 0;
     });
-
+    surveyIds.forEach(surveyId => {
+      if (!participantsMap[surveyId]) {
+        participantsMap[surveyId] = 0;
+      }
+    });
     return participantsMap;
   } catch (error) {
     console.error('Error fetching all survey answers:', error);

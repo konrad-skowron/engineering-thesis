@@ -28,6 +28,7 @@ export default function Account() {
       const surveyIds = fetchedSurveys.map(survey => survey.id);
       const participantsMap = await fetchAllSurveyParticipants(surveyIds);
       setParticipants(participantsMap);
+      console.warn("FETCHED PARTICIPANTS: ", participantsMap);
 
       setGettingSurveys(false);
     };
@@ -63,11 +64,11 @@ export default function Account() {
         <Button onClick={createSurvey}>+ Create survey</Button>
       </div>
 
-      <Group justify="space-between" mt="xl" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', paddingLeft: "20px", paddingRight: "20px" }}>
-        <div>Survey</div>
-        <div>Participants</div>
-        <div>Deadline</div>
-        <div>Status</div>
+      <Group justify="space-between" mt="xl" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto', paddingLeft: "10px", paddingRight: "20px" }}>
+        <b>Survey</b>
+        <b>Participants</b>
+        <b>Deadline</b>
+        <b>Status</b>
         <div style={{ visibility: "hidden" }}>
           <Button variant="subtle" color="gray" size="xs">
             <IconDots />
@@ -88,7 +89,7 @@ export default function Account() {
               </Text></div>
             <div>{participants[survey.id]}</div>
             <div>-</div>
-            <div>🔴<b>Live</b></div>
+            <b>🔴 Live</b>
             <div>
               <Button variant="subtle" color="gray" size="xs">
                 <IconDots />

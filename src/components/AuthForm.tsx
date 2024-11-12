@@ -112,22 +112,15 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
               error={form.errors.password && 'Password should include at least 6 characters'}
               radius="md"
             />
-
-            {type === 'sign up' && (
-              <Checkbox
-                mt="xs"
-                required
-                label="I accept terms and conditions"
-                onChange={(event) => form.setFieldValue('terms', event.currentTarget.checked)}
-              />
-            )}
           </Stack>
 
           <Group justify="space-between" mt="lg">
             <Checkbox label="Remember me" />
-            <Anchor component="button" size="sm">
-              Forgot password?
-            </Anchor>
+            {type === 'log in' && (
+              <Anchor component="button" size="sm">
+                Forgot password?
+              </Anchor>
+            )}
           </Group>
 
           <Group justify="space-between" mb="lg" mt="xl">

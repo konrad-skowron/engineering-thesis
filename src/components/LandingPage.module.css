@@ -1,7 +1,7 @@
 .wrapper {
   position: relative;
   box-sizing: border-box;
-  background-color: light-dark(var(--mantine-color-white), var(--mantine-color-dark-8));
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
   margin-top: rem(-40px);
   margin-bottom: rem(-40px);
   padding-left: rem(5px);
