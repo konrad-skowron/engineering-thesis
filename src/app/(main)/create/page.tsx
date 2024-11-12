@@ -4,7 +4,21 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { saveSurvey } from '@/lib/firestore';
 import { Question, QuestionType } from '@/lib/types';
-import { Container } from '@mantine/core';
+import { 
+  Container,
+  Title,
+  TextInput,
+  Textarea,
+  Select,
+  Button,
+  Paper,
+  Stack,
+  Group,
+  Box,
+  ActionIcon,
+  Text
+} from '@mantine/core';
+import { IconPlus, IconTrash } from '@tabler/icons-react';
 import RouteProtector from '@/components/auth/RouteProtector';
 
 export default function Create() {
@@ -12,7 +26,7 @@ export default function Create() {
   const { user } = useAuth();
   const [surveyTitle, setSurveyTitle] = useState<string>('');
   const [surveyDescription, setSurveyDescription] = useState<string>('');
-  const [questions, setQuestions] = useState<Question[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([{ type: 'text', question: '', required: false }]);
 
   const addQuestion = () => {
     setQuestions([...questions, { type: 'text', question: '', required: false }]);
@@ -48,6 +62,26 @@ export default function Create() {
     setQuestions(updatedQuestions);
   };
 
+  const removeQuestion = (indexToRemove: number) => {
+    setQuestions((prevQuestions: Question[]) => 
+      prevQuestions.filter((_, index) => index !== indexToRemove)
+    );
+  };
+  
+  const removeOption = (questionIndex: number, optionIndex: number) => {
+    setQuestions((prevQuestions: Question[]) => 
+      prevQuestions.map((question, qIndex) => {
+        if (qIndex === questionIndex && question.options) {
+          return {
+            ...question,
+            options: question.options.filter((_, oIndex) => oIndex !== optionIndex)
+          };
+        }
+        return question;
+      })
+    );
+  };
+
   const saveAndRedirect = async () => {
     if (!user) {
       return;
@@ -58,58 +92,122 @@ export default function Create() {
 
   return (
     <RouteProtector>
-      <Container>
-        <h1>Complete the below fields to create your survey</h1>
-        <input
-          type="text"
-          value={surveyTitle}
-          onChange={(e) => setSurveyTitle(e.target.value)}
-          placeholder="Title"
-        />
-        <input
-          type="text"
-          value={surveyDescription}
-          onChange={(e) => setSurveyDescription(e.target.value)}
-          placeholder="Description"
-        />
-        {questions.map((q, index) => (
-          <p key={index}>
-            <input
-              type="text"
-              value={q.question}
-              onChange={(e) => updateQuestion(index, 'question', e.target.value)}
-              placeholder="Question"
-            />
-            <select
-              value={q.type}
-              onChange={(e) => updateQuestion(index, 'type', e.target.value)}
+      <Container size="md" py="xl">
+        <Stack gap="lg">
+          <Title order={2}>Create a Survey</Title>
+          <Text c="dimmed">Complete the below fields to create your survey.</Text>
+          
+          <Paper shadow="xs" p="md" withBorder>
+            <Stack gap="md">
+              <TextInput
+                size='md'
+                label="Title"
+                placeholder="Enter survey title"
+                value={surveyTitle}
+                onChange={(e) => setSurveyTitle(e.target.value)}
+                required
+              />
+              
+              <Textarea
+                label="Description"
+                description="(optional)"
+                value={surveyDescription}
+                onChange={(e) => setSurveyDescription(e.target.value)}
+                minRows={4}
+              />
+            </Stack>
+          </Paper>
+  
+          {questions.map((q, index) => (
+            <Paper key={index} shadow="xs" p="md" withBorder>
+              <Stack gap="md">
+                <Group justify="space-between">
+                  <Title order={4}>Question {index + 1}</Title>
+                  <ActionIcon 
+                    color="red" 
+                    variant="subtle"
+                    onClick={() => removeQuestion(index)}
+                  >
+                    <IconTrash size={18} />
+                  </ActionIcon>
+                </Group>
+  
+                <TextInput
+                  placeholder="Enter your question"
+                  value={q.question}
+                  onChange={(e) => updateQuestion(index, 'question', e.target.value)}
+                  required
+                />
+  
+                <Select
+                  label="Type"
+                  placeholder="Select question type"
+                  value={q.type}
+                  w="20rem"
+                  onChange={(value: any) => updateQuestion(index, 'type', value)}
+                  data={[
+                    { value: 'text', label: 'Text Response' },
+                    { value: 'singleChoice', label: 'Single Choice' },
+                    { value: 'multipleChoice', label: 'Multiple Choice' },
+                    { value: 'ranking', label: 'Ranking' },
+                    { value: 'discreteScale', label: 'Discrete Scale' },
+                    { value: 'continousScale', label: 'Continuous Scale' }
+                  ]}
+                />
+  
+                {q.type === 'multipleChoice' && (
+                  <Box>
+                    <Title order={6} mb="xs">Options</Title>
+                    <Stack gap="xs">
+                      {q.options?.map((option, optionIndex) => (
+                        <Group key={optionIndex} gap="xs">
+                          <TextInput
+                            style={{ flex: 1 }}
+                            placeholder={`Option ${optionIndex + 1}`}
+                            value={option}
+                            onChange={(e) => updateOption(index, optionIndex, e.target.value)}
+                          />
+                          <ActionIcon 
+                            color="red" 
+                            variant="subtle"
+                            onClick={() => removeOption(index, optionIndex)}
+                          >
+                            <IconTrash size={18} />
+                          </ActionIcon>
+                        </Group>
+                      ))}
+                      <Button 
+                        variant="light" 
+                        leftSection={<IconPlus size={14} />}
+                        onClick={() => addOption(index)}
+                        size="xs"
+                      >
+                        Add Option
+                      </Button>
+                    </Stack>
+                  </Box>
+                )}
+              </Stack>
+            </Paper>
+          ))}
+  
+          <Group>
+            <Button
+              variant="default"
+              leftSection={<IconPlus size={14} />}
+              onClick={addQuestion}
             >
-              <option value="text">Text</option>
-              <option value="singleChoice">Single Choice</option>
-              <option value="multipleChoice">Multiple Choice</option>
-              <option value="ranking">Ranking</option>
-              <option value="discreteScale">Discrete Scale</option>
-              <option value="continousScale">Continous Scale</option>
-            </select>
-            {q.type === 'multipleChoice' && (
-              <div>
-                {q.options?.map((option, optionIndex) => (
-                  <input
-                    key={optionIndex}
-                    type="text"
-                    value={option}
-                    onChange={(e) => updateOption(index, optionIndex, e.target.value)}
-                    placeholder={`Option ${optionIndex + 1}`}
-                  />
-                ))}
-                <button type="button" onClick={() => addOption(index)}>Add Option</button>
-              </div>
-            )}
-          </p>
-        ))}
-        <p></p>
-        <button onClick={addQuestion}>Add Question</button>
-        <button onClick={saveAndRedirect}>Save Survey</button>
+              Add question
+            </Button>
+  
+            <Button
+              color="blue"
+              onClick={saveAndRedirect}
+            >
+              Create survey
+            </Button>
+          </Group>
+        </Stack>
       </Container>
     </RouteProtector>
   );

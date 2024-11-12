@@ -22,7 +22,7 @@ export default function AccountSettings() {
       <Container>
         <div>
           <h2>Settings</h2>
-          <Button variant="light" color="red" leftSection={<IconTrash />} onClick={handleDeleteAccount}>Delete account</Button>
+          <Button variant="light" color="red" leftSection={<IconTrash size={14} />} onClick={handleDeleteAccount}>Delete account</Button>
         </div>
       </Container>
     </RouteProtector>

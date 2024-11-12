@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyAnswers } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Answer } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea } from '@mantine/core';
 
 export default function ResultsPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -81,7 +81,7 @@ export default function ResultsPage(props: { params: Promise<{ surveyId: string 
 
             {question.type === 'multipleChoice' ? (
               <Stack gap="sm">
-                {Object.entries(calculateResults(index) || {}).map(([option, data]) => (
+                {Object.entries(calculateResults(index) || { 'No responses yet.': { count: 0, percentage: 0 } }).map(([option, data]) => (
                   <Box key={option}>
                     <Group pos="absolute">
                       <Text>{option}</Text>
@@ -103,9 +103,11 @@ export default function ResultsPage(props: { params: Promise<{ surveyId: string 
               </Stack>
             ) : (
               <Stack gap="xs">
-                {(calculateResults(index) as string[] || []).map((answer, i) => (
-                  <Text key={i}>{answer}</Text>
-                ))}
+                <ScrollArea h={150} type="auto">
+                  {(calculateResults(index) as string[] || ['No responses yet.']).map((answer, i) => (
+                    <Text key={i}>{answer}</Text>
+                  ))}
+                </ScrollArea>
               </Stack>
             )}
           </Paper>
@@ -117,7 +119,7 @@ export default function ResultsPage(props: { params: Promise<{ surveyId: string 
         mt="xl"
         variant="outline"
       >
-        Back to Survey
+        Back to survey
       </Button>
     </Container>
   );

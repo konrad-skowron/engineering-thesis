@@ -2,11 +2,11 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Container, Button, Group, Text } from '@mantine/core';
+import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/auth/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firestore';
-import { IconDots } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconShare, IconEraser, IconPlus } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 
@@ -16,6 +16,7 @@ export default function Dashboard() {
   const [surveys, setSurveys] = useState<any[]>([]);
   const [participants, setParticipants] = useState<Record<string, number>>({});
   const [gettingSurveys, setGettingSurveys] = useState(true);
+  const [openSurveyMenu, setOpenSurveyMenu] = useState<string | null>(null);
 
   useEffect(() => {
     const getSurveys = async () => {
@@ -47,12 +48,30 @@ export default function Dashboard() {
     router.push('/create');
   };
 
+  const copyLink = (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const link = window.location.href.replace(window.location.pathname, `/${surveyId}`);
+    navigator.clipboard.writeText(link);
+    alert('Survey link copied to clipboard');
+  };
+
+  const deleteSurvey = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (confirm('Are you sure you want to delete this survey?')) {
+
+    }
+  };
+
   return (
     <RouteProtector>
       <Container>
         <div>
-          <h2>Dashboard</h2>
-          <Button onClick={createSurvey}>+ Create survey</Button>
+          <Title order={2}>Dashboard</Title>
+          <Button onClick={createSurvey} leftSection={<IconPlus size={14} />} mt="lg">
+            Create survey
+          </Button>
         </div>
 
         <Group justify="space-between" mt="xl" pl="10px" pr="20px" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto' }}>
@@ -61,9 +80,9 @@ export default function Dashboard() {
           <b>Deadline</b>
           <b>Status</b>
           <div style={{ visibility: "hidden" }}>
-            <Button variant="subtle" color="gray" size="xs">
+            <ActionIcon variant="subtle" color="gray" radius="xl" c="dimmed">
               <IconDots />
-            </Button>
+            </ActionIcon>
           </div>
         </Group>
 
@@ -85,9 +104,37 @@ export default function Dashboard() {
               <div>-</div>
               <b>🔴 Live</b>
               <div>
-                <Button variant="subtle" color="gray" size="xs">
-                  <IconDots />
-                </Button>
+                <Menu
+                  opened={openSurveyMenu === survey.id}
+                  onClose={() => setOpenSurveyMenu(null)}
+                  trigger="click"
+                  position="bottom-end"
+                  withinPortal
+                >
+                  <Menu.Target>
+                    <ActionIcon variant="subtle" color="gray" radius="xl" c="dimmed"
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setOpenSurveyMenu(openSurveyMenu === survey.id ? null : survey.id);
+                      }}>
+                      <IconDots />
+                    </ActionIcon>
+                  </Menu.Target>
+                  <Menu.Dropdown>
+                    <Menu.Item leftSection={<IconShare size={14} />}
+                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
+                      Share
+                    </Menu.Item>
+
+                    <Menu.Divider />
+                    
+                    <Menu.Item leftSection={<IconTrash size={14} />} color="red"
+                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => deleteSurvey(e, survey.id)}>
+                      Delete survey
+                    </Menu.Item>
+                  </Menu.Dropdown>
+                </Menu>
               </div>
             </Group>
           </Link>
