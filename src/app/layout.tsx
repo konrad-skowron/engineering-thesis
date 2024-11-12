@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
-import { AuthProvider } from '@/components/AuthProvider';
+import { AuthProvider } from '@/components/auth/AuthProvider';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

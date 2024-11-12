@@ -16,8 +16,8 @@ import {
   Container,
   Title
 } from '@mantine/core';
-import { GoogleButton } from './GoogleButton';
-import { useAuth } from '@/components/AuthProvider';
+import { GoogleButton } from '@/components/GoogleButton';
+import { useAuth } from '@/components/auth/AuthProvider';
 import classes from './AuthForm.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

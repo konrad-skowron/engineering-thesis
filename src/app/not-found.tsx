@@ -1,4 +1,4 @@
-import Error from "@/components/Error"
+import Error from "@/components/pages/Error"
 
 export default function NotFound() {
   return (

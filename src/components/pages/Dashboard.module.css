@@ -1,0 +1,12 @@
+.survey {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  justify: space-between;
+  border: 1px solid gray;
+  border-radius: 10px;
+  background-color: light-dark(var(--mantine-color-gray-0), var(--mantine-color-dark-8));
+}
+
+.survey:hover {
+  border: 1px solid light-dark(var(--mantine-color-dark-8), var(--mantine-color-gray-0));
+}

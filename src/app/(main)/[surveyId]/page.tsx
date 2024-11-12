@@ -5,7 +5,7 @@ import React, { useState, useEffect, use } from 'react';
 import { fetchSurvey, saveSurveyAnswers } from '@/lib/firestore';
 import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { Button, Container, Group } from '@mantine/core';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {

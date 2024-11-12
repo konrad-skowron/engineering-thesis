@@ -46,7 +46,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logIn = async (email : string, password : string) => {
     setLoading(true);
-    setSigningOut(false);
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
@@ -57,7 +56,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const signUp = async (email : string, password : string) => {
     setLoading(true);
-    setSigningOut(false);
     try {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
@@ -68,7 +66,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   const logInWithGoogle = async () => {
     setLoading(true);
-    setSigningOut(false);
     const provider = new GoogleAuthProvider();
   
     try {

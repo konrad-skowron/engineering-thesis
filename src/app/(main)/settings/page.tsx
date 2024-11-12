@@ -1,4 +1,4 @@
-import AccountSettings from '@/components/AccountSettings';
+import AccountSettings from '@/components/pages/AccountSettings';
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {

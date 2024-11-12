@@ -26,7 +26,7 @@ import {
   SimpleGrid
 } from '@mantine/core';
 import Link from "next/link";
-import { useAuth } from '@/components/AuthProvider';
+import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 
 const links = [
