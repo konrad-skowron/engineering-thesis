@@ -104,14 +104,21 @@ export function Header() {
 
           <Skeleton visible={loading} width={loading ? '20%' : 'auto'} height={loading ? 35 : 'auto'}>
             {!user && !loading ? (
-              <Group>
-                <Link href="/login" style={{ textDecoration: 'none' }}>
-                  <Button variant="default">Log in</Button>
-                </Link>
-                <Link href="/register" style={{ textDecoration: 'none' }}>
-                  <Button visibleFrom="xs">Sign up</Button>
-                </Link>
-              </Group>
+              <>
+                <Group visibleFrom="xs">
+                  <Link href="/login" style={{ textDecoration: 'none' }}>
+                    <Button variant="default">Log in</Button>
+                  </Link>
+                  <Link href="/register" style={{ textDecoration: 'none' }}>
+                    <Button>Sign up</Button>
+                  </Link>
+                </Group>
+                <Group hiddenFrom="xs" gap={0}>
+                  <Link href="/login" style={{ textDecoration: 'none' }}>
+                    <Button variant="default">Log in</Button>
+                  </Link>
+                </Group>
+              </>
             ) : (
               <Group justify="space-between">
                 <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
