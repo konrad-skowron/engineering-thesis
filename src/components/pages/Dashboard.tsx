@@ -107,8 +107,9 @@ export default function Dashboard() {
               <div>
                 <ActionIcon variant="transparent" color="gray" hiddenFrom="xs">
                   <IconUsers size={15} />
+                  {participants[survey.id]}
                 </ActionIcon>
-                {participants[survey.id]}
+                <Text visibleFrom="xs">{participants[survey.id]}</Text>
               </div>
               <div>-</div>
               <div>🔴Live</div>
