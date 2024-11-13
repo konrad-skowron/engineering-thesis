@@ -6,7 +6,7 @@ import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantin
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/auth/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firestore';
-import { IconDots, IconTrash, IconShare, IconEraser, IconPlus } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 
@@ -74,7 +74,7 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        <Group justify="space-between" mt="xl" pl="10px" pr="20px" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto' }}>
+        <Group visibleFrom="xs" justify="space-between" mt="xl" pl="10px" pr="20px" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto' }}>
           <b>Survey</b>
           <b>Participants</b>
           <b>Deadline</b>
@@ -84,6 +84,9 @@ export default function Dashboard() {
               <IconDots />
             </ActionIcon>
           </div>
+        </Group>
+        <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="10px" pr="20px">
+          <b>Survey</b>
         </Group>
 
         {surveys.length === 0 && !gettingSurveys &&
@@ -99,10 +102,16 @@ export default function Dashboard() {
                   <Text size="xs" c="dimmed" component="span">
                     {formatTimestamp(survey.createdAt)}
                   </Text>
-                </Text></div>
-              <div>{participants[survey.id]}</div>
+                </Text>
+              </div>
+              <div>
+                <ActionIcon variant="transparent" color="gray" hiddenFrom="xs">
+                  <IconUsers size={15} />
+                </ActionIcon>
+                {participants[survey.id]}
+              </div>
               <div>-</div>
-              <b>🔴 Live</b>
+              <div>🔴Live</div>
               <div>
                 <Menu
                   opened={openSurveyMenu === survey.id}
@@ -123,14 +132,14 @@ export default function Dashboard() {
                   </Menu.Target>
                   <Menu.Dropdown>
                     <Menu.Item leftSection={<IconShare size={14} />}
-                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
                       Share
                     </Menu.Item>
 
                     <Menu.Divider />
-                    
+
                     <Menu.Item leftSection={<IconTrash size={14} />} color="red"
-                     onClick={(e: React.MouseEvent<HTMLButtonElement>) => deleteSurvey(e, survey.id)}>
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => deleteSurvey(e, survey.id)}>
                       Delete survey
                     </Menu.Item>
                   </Menu.Dropdown>
