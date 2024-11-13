@@ -55,7 +55,7 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
               <Input
                 type="text"
                 value={answers[index] || ''}
-                onChange={(e) => handleInputChange(index, e.target.value)}
+                onChange={(e: any) => handleInputChange(index, e.target.value)}
                 required
               />
             ) : question.type === 'multipleChoice' && (
@@ -67,7 +67,7 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
                       name={`question-${index}`}
                       value={option}
                       checked={answers[index] === option}
-                      onChange={(e) => handleInputChange(index, e.target.value)}
+                      onChange={(e: any) => handleInputChange(index, e.target.value)}
                       required
                     />
                     {option}
