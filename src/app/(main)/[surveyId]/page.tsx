@@ -6,7 +6,7 @@ import { fetchSurvey, saveSurveyAnswers } from '@/lib/firestore';
 import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Button, Container, Group } from '@mantine/core';
+import { Button, Container, Group, Input } from '@mantine/core';
 
 export default function SurveyPage(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -52,7 +52,7 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
           <div key={index} className="question-container">
             <h3>{question.question}</h3>
             {question.type === 'text' ? (
-              <input
+              <Input
                 type="text"
                 value={answers[index] || ''}
                 onChange={(e) => handleInputChange(index, e.target.value)}
@@ -62,7 +62,7 @@ export default function SurveyPage(props: { params: Promise<{ surveyId: string }
               <div>
                 {question.options?.map((option, optionIndex) => (
                   <label key={optionIndex}>
-                    <input
+                    <Input
                       type="radio"
                       name={`question-${index}`}
                       value={option}
