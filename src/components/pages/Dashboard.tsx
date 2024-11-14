@@ -9,6 +9,7 @@ import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firestore';
 import { IconDots, IconTrash, IconShare, IconUsers, IconPlus } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
+import LiveDot from "../LiveDot";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -112,7 +113,7 @@ export default function Dashboard() {
                 <Text visibleFrom="xs">{participants[survey.id]}</Text>
               </div>
               <div>-</div>
-              <div>🔴Live</div>
+              <div><LiveDot /></div>
               <div>
                 <Menu
                   opened={openSurveyMenu === survey.id}
@@ -122,7 +123,7 @@ export default function Dashboard() {
                   withinPortal
                 >
                   <Menu.Target>
-                    <ActionIcon variant="subtle" color="gray" radius="xl" c="dimmed"
+                    <ActionIcon variant="subtle" color="gray" c="dimmed"
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.preventDefault();
                         e.stopPropagation();
