@@ -71,7 +71,7 @@ export default function Dashboard() {
       <Container>
         <div>
           <Title order={2}>Dashboard</Title>
-          <Button onClick={createSurvey} leftSection={<IconPlus size={14} />} mt="lg">
+          <Button onClick={createSurvey} leftSection={<IconPlus size={14} />} mt="lg" mb="xs">
             Create survey
           </Button>
         </div>
@@ -97,10 +97,10 @@ export default function Dashboard() {
           <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
             <Group mt="md" p="25px" className={classes.survey}>
               <div>
-                <Text fw={500} size="m" lh={1} mr={3}>
+                <Text fw={500} lh={1} mr={3}>
                   {survey.title}
                   <br />
-                  <Text size="xs" c="dimmed" component="span">
+                  <Text size="sm" c="dimmed" component="span">
                     {formatTimestamp(survey.createdAt)}
                   </Text>
                 </Text>
@@ -121,7 +121,7 @@ export default function Dashboard() {
                   withinPortal
                 >
                   <Menu.Target>
-                    <ActionIcon variant="subtle" color="gray" c="dimmed"
+                    <ActionIcon variant="subtle" color="gray" c="dimmed" radius="xl"
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
                         e.preventDefault();
                         e.stopPropagation();
