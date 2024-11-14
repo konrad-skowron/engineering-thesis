@@ -1,6 +1,6 @@
 .survey {
   display: grid;
-  grid-template-columns: 2fr 1fr 1fr 1fr auto;
+  grid-template-columns: 3fr 1fr 1fr auto;
   justify: space-between;
   border: 1px solid gray;
   border-radius: 10px;

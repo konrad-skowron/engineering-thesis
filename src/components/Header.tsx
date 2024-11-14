@@ -30,8 +30,8 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
 
 const links = [
-  { link: '/create', label: 'Create Survey' },
   { link: '/account', label: 'Dashboard' },
+  { link: '/create', label: 'Create Survey' },
   {
     link: '#1',
     label: 'Support',

@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { Survey, Question, Answer } from "@/lib/types";
 
@@ -111,4 +111,25 @@ export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Re
     return {};
   }
 };
+
+export const deleteSurvey = async (surveyId: string, user: User): Promise<boolean> => {
+  try {
+    const surveyRef = doc(db, 'surveys', surveyId);
+    await deleteDoc(surveyRef);
+
+    const userRef = doc(db, 'users', user.uid);
+    await setDoc(userRef, {
+      surveyIds: arrayRemove(surveyId),
+    }, { merge: true });
+
+    const resultsRef = doc(db, 'results', surveyId);
+    await deleteDoc(resultsRef);
+
+    return true;
+  } catch (e) {
+    console.error("Error deleting survey: ", e);
+    return false;
+  }
+};
+
 

@@ -5,7 +5,7 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/auth/RouteProtector';
-import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firestore';
+import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey } from '@/lib/firestore';
 import { IconDots, IconTrash, IconShare, IconUsers, IconPlus } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
@@ -57,11 +57,12 @@ export default function Dashboard() {
     alert('Survey link copied to clipboard');
   };
 
-  const deleteSurvey = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+  const handleDeleteSurvey = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (confirm('Are you sure you want to delete this survey?')) {
-
+    if (confirm('Are you sure you want to delete this survey?') && user) {
+      await deleteSurvey(surveyId, user);
+      setSurveys(surveys.filter(survey => survey.id !== surveyId));
     }
   };
 
@@ -75,10 +76,9 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        <Group visibleFrom="xs" justify="space-between" mt="xl" pl="10px" pr="20px" style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr 1fr auto' }}>
+        <Group visibleFrom="xs" justify="space-between" mt="xl" pl="10px" pr="25px" style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr auto' }}>
           <b>Survey</b>
           <b>Participants</b>
-          <b>Deadline</b>
           <b>Status</b>
           <div style={{ visibility: "hidden" }}>
             <ActionIcon variant="subtle" color="gray" radius="xl" c="dimmed">
@@ -86,7 +86,7 @@ export default function Dashboard() {
             </ActionIcon>
           </div>
         </Group>
-        <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="10px" pr="20px">
+        <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="10px" pr="25px">
           <b>Survey</b>
         </Group>
 
@@ -95,7 +95,7 @@ export default function Dashboard() {
 
         {surveys.map((survey, index) => (
           <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Group mt="md" p="20px" className={classes.survey}>
+            <Group mt="md" p="25px" className={classes.survey}>
               <div>
                 <Text fw={500} size="m" lh={1} mr={3}>
                   {survey.title}
@@ -107,12 +107,10 @@ export default function Dashboard() {
               </div>
               <div>
                 <ActionIcon variant="transparent" color="gray" hiddenFrom="xs">
-                  <IconUsers size={15} />
-                  {participants[survey.id]}
+                  <IconUsers size={15} />&nbsp;{participants[survey.id]}
                 </ActionIcon>
                 <Text visibleFrom="xs">{participants[survey.id]}</Text>
               </div>
-              <div>-</div>
               <div><LiveDot /></div>
               <div>
                 <Menu
@@ -141,7 +139,7 @@ export default function Dashboard() {
                     <Menu.Divider />
 
                     <Menu.Item leftSection={<IconTrash size={14} />} color="red"
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => deleteSurvey(e, survey.id)}>
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleDeleteSurvey(e, survey.id)}>
                       Delete survey
                     </Menu.Item>
                   </Menu.Dropdown>

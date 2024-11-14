@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react';
+import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
 
 const LiveDot = () => {
   const [visible, setVisible] = useState(true);
+  const { colorScheme } = useMantineColorScheme();
+  const theme = useMantineTheme();
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -14,8 +17,11 @@ const LiveDot = () => {
   return (
     <div style={{ display: 'flex',
                   alignItems: 'center',
-                  color: 'var(--mantine-color-red-7)', 
-                  backgroundColor: 'rgba(255, 168, 168, 0.1)', 
+                  color: theme.colors.red[7], 
+                  backgroundColor:
+                  colorScheme === 'dark'
+                    ? 'rgba(255, 168, 168, 0.1)'
+                    : 'rgba(255, 168, 168, 0.3)',
                   borderRadius: 'var(--mantine-radius-md)', 
                   width: 'fit-content', 
                   padding: '0 8px' }}>
@@ -25,7 +31,7 @@ const LiveDot = () => {
           width: '11px',
           height: '11px',
           borderRadius: '50%',
-          backgroundColor: 'var(--mantine-color-red-7)',
+          backgroundColor: theme.colors.red[7],
           opacity: visible ? 1 : 0.4,
           transition: 'opacity 1s ease',
         }}
