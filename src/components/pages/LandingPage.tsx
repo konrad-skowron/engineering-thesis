@@ -7,12 +7,12 @@ const features = [
   {
     icon: IconBrandOpenSource,
     title: 'Free and open source',
-    description: 'No hidden costs or subscription fees, published under MIT license',
+    description: 'No hidden costs or subscription fees. The source code is available on GitHub',
   },
   {
     icon: IconShieldCheck,
     title: 'Privacy-focused',
-    description: 'No intrusive tracking or analytics—prioritizing user privacy and providing fluent survey experience',
+    description: 'No intrusive tracking or analytics-prioritizing user privacy and providing fluent survey experience',
   },
   {
     icon: IconAdCircleOff,
@@ -47,14 +47,14 @@ export function LandingPage() {
     <div className={classes.wrapper}>
       <Container className={classes.inner}>
         <h1 className={classes.title}>
-          Conduct surveys using <br/>a{' '}
+          Conduct surveys using a{' '}
           <Text component="span" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }} inherit>
             continuous
           </Text>
           {' '}Likert scale
         </h1>
 
-        <Text className={classes.description} c="dimmed">
+        <Text className={classes.description} c="placeholder">
           Build fully functional and accessible web surveys with ease. 
           The service includes all the needed tools for conducting surveys 
           using a continuous as well as a discrete Likert scale.

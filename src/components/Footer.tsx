@@ -12,7 +12,7 @@ export function Footer() {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <Text c="dimmed" size="sm">
-          © 2024 Konrad Skowron. All rights reserved.
+          Build by Konrad Skowron.
         </Text>
 
         <Group gap={0} className={classes.links} justify="flex-end" wrap="nowrap">
