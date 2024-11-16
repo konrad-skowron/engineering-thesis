@@ -4,15 +4,17 @@ import { useRouter } from 'next/navigation';
 import { Container, Button, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import RouteProtector from '@/components/auth/RouteProtector';
+import { deleteAllUserData } from '@/lib/firestore';
 
 export default function AccountSettings() {
-  const { signOut } = useAuth();
+  const { user, deleteAccount } = useAuth();
   const router = useRouter();
 
   const handleDeleteAccount = () => {
-    if (confirm('Are you sure you want to delete your account?')) {
+    if (confirm('Are you sure you want to delete your account?') && user) {
+      deleteAllUserData(user);
+      deleteAccount();
       router.push("/");
-      signOut();
       alert("Account successfully deleted");
     }
   };

@@ -8,26 +8,32 @@ import {
   onAuthStateChanged,
   User,
   createUserWithEmailAndPassword,
+  deleteUser,
+  sendPasswordResetEmail
 } from "firebase/auth";
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
+  signingOut: boolean;
   logIn: (email : string, password : string) => Promise<void>;
   signUp: (email : string, password : string) => Promise<void>;
   logInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
-  signingOut: boolean;
+  deleteAccount: () => Promise<void>;
+  resetPassword: (email : string) => Promise<void>;
 }
 
 const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
+  signingOut: false,
   logIn: (email : string, password : string) => Promise.resolve(),
   signUp: (email : string, password : string) => Promise.resolve(),
   logInWithGoogle: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
-  signingOut: false,
+  deleteAccount: () => Promise.resolve(),
+  resetPassword: (email : string) => Promise.resolve()
 });
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
@@ -49,7 +55,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      alert("Error loging in: " + error);
+      alert("Error loging in" + error);
       throw error;
     }
   };
@@ -59,7 +65,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      alert("Error signing in: " + error);
+      alert("Error signing in" + error);
       throw error;
     }
   };
@@ -85,8 +91,27 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   }
 
+  const deleteAccount = async () => {
+    setLoading(true);
+    try {
+      if (user) {
+        await deleteUser(user);
+      }
+    } catch (error) {
+      console.error("Error deleting account", error);
+    }
+  }
+
+  const resetPassword = async (email : string) => {
+    try {
+      await sendPasswordResetEmail(auth, email);
+    } catch (error) {
+      console.error("Error resetting password", error);
+    }
+  }
+
   return (
-    <AuthContext.Provider value={{ user, loading, logIn, signUp, logInWithGoogle, signOut, signingOut }}>
+    <AuthContext.Provider value={{ user, loading, signingOut, logIn, signUp, logInWithGoogle, signOut, deleteAccount, resetPassword }}>
       {children}
     </AuthContext.Provider>
   );

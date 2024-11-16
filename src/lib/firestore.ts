@@ -35,7 +35,7 @@ export const fetchSurvey = async (surveyId: string): Promise<Survey | null> => {
       return docSnap.data() as Survey;
     }
   } catch (error) {
-    console.error('Error fetching survey:', error);
+    console.error('Error fetching survey: ', error);
   }
   return null;
 };
@@ -84,7 +84,7 @@ export const fetchSurveyAnswers = async (surveyId: string): Promise<Answer[]> =>
       return docSnap.data().answers || [];
     }
   } catch (error) {
-    console.error('Error fetching survey answers:', error);
+    console.error('Error fetching survey answers: ', error);
   }
   return [];
 };
@@ -132,3 +132,11 @@ export const deleteSurvey = async (surveyId: string, user: User): Promise<boolea
     return false;
   }
 };
+
+export const deleteAllUserData = async (user: User) => {
+  const surveys = await fetchUserSurveys(user);
+  for (const survey of surveys) {
+    await deleteSurvey(survey.id, user);
+  }
+  await deleteDoc(doc(db, 'users', user.uid));
+}
