@@ -20,7 +20,7 @@ export default function ResetPasswordForm() {
   const router = useRouter();
 
   useEffect(() => {
-    if (user && user.uid !== null && user.uid !== undefined) {
+    if (user) {
       router.replace('/account');
     }
   }, [user, router]);

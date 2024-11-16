@@ -56,6 +56,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       alert("Error loging in" + error);
+      setLoading(false);
       throw error;
     }
   };
@@ -66,6 +67,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       alert("Error signing in" + error);
+      setLoading(false);
       throw error;
     }
   };
@@ -73,11 +75,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const logInWithGoogle = async () => {
     setLoading(true);
     const provider = new GoogleAuthProvider();
-  
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Error signing in with Google", error);
+      setLoading(false);
     }
   }
 
@@ -88,17 +90,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       return auth.signOut();
     } catch (error) {
       console.error("Error signing out with Google", error);
+      setLoading(false);
     }
   }
 
   const deleteAccount = async () => {
-    setLoading(true);
     try {
       if (user) {
+        setLoading(true);
         await deleteUser(user);
       }
     } catch (error) {
       console.error("Error deleting account", error);
+      setLoading(false);
     }
   }
 

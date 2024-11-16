@@ -31,7 +31,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
   const router = useRouter();
 
   useEffect(() => {
-    if (user && user.uid !== null && user.uid !== undefined) {
+    if (user) {
       router.replace('/account');
     }
   }, [user, router]);
@@ -56,12 +56,10 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
     } else {
       await signUp(form.values.email, form.values.password);
     }
-    router.replace('/account');
   };
 
   const handleGoogleSignIn = async () => {
     await logInWithGoogle();
-    router.replace('/account');
   };
 
   const handleForgotPassword = (e: any) => {
@@ -129,7 +127,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
           </Stack>
 
           <Group justify="space-between" mt="lg">
-            <Checkbox label="Remember me" />
+            <Checkbox defaultChecked label="Remember me" />
             {type === 'log in' && (
               <Anchor component="button" size="sm" onClick={(e: any) => handleForgotPassword(e)}>
                 Forgot password?
