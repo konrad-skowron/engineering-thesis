@@ -82,7 +82,7 @@ export default function Dashboard() {
           </Button>
         </div>
 
-        <Group visibleFrom="xs" justify="space-between" mt="xl" pl="10px" pr="25px" style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr auto' }}>
+        <Group visibleFrom="xs" justify="space-between" mt="xl" pl="25px" pr="25px" style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr auto' }}>
           <b>Survey</b>
           <b>Participants</b>
           <b>Status</b>
@@ -92,12 +92,12 @@ export default function Dashboard() {
             </ActionIcon>
           </div>
         </Group>
-        <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="10px" pr="25px">
+        <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="25px" pr="25px">
           <b>Survey</b>
         </Group>
 
         {surveys.length === 0 && !gettingSurveys &&
-          <Text mt="sm" pl="10px">You have not created any surveys yet.</Text>}
+          <Text mt="md" pl="25px">You have not created any surveys yet.</Text>}
 
         {surveys.map((survey, index) => (
           <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>

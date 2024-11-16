@@ -1,7 +1,7 @@
 'use client'
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
-import { Container, Button } from '@mantine/core';
+import { Container, Button, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import RouteProtector from '@/components/auth/RouteProtector';
 
@@ -21,8 +21,8 @@ export default function AccountSettings() {
     <RouteProtector>
       <Container>
         <div>
-          <h2>Settings</h2>
-          <Button variant="light" color="red" leftSection={<IconTrash size={14} />} onClick={handleDeleteAccount}>Delete account</Button>
+          <Title order={2}>Settings</Title>
+          <Button variant="light" color="red" mt="lg" leftSection={<IconTrash size={16} />} onClick={handleDeleteAccount}>Delete account</Button>
         </div>
       </Container>
     </RouteProtector>
