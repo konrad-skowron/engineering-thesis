@@ -10,6 +10,7 @@ export interface Question {
 export interface Survey {
   createdAt: Date;
   author: string;
+  authorName: string;
   title: string;
   discription: string;
   questions: Question[];

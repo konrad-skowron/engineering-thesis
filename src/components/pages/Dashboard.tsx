@@ -6,7 +6,7 @@ import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantin
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/auth/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey } from '@/lib/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconReportAnalytics } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
@@ -47,6 +47,12 @@ export default function Dashboard() {
       return;
     }
     router.push('/create');
+  };
+
+  const showResults = (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    router.push(`/${surveyId}/results`);
   };
 
   const copyLink = (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
@@ -131,6 +137,10 @@ export default function Dashboard() {
                     </ActionIcon>
                   </Menu.Target>
                   <Menu.Dropdown>
+                  <Menu.Item leftSection={<IconReportAnalytics size={14} />}
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
+                      Show results
+                    </Menu.Item>
                     <Menu.Item leftSection={<IconShare size={14} />}
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
                       Share

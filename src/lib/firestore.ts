@@ -8,6 +8,7 @@ export const saveSurvey = async (surveyTitle: string, surveyDescription: string,
     const survey: Survey = {
       createdAt: new Date(),
       author: user.uid,
+      authorName: user.displayName || user.email || '',
       title: surveyTitle,
       discription: surveyDescription,
       questions: questions
@@ -131,5 +132,3 @@ export const deleteSurvey = async (surveyId: string, user: User): Promise<boolea
     return false;
   }
 };
-
-

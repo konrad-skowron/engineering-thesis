@@ -50,7 +50,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
     },
   });
 
-  const handleSignIn = async () => {
+  const handleLogin = async () => {
     if (type === 'log in') {
       await logIn(form.values.email, form.values.password);
     } else {
@@ -83,16 +83,6 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
         <form onSubmit={form.onSubmit(() => { })}>
           <Stack>
-            {type === 'sign up' && (
-              <TextInput
-                label="Name"
-                placeholder="Your name"
-                value={form.values.name}
-                onChange={(event) => form.setFieldValue('name', event.currentTarget.value)}
-                radius="md"
-              />
-            )}
-
             <TextInput
               required
               label="Email"
@@ -124,7 +114,7 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
           </Group>
 
           <Group justify="space-between" mb="lg" mt="xl">
-            <Button type="submit" radius="xl" fullWidth onClick={() => handleSignIn()}>
+            <Button type="submit" radius="xl" fullWidth onClick={() => handleLogin()}>
               {upperFirst(type)}
             </Button>
           </Group>
