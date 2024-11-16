@@ -8,7 +8,7 @@ export const saveSurvey = async (surveyTitle: string, surveyDescription: string,
     const survey: Survey = {
       createdAt: new Date(),
       author: user.uid,
-      authorName: user.displayName || user.email || '',
+      authorName: user.displayName || user.email || 'Unknown',
       title: surveyTitle,
       discription: surveyDescription,
       questions: questions

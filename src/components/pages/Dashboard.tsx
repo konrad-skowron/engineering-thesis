@@ -6,7 +6,7 @@ import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantin
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/auth/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey } from '@/lib/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconReportAnalytics } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
@@ -77,7 +77,7 @@ export default function Dashboard() {
       <Container>
         <div>
           <Title order={2}>Dashboard</Title>
-          <Button onClick={createSurvey} leftSection={<IconPlus size={14} />} mt="lg" mb="xs">
+          <Button onClick={createSurvey} leftSection={<IconPlus size={16} />} mt="lg" mb="xs">
             Create survey
           </Button>
         </div>
@@ -137,7 +137,7 @@ export default function Dashboard() {
                     </ActionIcon>
                   </Menu.Target>
                   <Menu.Dropdown>
-                  <Menu.Item leftSection={<IconReportAnalytics size={14} />}
+                  <Menu.Item leftSection={<IconChartBar size={14} />}
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
                       Show results
                     </Menu.Item>

@@ -28,6 +28,7 @@ import {
 import Link from "next/link";
 import { useAuth } from '@/components/auth/AuthProvider';
 import { useRouter } from 'next/navigation';
+import Image from 'next/image';
 
 const links = [
   { link: '/account', label: 'Dashboard' },
@@ -182,7 +183,9 @@ export function Header() {
         </div>
       </Container>
 
-      <Drawer opened={opened} onClose={toggle} size="16rem" title="Survey Maker" position="top" offset={10} radius="md" overlayProps={{ blur: 4 }}>
+      <Drawer opened={opened} onClose={toggle} size="16rem"
+        title={<Group gap="xs"><Image src="/favicon.ico" alt="logo" width={24} height={24} /><b>Survey Maker</b></Group>}
+        position="top" offset={10} radius="md" overlayProps={{ blur: 4 }}>
         <Group>
           <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={64} />
           <Text fw={500} size="m" lh={1} mr={3}>
@@ -197,9 +200,9 @@ export function Header() {
           </Text>
         </Group>
         <SimpleGrid cols={2} mt="lg">
-          <Button variant="default" justify="left" onClick={() => router.push('/account')} leftSection={<IconHome />}>Dashboard</Button>
-          <Button variant="default" justify="left" onClick={() => router.push('/settings')} leftSection={<IconSettings />}>Settings</Button>
-          <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout />}>Sign out</Button>
+          <Button variant="default" justify="left" onClick={() => router.push('/account')} leftSection={<IconHome size={16} />}>Dashboard</Button>
+          <Button variant="default" justify="left" onClick={() => router.push('/settings')} leftSection={<IconSettings size={16} />}>Settings</Button>
+          <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout size={16} />}>Sign out</Button>
         </SimpleGrid>
       </Drawer>
     </header>

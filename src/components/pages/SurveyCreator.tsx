@@ -93,9 +93,9 @@ export default function SurveyCreator() {
   return (
     <RouteProtector>
       <Container size="md" py="xl">
+        <Title order={2}>Create a Survey</Title>
+        <Text c="dimmed" mb="lg">Complete the below fields to create your survey.</Text>
         <Stack gap="lg">
-          <Title order={2}>Create a Survey</Title>
-          <Text c="dimmed">Complete the below fields to create your survey.</Text>
           
           <Paper shadow="xs" p="md" withBorder>
             <Stack gap="md">
@@ -192,10 +192,10 @@ export default function SurveyCreator() {
             </Paper>
           ))}
   
-          <Group>
+          <Group mt="md">
             <Button
               variant="default"
-              leftSection={<IconPlus size={14} />}
+              leftSection={<IconPlus size={16} />}
               onClick={addQuestion}
             >
               Add question

@@ -5,10 +5,13 @@ import { fetchSurvey, fetchSurveyAnswers } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Answer } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal } from '@mantine/core';
+import { IconFileDownload, IconArrowLeft } from '@tabler/icons-react';
+import { calculateResults, exportToCSV, exportToJSON } from '@/lib/utils';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
+  const [opened, setOpened] = useState(false);
   const { user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -36,36 +39,6 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
     return <Loading />;
   }
 
-  const calculateResults = (questionIndex: number) => {
-    const question = survey?.questions[questionIndex];
-    if (!question) return null;
-
-    if (question.type === 'multipleChoice' && question.options) {
-
-      const totalResponses = answers.length;
-      const optionCounts = question.options.reduce((acc, option) => {
-        const count = answers.filter(a => a[questionIndex] === option).length;
-        return {
-          ...acc,
-          [option]: {
-            count,
-            percentage: totalResponses ? ((count / totalResponses) * 100).toFixed(1) : '0'
-          }
-        };
-      }, {} as { [key: string]: { count: number; percentage: string } });
-
-      return optionCounts;
-    }
-
-    if (question.type === 'text') {
-      return answers.map(a => a[questionIndex]).filter(Boolean);
-    }
-
-    return null;
-  };
-
-  console.log()
-
   return (
     <Container p="md">
       <Title order={1}>{survey?.title}</Title>
@@ -79,7 +52,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
             {question.type === 'multipleChoice' ? (
               <Stack gap="sm">
-                {Object.entries(calculateResults(index) || { 'No responses yet.': { count: 0, percentage: 0 } }).map(([option, data]) => (
+                {Object.entries(calculateResults(survey, answers, index) || { 'No responses yet.': { count: 0, percentage: 0 } }).map(([option, data]) => (
                   <Box key={option}>
                     <Group pos="absolute">
                       <Text>{option}</Text>
@@ -87,7 +60,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         {data.count} ({data.percentage}%)
                       </Text>
                     </Group>
-                    <Box 
+                    <Box
                       sx={(theme: MantineTheme) => ({
                         backgroundColor: theme.colors.blue[4],
                         height: 8,
@@ -102,7 +75,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
             ) : (
               <Stack gap="xs">
                 <ScrollArea h={150} type="auto">
-                  {(calculateResults(index) as string[] || ['No responses yet.']).map((answer, i) => (
+                  {(calculateResults(survey, answers, index) as string[] || ['No responses yet.']).map((answer, i) => (
                     <Text key={i}>{answer}</Text>
                   ))}
                 </ScrollArea>
@@ -112,13 +85,42 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         ))}
       </Stack>
 
-      <Button 
-        onClick={() => router.push(`/${params.surveyId}`)}
-        mt="xl"
-        variant="outline"
+      <Group mt="xl">
+        <Button
+          onClick={() => router.push(`/${params.surveyId}`)}
+          leftSection={<IconArrowLeft size={16} />}
+        >
+          Back to survey
+        </Button>
+        <Button
+          leftSection={<IconFileDownload size={16} />}
+          variant='default'
+          onClick={() => setOpened(!opened)}
+        >
+          Export results
+        </Button>
+      </Group>
+
+      <Modal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        title="Export results"
+        overlayProps={{ blur: 4 }}
+        centered
       >
-        Back to survey
-      </Button>
-    </Container>
+        <Group grow>
+          <Button
+            onClick={() => survey && answers && exportToCSV(survey, answers)}
+          >
+            Generate .csv
+          </Button>
+          <Button
+            onClick={() => survey && answers && exportToJSON(survey, answers)}
+          >
+            Generate .json
+          </Button>
+        </Group>
+      </Modal>
+    </Container >
   );
 }

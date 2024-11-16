@@ -7,6 +7,7 @@ import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Button, Container, Group, Input } from '@mantine/core';
+import { IconArrowRight, IconChartBar } from '@tabler/icons-react';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -78,10 +79,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
           </div>
         ))}
         <Group mt="xl">
-          <Button type="submit">Submit</Button>
+          <Button type="submit" rightSection={<IconArrowRight size={16} />}>
+            Submit
+          </Button>
           {user && user.uid === survey?.author &&
             <Link href={`/${params.surveyId}/results`}>
-              <Button variant='default'>Show results</Button>
+              <Button variant='default' leftSection={<IconChartBar size={16} />}>
+                Show results
+              </Button>
             </Link>}
         </Group>
       </form>
