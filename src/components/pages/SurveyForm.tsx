@@ -6,8 +6,9 @@ import { fetchSurvey, saveSurveyAnswers } from '@/lib/firestore';
 import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Button, Container, Group, Input } from '@mantine/core';
-import { IconArrowRight, IconChartBar } from '@tabler/icons-react';
+import { Button, Container, Group, Input, Center } from '@mantine/core';
+import { IconArrowRight, IconChartBar, IconShare } from '@tabler/icons-react';
+import { copyLink } from '@/lib/utils';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -45,6 +46,16 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     return <Loading />;
   }
 
+  if (!survey?.active) {
+    return (
+      <Container>
+        <Center>
+          This survey has been closed.
+        </Center>
+      </Container>
+    );
+  }
+
   return (
     <Container>
       <h1>{survey?.title}</h1>
@@ -78,16 +89,27 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             )}
           </div>
         ))}
-        <Group mt="xl">
-          <Button type="submit" rightSection={<IconArrowRight size={16} />}>
-            Submit
-          </Button>
-          {user && user.uid === survey?.author &&
-            <Link href={`/${params.surveyId}/results`}>
-              <Button variant='default' leftSection={<IconChartBar size={16} />}>
-                Show results
-              </Button>
-            </Link>}
+        <Group mt="xl" grow>
+          <Group>
+            <Button type="submit" rightSection={<IconArrowRight size={16} />}>
+              Submit
+            </Button>
+            {user && user.uid === survey?.author &&
+              <Link href={`/${params.surveyId}/results`}>
+                <Button variant='default' leftSection={<IconChartBar size={16} />}>
+                  Show results
+                </Button>
+              </Link>}
+          </Group>
+          <Group justify='end'>
+            <Button
+              onClick={copyLink}
+              leftSection={<IconShare size={16} />}
+              variant='default'
+            >
+              Share
+            </Button>
+          </Group>
         </Group>
       </form>
     </Container>

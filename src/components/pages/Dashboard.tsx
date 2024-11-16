@@ -5,11 +5,12 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/auth/RouteProtector';
-import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey } from '@/lib/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar } from '@tabler/icons-react';
+import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firestore';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
+import Closed from "../Closed";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -72,6 +73,13 @@ export default function Dashboard() {
     }
   };
 
+  const handleToggleActive = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string, isActive: boolean) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setSurveyActive(surveyId, isActive);
+    setSurveys(surveys.map(survey => survey.id === surveyId ? { ...survey, active: isActive } : survey));
+  };
+
   return (
     <RouteProtector>
       <Container>
@@ -117,7 +125,9 @@ export default function Dashboard() {
                 </ActionIcon>
                 <Text visibleFrom="xs">{participants[survey.id]}</Text>
               </div>
-              <div><LiveDot /></div>
+              <div>
+                {survey.active ? <LiveDot /> : <Closed />}
+              </div>
               <div>
                 <Menu
                   opened={openSurveyMenu === survey.id}
@@ -137,13 +147,22 @@ export default function Dashboard() {
                     </ActionIcon>
                   </Menu.Target>
                   <Menu.Dropdown>
-                  <Menu.Item leftSection={<IconChartBar size={14} />}
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
-                      Show results
-                    </Menu.Item>
+                    {survey.active ? (
+                      <Menu.Item leftSection={<IconLock size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, false)}>
+                        Close survey
+                      </Menu.Item>) : (
+                      <Menu.Item leftSection={<IconLockOpen size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, true)}>
+                        Reopen survey
+                      </Menu.Item>)}
                     <Menu.Item leftSection={<IconShare size={14} />}
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
                       Share
+                    </Menu.Item>
+                    <Menu.Item leftSection={<IconChartBar size={14} />}
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
+                      Show results
                     </Menu.Item>
 
                     <Menu.Divider />

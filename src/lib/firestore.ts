@@ -6,6 +6,7 @@ import { Survey, Question, Answer } from "@/lib/types";
 export const saveSurvey = async (surveyTitle: string, surveyDescription: string, questions: Question[], user : User) : Promise<string> => {
   try {
     const survey: Survey = {
+      active: true,
       createdAt: new Date(),
       author: user.uid,
       authorName: user.displayName || user.email || 'Unknown',
@@ -139,4 +140,15 @@ export const deleteAllUserData = async (user: User) => {
     await deleteSurvey(survey.id, user);
   }
   await deleteDoc(doc(db, 'users', user.uid));
+}
+
+export const setSurveyActive = async (surveyId: string, isActive: boolean) => {
+  try {
+    const surveyRef = doc(db, 'surveys', surveyId);
+    await setDoc(surveyRef, {
+      active: isActive,
+    }, { merge: true });
+  } catch (e) {
+    console.error("Error opening survey: ", e);
+  }
 }

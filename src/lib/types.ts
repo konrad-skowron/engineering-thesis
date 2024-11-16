@@ -8,6 +8,7 @@ export interface Question {
 }
 
 export interface Survey {
+  active: boolean;
   createdAt: Date;
   author: string;
   authorName: string;

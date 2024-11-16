@@ -6,8 +6,8 @@ import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Answer } from '@/lib/types';
 import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal } from '@mantine/core';
-import { IconFileDownload, IconArrowLeft } from '@tabler/icons-react';
-import { calculateResults, exportToCSV, exportToJSON } from '@/lib/utils';
+import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
+import { calculateResults, copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -85,21 +85,33 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         ))}
       </Stack>
 
-      <Group mt="xl">
-        <Button
-          onClick={() => router.push(`/${params.surveyId}`)}
-          leftSection={<IconArrowLeft size={16} />}
-        >
-          Back to survey
-        </Button>
-        <Button
-          leftSection={<IconFileDownload size={16} />}
-          variant='default'
-          onClick={() => setOpened(!opened)}
-        >
-          Export results
-        </Button>
+      <Group mt="xl" grow>
+        <Group>
+          <Button
+            onClick={() => router.push(`/${params.surveyId}`)}
+            leftSection={<IconArrowLeft size={16} />}
+          >
+            Back to survey
+          </Button>
+          <Button
+            leftSection={<IconFileDownload size={16} />}
+            variant='default'
+            onClick={() => setOpened(!opened)}
+          >
+            Export results
+          </Button>
+        </Group>
+        <Group justify='end'>
+          <Button
+            onClick={copyLink}
+            leftSection={<IconShare size={16} />}
+            variant='default'
+          >
+            Share
+          </Button>
+        </Group>
       </Group>
+
 
       <Modal
         opened={opened}
