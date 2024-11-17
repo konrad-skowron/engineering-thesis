@@ -22,7 +22,7 @@ const LiveDot = () => {
                   backgroundColor:
                   colorScheme === 'dark'
                     ? 'rgba(255, 168, 168, 0.1)'
-                    : 'rgba(255, 168, 168, 0.3)',
+                    : 'rgba(255, 168, 168, 0.4)',
                   borderRadius: theme.radius.xl, 
                   width: 'fit-content',
                   height: 'fit-content',

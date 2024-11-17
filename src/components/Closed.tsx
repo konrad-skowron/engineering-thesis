@@ -12,7 +12,7 @@ const Closed = () => {
                   color: 
                   colorScheme === 'dark'
                     ? theme.colors.green[6]
-                    : theme.colors.green[8],
+                    : theme.colors.green[7],
                   backgroundColor:
                   colorScheme === 'dark'
                     ? 'rgba(47, 158, 68, 0.1)'

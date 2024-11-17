@@ -45,8 +45,8 @@ export function LandingPage() {
 
   return (
     <div className={classes.wrapper}>
-      <Container className={classes.inner}>
-        <h1 className={classes.title} id='about'>
+      <Container className={classes.inner} id='about'>
+        <h1 className={classes.title}>
           Conduct surveys using a{' '}
           <Text component="span" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }} inherit>
             continuous
