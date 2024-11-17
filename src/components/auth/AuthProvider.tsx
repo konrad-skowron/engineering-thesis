@@ -12,7 +12,8 @@ import {
   sendPasswordResetEmail,
   setPersistence,
   browserLocalPersistence,
-  browserSessionPersistence 
+  browserSessionPersistence, 
+  inMemoryPersistence
 } from "firebase/auth";
 
 interface AuthContextType {
@@ -81,6 +82,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setLoading(true);
     const provider = new GoogleAuthProvider();
     try {
+      await setPersistence(auth, inMemoryPersistence);
       await signInWithPopup(auth, provider);
     } catch (error) {
       console.error("Error signing in with Google", error);
