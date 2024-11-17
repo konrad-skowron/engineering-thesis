@@ -33,15 +33,7 @@ import Image from 'next/image';
 const links = [
   { link: '/account', label: 'Dashboard' },
   { link: '/create', label: 'Create Survey' },
-  {
-    link: '#1',
-    label: 'Support',
-    links: [
-      { link: '/about', label: 'About' },
-      { link: '/contact', label: 'Contact' },
-      { link: '/faq', label: 'FAQ' },
-    ],
-  },
+  { link: '/settings', label: 'Settings' },
 ];
 
 export function Header() {
@@ -59,29 +51,6 @@ export function Header() {
   };
 
   const items = links.map((link) => {
-    const menuItems = link.links?.map((item) => (
-      <Menu.Item key={item.link}>{item.label}</Menu.Item>
-    ));
-
-    if (menuItems) {
-      return (
-        <Menu key={link.label} trigger="hover" transitionProps={{ exitDuration: 0 }} withinPortal>
-          <Menu.Target>
-            <a
-              href={link.link}
-              className={classes.link}
-            >
-              <Center>
-                <span className={classes.linkLabel}>{link.label}</span>
-                <IconChevronDown size="0.9rem" stroke={1.5} />
-              </Center>
-            </a>
-          </Menu.Target>
-          <Menu.Dropdown>{menuItems}</Menu.Dropdown>
-        </Menu>
-      );
-    }
-
     return (
       <a
         key={link.label}

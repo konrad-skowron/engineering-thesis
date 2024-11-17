@@ -9,15 +9,18 @@ import {
   User,
   createUserWithEmailAndPassword,
   deleteUser,
-  sendPasswordResetEmail
+  sendPasswordResetEmail,
+  setPersistence,
+  browserLocalPersistence,
+  browserSessionPersistence 
 } from "firebase/auth";
 
 interface AuthContextType {
   user: User | null;
   loading: boolean;
   signingOut: boolean;
-  logIn: (email : string, password : string) => Promise<void>;
-  signUp: (email : string, password : string) => Promise<void>;
+  logIn: (email : string, password : string, rememberMe : boolean) => Promise<void>;
+  signUp: (email : string, password : string, rememberMe : boolean) => Promise<void>;
   logInWithGoogle: () => Promise<void>;
   signOut: () => Promise<void>;
   deleteAccount: () => Promise<void>;
@@ -28,8 +31,8 @@ const AuthContext = createContext<AuthContextType>({
   user: null,
   loading: true,
   signingOut: false,
-  logIn: (email : string, password : string) => Promise.resolve(),
-  signUp: (email : string, password : string) => Promise.resolve(),
+  logIn: (email : string, password : string, rememberMe : boolean) => Promise.resolve(),
+  signUp: (email : string, password : string, rememberMe : boolean) => Promise.resolve(),
   logInWithGoogle: () => Promise.resolve(),
   signOut: () => Promise.resolve(),
   deleteAccount: () => Promise.resolve(),
@@ -50,9 +53,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     return () => unsubscribe();
   }, []);
 
-  const logIn = async (email : string, password : string) => {
+  const logIn = async (email : string, password : string, rememberMe : boolean) => {
     setLoading(true);
     try {
+      await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
       alert("Error loging in" + error);
@@ -61,9 +65,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     }
   };
 
-  const signUp = async (email : string, password : string) => {
+  const signUp = async (email : string, password : string, rememberMe : boolean) => {
     setLoading(true);
     try {
+      await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
       alert("Error signing in" + error);

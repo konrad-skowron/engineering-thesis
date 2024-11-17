@@ -14,7 +14,8 @@ import {
   Anchor,
   Stack,
   Container,
-  Title
+  Title,
+  rem
 } from '@mantine/core';
 import { GoogleButton } from '@/components/GoogleButton';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -42,19 +43,23 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
       name: '',
       password: '',
       terms: true,
+      rememberMe: false,
     },
 
     validate: {
       email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length <= 6 ? 'Password should include at least 6 characters' : null),
+      password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
     },
   });
 
   const handleLogin = async () => {
+    if (!form.isValid()) {
+      return;
+    }
     if (type === 'log in') {
-      await logIn(form.values.email, form.values.password);
+      await logIn(form.values.email, form.values.password, form.values.rememberMe);
     } else {
-      await signUp(form.values.email, form.values.password);
+      await signUp(form.values.email, form.values.password, form.values.rememberMe);
     }
   };
 
@@ -127,7 +132,10 @@ export function AuthForm({ type, ...props }: AuthenticationFormProps) {
           </Stack>
 
           <Group justify="space-between" mt="lg">
-            <Checkbox defaultChecked label="Remember me" />
+            <Checkbox 
+              checked={form.values.rememberMe} 
+              onChange={(event) => form.setFieldValue('rememberMe', event.currentTarget.checked)}
+              label="Remember me" />
             {type === 'log in' && (
               <Anchor component="button" size="sm" onClick={(e: any) => handleForgotPassword(e)}>
                 Forgot password?

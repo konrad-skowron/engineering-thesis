@@ -12,7 +12,7 @@ export function Footer() {
     <div className={classes.footer}>
       <Container className={classes.inner}>
         <Text c="dimmed" size="sm">
-          Build by Konrad Skowron.
+          © 2024 Survey Maker. Build by Konrad Skowron.
         </Text>
 
         <Group gap={0} className={classes.links} justify="flex-end" wrap="nowrap">
@@ -30,8 +30,8 @@ export function Footer() {
             onClick={() => setColorScheme(computedColorScheme === 'light' ? 'dark' : 'light')}
             aria-label="Toggle color scheme"
           >
-            <IconSun className={cx(classes.icon, classes.light)} stroke={1.5} title="Light mode" />
-            <IconMoon className={cx(classes.icon, classes.dark)} stroke={1.5} title="Dark mode" /> 
+            <IconSun className={cx(classes.icon, classes.light)} style={{ width: rem(18), height: rem(18) }} stroke={1.5} title="Light mode" />
+            <IconMoon className={cx(classes.icon, classes.dark)} style={{ width: rem(18), height: rem(18) }} stroke={1.5} title="Dark mode" /> 
           </ActionIcon>
         </Group>
       </Container>
