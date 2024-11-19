@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { saveSurvey } from '@/lib/firestore';
 import { Question, QuestionType } from '@/lib/types';
-import { 
+import {
   Container,
   Title,
   TextInput,
@@ -16,9 +16,13 @@ import {
   Group,
   Box,
   ActionIcon,
-  Text
+  Text,
+  Checkbox,
+  Radio,
+  Switch,
+  Divider
 } from '@mantine/core';
-import { IconPlus, IconTrash } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import RouteProtector from '@/components/auth/RouteProtector';
 
 export default function SurveyCreator() {
@@ -26,26 +30,39 @@ export default function SurveyCreator() {
   const { user } = useAuth();
   const [surveyTitle, setSurveyTitle] = useState<string>('');
   const [surveyDescription, setSurveyDescription] = useState<string>('');
-  const [questions, setQuestions] = useState<Question[]>([{ type: 'text', question: '', required: false }]);
+  const [questions, setQuestions] = useState<Question[]>([{ type: 'text', question: '', rangeEnabled: false, required: false }]);
 
   const addQuestion = () => {
-    setQuestions([...questions, { type: 'text', question: '', required: false }]);
+    setQuestions([...questions, { type: 'text', question: '', rangeEnabled: false, required: false }]);
   };
 
-  const updateQuestion = (index: number, field: keyof Question, value: string) => {
+  const updateQuestion = (index: number, field: keyof Question, value: any) => {
     const updatedQuestions = [...questions];
     if (field === 'type') {
       updatedQuestions[index] = {
         type: value as QuestionType,
         question: updatedQuestions[index].question,
         required: updatedQuestions[index].required,
-        options: value === 'multipleChoice' ? [''] : undefined
+        rangeEnabled: updatedQuestions[index].rangeEnabled,
+        options: setOptions(value)
       };
     } else {
       (updatedQuestions[index] as any)[field] = value;
     }
     setQuestions(updatedQuestions);
   };
+
+  const setOptions = (type: string) => {
+    if (type === 'singleChoice' || type === 'multipleChoice' || type === 'dropdownList' || type === 'ranking') {
+      return [''];
+    } else if (type === 'discreteScale') {
+      return ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
+    } else if (type === 'continousScale') {
+      return ['', ''];
+    } else {
+      return undefined;
+    }
+  }
 
   const addOption = (questionIndex: number) => {
     const updatedQuestions = [...questions];
@@ -63,13 +80,13 @@ export default function SurveyCreator() {
   };
 
   const removeQuestion = (indexToRemove: number) => {
-    setQuestions((prevQuestions: Question[]) => 
+    setQuestions((prevQuestions: Question[]) =>
       prevQuestions.filter((_, index) => index !== indexToRemove)
     );
   };
-  
+
   const removeOption = (questionIndex: number, optionIndex: number) => {
-    setQuestions((prevQuestions: Question[]) => 
+    setQuestions((prevQuestions: Question[]) =>
       prevQuestions.map((question, qIndex) => {
         if (qIndex === questionIndex && question.options) {
           return {
@@ -96,7 +113,7 @@ export default function SurveyCreator() {
         <Title order={2}>Create a Survey</Title>
         <Text c="dimmed" mb="lg">Complete the below fields to create your survey.</Text>
         <Stack gap="lg">
-          
+
           <Paper shadow="xs" p="md" withBorder>
             <Stack gap="md">
               <TextInput
@@ -107,92 +124,132 @@ export default function SurveyCreator() {
                 onChange={(e) => setSurveyTitle(e.target.value)}
                 required
               />
-              
+
               <Textarea
                 label="Description"
-                description="(optional)"
                 value={surveyDescription}
                 onChange={(e) => setSurveyDescription(e.target.value)}
-                minRows={4}
+                resize="vertical"
               />
             </Stack>
           </Paper>
-  
+
           {questions.map((q, index) => (
             <Paper key={index} shadow="xs" p="md" withBorder>
               <Stack gap="md">
-                <Group justify="space-between">
-                  <Title order={4}>Question {index + 1}</Title>
-                  <ActionIcon 
-                    color="red" 
+                <Group justify='space-between' style={{ display: 'grid', gridTemplateColumns: '2fr 1fr auto' }}>
+                  <TextInput
+                    label={`Question ${index + 1}`}
+                    placeholder="Enter your question"
+                    value={q.question}
+                    onChange={(e) => updateQuestion(index, 'question', e.target.value)}
+                    required
+                  />
+
+                  <Select
+                    label="Type"
+                    allowDeselect={false}
+                    placeholder="Select question type"
+                    value={q.type}
+                    onChange={(value: any) => updateQuestion(index, 'type', value)}
+                    data={[
+                      { value: 'text', label: 'Text Response' },
+                      { value: 'singleChoice', label: 'Single Choice' },
+                      { value: 'multipleChoice', label: 'Multiple Choice' },
+                      { value: 'dropdownList', label: 'Dropdown List' },
+                      { value: 'discreteScale', label: 'Discrete Scale' },
+                      { value: 'continousScale', label: 'Continuous Scale' },
+                      { value: 'ranking', label: 'Ranking' }
+                    ]}
+                  />
+
+                  <ActionIcon
+                    color="red"
                     variant="subtle"
                     onClick={() => removeQuestion(index)}
+                    w={20}
+                    h="100%"
                   >
                     <IconTrash size={18} />
                   </ActionIcon>
                 </Group>
-  
-                <TextInput
-                  placeholder="Enter your question"
-                  value={q.question}
-                  onChange={(e) => updateQuestion(index, 'question', e.target.value)}
-                  required
+
+                <Divider />
+
+                <Switch
+                  label="Required"
+                  checked={q.required}
+                  onChange={(e) => updateQuestion(index, 'required', e.target.checked)}
                 />
-  
-                <Select
-                  label="Type"
-                  allowDeselect={false}
-                  placeholder="Select question type"
-                  value={q.type}
-                  w="20rem"
-                  onChange={(value: any) => updateQuestion(index, 'type', value)}
-                  data={[
-                    { value: 'text', label: 'Text Response' },
-                    { value: 'singleChoice', label: 'Single Choice' },
-                    { value: 'multipleChoice', label: 'Multiple Choice' },
-                    { value: 'ranking', label: 'Ranking' },
-                    { value: 'discreteScale', label: 'Discrete Scale' },
-                    { value: 'continousScale', label: 'Continuous Scale' }
-                  ]}
-                />
-  
-                {q.type === 'multipleChoice' && (
+
+                {(q.type === 'discreteScale' || q.type === 'continousScale') && (
+                  <Switch
+                    label="Enable selecting ranges"
+                    checked={q.rangeEnabled}
+                    onChange={(e) => updateQuestion(index, 'rangeEnabled', e.target.checked)}
+                  />
+                )}
+
+                {q.type !== 'text' && (
                   <Box>
-                    <Title order={6} mb="xs">Options</Title>
-                    <Stack gap="xs">
-                      {q.options?.map((option, optionIndex) => (
-                        <Group key={optionIndex} gap="xs">
-                          <TextInput
-                            style={{ flex: 1 }}
-                            placeholder={`Option ${optionIndex + 1}`}
-                            value={option}
-                            onChange={(e) => updateOption(index, optionIndex, e.target.value)}
-                          />
-                          <ActionIcon 
-                            color="red" 
-                            variant="subtle"
-                            onClick={() => removeOption(index, optionIndex)}
+                    {q.type !== 'continousScale' ? (
+                      <>
+                        <Title order={6} mb="xs">
+                          {q.type === 'discreteScale' ? 'Values' : 'Options'}
+                        </Title>
+                        <Stack gap="xs">
+                          {q.options?.map((option, optionIndex) => (
+                            <Group key={optionIndex} gap="xs">
+                              {q.type === 'singleChoice' && <Radio disabled />}
+                              {q.type === 'multipleChoice' && <Checkbox disabled />}
+                              {q.type === 'dropdownList' && <Text>{optionIndex + 1}.</Text>}
+                              {q.type === 'discreteScale' && <Text>{optionIndex + 1}</Text>}
+                              <TextInput
+                                style={{ flex: 1 }}
+                                placeholder={q.type === 'discreteScale' ? `Label (optional)` : `Option ${optionIndex + 1}`}
+                                value={option}
+                                onChange={(e) => updateOption(index, optionIndex, e.target.value)}
+                              />
+                              <ActionIcon
+                                color="gray"
+                                variant="subtle"
+                                onClick={() => removeOption(index, optionIndex)}
+                              >
+                                <IconX size={18} />
+                              </ActionIcon>
+                            </Group>
+                          ))}
+                          <Button
+                            variant="light"
+                            leftSection={<IconPlus size={14} />}
+                            onClick={() => addOption(index)}
+                            mt='xs'
+                            size='xs'
                           >
-                            <IconTrash size={18} />
-                          </ActionIcon>
-                        </Group>
-                      ))}
-                      <Button 
-                        variant="light" 
-                        leftSection={<IconPlus size={14} />}
-                        onClick={() => addOption(index)}
-                        size="xs"
-                      >
-                        Add Option
-                      </Button>
-                    </Stack>
+                            Add {q.type === 'discreteScale' ? 'value' : 'option'}
+                          </Button>
+                        </Stack>
+                      </>) : (
+                      <Group grow>
+                        <TextInput
+                          label='Left label'
+                          placeholder={`Label (optional)`}
+                          onChange={(e) => updateOption(index, 0, e.target.value)}
+                        />
+                        <TextInput
+                          label='Right label'
+                          placeholder={`Label (optional)`}
+                          onChange={(e) => updateOption(index, 1, e.target.value)}
+                        />
+                      </Group>
+                    )}
                   </Box>
                 )}
               </Stack>
             </Paper>
           ))}
-  
-          <Group mt="md">
+
+          <Group>
             <Button
               variant="default"
               leftSection={<IconPlus size={16} />}
@@ -200,7 +257,7 @@ export default function SurveyCreator() {
             >
               Add question
             </Button>
-  
+
             <Button
               color="blue"
               onClick={saveAndRedirect}

@@ -169,8 +169,8 @@ export function Header() {
           </Text>
         </Group>
         <SimpleGrid cols={2} mt="lg">
-          <Button variant="default" justify="left" onClick={() => router.push('/account')} leftSection={<IconHome size={16} />}>Dashboard</Button>
-          <Button variant="default" justify="left" onClick={() => router.push('/settings')} leftSection={<IconSettings size={16} />}>Settings</Button>
+          <Button variant="default" justify="left" onClick={() => { router.push('/account'); toggle(); }} leftSection={<IconHome size={16} />}>Dashboard</Button>
+          <Button variant="default" justify="left" onClick={() => { router.push('/settings'); toggle(); }} leftSection={<IconSettings size={16} />}>Settings</Button>
           <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout size={16} />}>Sign out</Button>
         </SimpleGrid>
       </Drawer>

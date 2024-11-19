@@ -1,9 +1,10 @@
-export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'list' | 'ranking' | 'discreteScale' | 'continousScale';
+export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'dropdownList' | 'ranking' | 'discreteScale' | 'continousScale';
 
 export interface Question {
   type: QuestionType;
   question: string;
   required: boolean;
+  rangeEnabled: boolean;
   options?: string[];
 }
 
