@@ -184,7 +184,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   mb="xl"
                   styles={{
                     markLabel: {
-                      whiteSpace: 'normal',
+                      whiteSpace: 'pre-wrap',
                       display: 'block',
                       textAlign: 'center'
                     }
