@@ -2,7 +2,7 @@
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, saveSurveyAnswers } from '@/lib/firestore';
+import { fetchSurvey, saveSurveyResponses } from '@/lib/firestore';
 import { Survey } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -15,7 +15,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
-  const [answers, setAnswers] = useState<any>({});
+  const [responses, setResponses] = useState<any>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -28,13 +28,13 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     getSurvey();
   }, [params.surveyId]);
 
-  const handleInputChange = (questionIndex: number, answer: string) => {
-    setAnswers({ ...answers, [questionIndex]: answer });
+  const handleInputChange = (questionIndex: number, response: string) => {
+    setResponses({ ...responses, [questionIndex]: response });
   };
 
   const handleSubmit = () => {
-    saveSurveyAnswers(params.surveyId, answers);
-    alert('Your answers have been saved. Thank you for participating in this poll.');
+    saveSurveyResponses(params.surveyId, responses);
+    alert('Your responses have been saved. Thank you for participating in this poll.');
   };
 
   if (loading) {
@@ -66,7 +66,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             {question.type === 'text' ? (
               <Input
                 type="text"
-                value={answers[index] || ''}
+                value={responses[index] || ''}
                 onChange={(e: any) => handleInputChange(index, e.target.value)}
                 required
               />
@@ -78,7 +78,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                       type="radio"
                       name={`question-${index}`}
                       value={option}
-                      checked={answers[index] === option}
+                      checked={responses[index] === option}
                       onChange={(e: any) => handleInputChange(index, e.target.value)}
                       required
                     />

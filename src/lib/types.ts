@@ -18,11 +18,11 @@ export interface Survey {
   questions: Question[];
 }
 
-export interface Answer {
+export interface Response {
   [questionIndex: string]: string;
 }
 
 export interface Results {
-  answers: Answer[];
+  responses: Response[];
   updatedAt: Date;
 }

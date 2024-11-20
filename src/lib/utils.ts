@@ -1,4 +1,4 @@
-import { Survey, Answer } from "./types";
+import { Survey, Response } from "./types";
 
 export const formatTimestamp = (createdAt : any) => {
   const date = new Date(createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1e6));
@@ -11,15 +11,15 @@ export const copyLink = () => {
   alert('Link copied to clipboard');
 };
 
-export const calculateResults = (survey: Survey, answers: Answer[], questionIndex: number) => {
+export const calculateResults = (survey: Survey, responses: Response[], questionIndex: number) => {
   const question = survey?.questions[questionIndex];
   if (!question) return null;
 
   if (question.type === 'multipleChoice' && question.options) {
 
-    const totalResponses = answers.length;
+    const totalResponses = responses.length;
     const optionCounts = question.options.reduce((acc, option) => {
-      const count = answers.filter(a => a[questionIndex] === option).length;
+      const count = responses.filter(a => a[questionIndex] === option).length;
       return {
         ...acc,
         [option]: {
@@ -33,13 +33,13 @@ export const calculateResults = (survey: Survey, answers: Answer[], questionInde
   }
 
   if (question.type === 'text') {
-    return answers.map(a => a[questionIndex]).filter(Boolean);
+    return responses.map(a => a[questionIndex]).filter(Boolean);
   }
 
   return null;
 };
 
-export const exportToCSV = (survey : Survey, answers : Answer[]) => {
+export const exportToCSV = (survey : Survey, responses : Response[]) => {
   if (!survey) return;
 
   let csvContent = "data:text/csv;charset=utf-8,";
@@ -47,11 +47,11 @@ export const exportToCSV = (survey : Survey, answers : Answer[]) => {
   const headers = ['Response ID', ...survey.questions.map(q => q.question)];
   csvContent += headers.join(',') + '\n';
 
-  answers.forEach((answer, index) => {
+  responses.forEach((response, index) => {
     const row = [
       index + 1,
       ...survey.questions.map((_, qIndex) => {
-        const response = answer[qIndex] || '';
+        const response = response[qIndex] || '';
         return `"${response.replace(/"/g, '""')}"`;
       })
     ];
@@ -67,17 +67,17 @@ export const exportToCSV = (survey : Survey, answers : Answer[]) => {
   document.body.removeChild(link);
 };
 
-export const exportToJSON = (survey : Survey, answers : Answer[]) => {
+export const exportToJSON = (survey : Survey, responses : Response[]) => {
   if (!survey) return;
 
   const data = {
     surveyTitle: survey.title,
-    totalResponses: answers.length,
+    totalResponses: responses.length,
     questions: survey.questions.map((question, index) => ({
       question: question.question,
       type: question.type,
-      responses: question.type === 'multipleChoice' ? calculateResults(survey, answers, index) : 
-        answers.map(a => a[index]).filter(Boolean)
+      responses: question.type === 'multipleChoice' ? calculateResults(survey, responses, index) : 
+        responses.map(a => a[index]).filter(Boolean)
     }))
   };
 

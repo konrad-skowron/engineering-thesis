@@ -137,7 +137,7 @@ export default function SurveyCreator() {
           {questions.map((q, index) => (
             <Paper key={index} shadow="xs" p="md" withBorder>
               <Stack gap="md">
-                <Group justify='space-between' style={{ display: 'grid', gridTemplateColumns: '2fr 1fr auto' }}>
+                <Group justify='space-between' style={{ display: 'grid', gridTemplateColumns: '1fr auto auto' }}>
                   <TextInput
                     label={`Question ${index + 1}`}
                     placeholder="Enter your question"

@@ -1,10 +1,10 @@
 'use client'
 import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchSurvey, fetchSurveyAnswers } from '@/lib/firestore';
+import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Survey, Answer } from '@/lib/types';
+import { Survey, Response } from '@/lib/types';
 import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
 import { calculateResults, copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
@@ -16,7 +16,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
-  const [answers, setAnswers] = useState<Answer[]>([]);
+  const [responses, setResponses] = useState<Response[]>([]);
 
   useEffect(() => {
     const getData = async () => {
@@ -26,9 +26,9 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         return;
       }
 
-      const fetchedAnswers = await fetchSurveyAnswers(params.surveyId);
+      const fetchedResponses = await fetchSurveyResponses(params.surveyId);
       setSurvey(fetchedSurvey);
-      setAnswers(fetchedAnswers);
+      setResponses(fetchedResponses);
       setLoading(false);
     };
 
@@ -43,7 +43,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
     <Container p="md">
       <Title order={1}>{survey?.title}</Title>
       <Text mb="lg" c={'dimmed'} size='sm'>by {survey?.authorName}</Text>
-      <Text mb="lg">Total responses: {answers.length}</Text>
+      <Text mb="lg">Total responses: {responses.length}</Text>
 
       <Stack gap="xl">
         {survey?.questions.map((question, index) => (
@@ -52,7 +52,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
             {question.type === 'multipleChoice' ? (
               <Stack gap="sm">
-                {Object.entries(calculateResults(survey, answers, index) || { 'No responses yet.': { count: 0, percentage: 0 } }).map(([option, data]) => (
+                {Object.entries(calculateResults(survey, responses, index) || { 'No responses yet.': { count: 0, percentage: 0 } }).map(([option, data]) => (
                   <Box key={option}>
                     <Group pos="absolute">
                       <Text>{option}</Text>
@@ -75,8 +75,8 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
             ) : (
               <Stack gap="xs">
                 <ScrollArea h={150} type="auto">
-                  {(calculateResults(survey, answers, index) as string[] || ['No responses yet.']).map((answer, i) => (
-                    <Text key={i}>{answer}</Text>
+                  {(calculateResults(survey, responses, index) as string[] || ['No responses yet.']).map((response, i) => (
+                    <Text key={i}>{response}</Text>
                   ))}
                 </ScrollArea>
               </Stack>
@@ -122,12 +122,12 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
       >
         <Group grow>
           <Button
-            onClick={() => survey && answers && exportToCSV(survey, answers)}
+            onClick={() => survey && responses && exportToCSV(survey, responses)}
           >
             Generate .csv
           </Button>
           <Button
-            onClick={() => survey && answers && exportToJSON(survey, answers)}
+            onClick={() => survey && responses && exportToJSON(survey, responses)}
           >
             Generate .json
           </Button>

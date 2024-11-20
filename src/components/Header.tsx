@@ -156,8 +156,8 @@ export function Header() {
         title={<Group gap="xs"><Image src="/favicon.ico" alt="logo" width={24} height={24} /><b>Survey Maker</b></Group>}
         position="top" offset={10} radius="md" overlayProps={{ blur: 4 }}>
         <Group>
-          <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={64} />
-          <Text fw={500} size="m" lh={1} mr={3}>
+          <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={72} />
+          <Text fw={500} lh={1} mr={3}>
             {user?.displayName || user?.email}
             {user?.displayName &&
               <>

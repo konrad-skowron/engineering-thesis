@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove } from "firebase/firestore";
 import { User } from "firebase/auth";
-import { Survey, Question, Answer } from "@/lib/types";
+import { Survey, Question, Response } from "@/lib/types";
 
 export const saveSurvey = async (surveyTitle: string, surveyDescription: string, questions: Question[], user : User) : Promise<string> => {
   try {
@@ -66,26 +66,26 @@ export const fetchUserSurveys = async (user : User): Promise<any[]> => {
   }
 };
 
-export const saveSurveyAnswers = async (surveyId: string, answers: any) => {
+export const saveSurveyResponses = async (surveyId: string, responses: any) => {
   try {
     await setDoc(doc(db, 'results', surveyId), {
-      answers: arrayUnion(answers),
+      responses: arrayUnion(responses),
       updatedAt: new Date()
     }, { merge: true });
   } catch (e) {   
-    console.error('Error saving survey answers: ', e);
+    console.error('Error saving survey responses: ', e);
   }
 };
 
-export const fetchSurveyAnswers = async (surveyId: string): Promise<Answer[]> => {
+export const fetchSurveyResponses = async (surveyId: string): Promise<Response[]> => {
   try {
     const docSnap = await getDoc(doc(db, 'results', surveyId));
 
     if (docSnap.exists()) {
-      return docSnap.data().answers || [];
+      return docSnap.data().responses || [];
     }
   } catch (error) {
-    console.error('Error fetching survey answers: ', error);
+    console.error('Error fetching survey responses: ', error);
   }
   return [];
 };
@@ -100,7 +100,7 @@ export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Re
 
     const participantsMap: Record<string, number> = {};
     resultsSnapshot.forEach(doc => {
-      participantsMap[doc.id] = doc.data().answers.length || 0;
+      participantsMap[doc.id] = doc.data().responses.length || 0;
     });
     surveyIds.forEach(surveyId => {
       if (!participantsMap[surveyId]) {
@@ -109,7 +109,7 @@ export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Re
     });
     return participantsMap;
   } catch (error) {
-    console.error('Error fetching all survey answers:', error);
+    console.error('Error fetching all survey responses:', error);
     return {};
   }
 };
