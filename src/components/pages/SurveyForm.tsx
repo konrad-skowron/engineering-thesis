@@ -3,7 +3,7 @@ import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useState, useEffect, use } from 'react';
 import { fetchSurvey, saveSurveyResponse } from '@/lib/firestore';
-import { Survey, Question, Response } from '@/lib/types';
+import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { IconArrowRight, IconChartBar, IconShare } from '@tabler/icons-react';
@@ -35,6 +35,11 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const [responses, setResponses] = useState<{[index: number]: any}>({});
   const router = useRouter();
 
+  const discreteScaleRangeDv = [10, 30];
+  const discreteScaleDv = (length: number) => Math.floor((length) / 2);
+  const continuousScaleRangeDv = [20, 60];
+  const continuousScaleDv = 50;
+
   useEffect(() => {
     const getSurvey = async () => {
       const fetchedSurvey = await fetchSurvey(params.surveyId);
@@ -53,13 +58,35 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   };
 
   const handleSubmit = () => {
-    survey?.questions.forEach((question, index) => {
-      if (question.required && !responses[index]) {
-        alert(`Please provide a response for question ${question.question}.`);
+    const newResponses = { ...responses };
+
+    for (const [index, question] of survey?.questions.entries() || []) {
+      if (!newResponses[index]) {
+        switch (question.type) {
+          case 'discreteScale':
+            if (question.rangeEnabled) {
+              newResponses[index] = discreteScaleRangeDv;
+            } else {
+              newResponses[index] = discreteScaleDv(question.options?.length || 1);
+            }
+            break;
+          case 'continousScale':
+            if (question.rangeEnabled) {
+              newResponses[index] = continuousScaleRangeDv;
+            } else {
+              newResponses[index] = continuousScaleDv;
+            }
+            break;
+        }
+      }
+
+      if (question.required && !newResponses[index]) {
+        alert(`Please provide a response for question "${question.question}"`);
         return;
       }
-    })
-    saveSurveyResponse(params.surveyId, responses);
+    }
+    
+    saveSurveyResponse(params.surveyId, newResponses);
     alert('Your responses have been saved. Thank you for participating in this survey.');
     setResponses({});
   };
@@ -152,7 +179,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   step={10}
                   marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
                   onChange={(value) => updateResponse(index, [value[0] / 10, value[1] / 10])}
-                  defaultValue={responses[index] || [10, 30]}
+                  defaultValue={responses[index] || discreteScaleRangeDv}
                   p="8%"
                   mb="xl"
                   styles={{
@@ -175,7 +202,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                 marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
                 min={0}
                 max={(question.options?.length || 1) - 1}
-                defaultValue={Math.floor((question.options?.length || 1) / 2)}
+                defaultValue={discreteScaleDv(question.options?.length || 1)}
                 onChange={(value) => updateResponse(index, value)}
                 color="default"
                 p="8%"
@@ -203,7 +230,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider
-                    value={responses[index] || [20, 60]}
+                    value={responses[index] || continuousScaleRangeDv}
                     onChange={(value) => updateResponse(index, value)}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
@@ -221,7 +248,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
-                    value={responses[index] || 50}
+                    value={responses[index] || continuousScaleDv}
                     onChange={(value) => updateResponse(index, value)}
                     color="default"
                   />
