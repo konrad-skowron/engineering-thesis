@@ -295,9 +295,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
           </Paper>
         ))}
 
-        <Group grow>
-          <Group>
-            <Button onClick={handleSubmit} type="submit" rightSection={<IconArrowRight size={16} />}>
+        <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}>
+          <Group wrap="nowrap">
+            <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
               Submit
             </Button>
             {user && user.uid === survey?.author &&

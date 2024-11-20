@@ -85,8 +85,8 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         ))}
       </Stack>
 
-      <Group mt="xl" grow>
-        <Group>
+      <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} mt='xl'>
+        <Group wrap="nowrap">
           <Button
             onClick={() => router.push(`/${params.surveyId}`)}
             leftSection={<IconArrowLeft size={16} />}
