@@ -11,7 +11,7 @@ export const saveSurvey = async (surveyTitle: string, surveyDescription: string,
       author: user.uid,
       authorName: user.displayName || user.email || 'Unknown',
       title: surveyTitle,
-      discription: surveyDescription,
+      description: surveyDescription,
       questions: questions
     };
 

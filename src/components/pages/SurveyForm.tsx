@@ -53,6 +53,12 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   };
 
   const handleSubmit = () => {
+    survey?.questions.forEach((question, index) => {
+      if (question.required && !responses[index]) {
+        alert(`Please provide a response for question ${question.question}.`);
+        return;
+      }
+    })
     saveSurveyResponse(params.surveyId, responses);
     alert('Your responses have been saved. Thank you for participating in this survey.');
     setResponses({});
