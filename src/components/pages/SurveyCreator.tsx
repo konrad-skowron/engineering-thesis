@@ -53,7 +53,7 @@ export default function SurveyCreator() {
   };
 
   const setOptions = (type: string) => {
-    if (type === 'singleChoice' || type === 'multipleChoice' || type === 'dropdownList' || type === 'ranking') {
+    if (type === 'singleChoice' || type === 'multipleChoice' || type === 'dropdownList') {
       return [''];
     } else if (type === 'discreteScale') {
       return ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
@@ -158,8 +158,7 @@ export default function SurveyCreator() {
                       { value: 'multipleChoice', label: 'Multiple Choice' },
                       { value: 'dropdownList', label: 'Dropdown List' },
                       { value: 'discreteScale', label: 'Discrete Scale' },
-                      { value: 'continousScale', label: 'Continuous Scale' },
-                      { value: 'ranking', label: 'Ranking' }
+                      { value: 'continousScale', label: 'Continuous Scale' }
                     ]}
                   />
 

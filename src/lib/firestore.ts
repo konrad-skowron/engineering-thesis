@@ -66,7 +66,7 @@ export const fetchUserSurveys = async (user : User): Promise<any[]> => {
   }
 };
 
-export const saveSurveyResponses = async (surveyId: string, responses: any) => {
+export const saveSurveyResponse = async (surveyId: string, responses: any) => {
   try {
     await setDoc(doc(db, 'results', surveyId), {
       responses: arrayUnion(responses),

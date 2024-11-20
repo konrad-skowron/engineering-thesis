@@ -2,20 +2,37 @@
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, saveSurveyResponses } from '@/lib/firestore';
-import { Survey } from '@/lib/types';
+import { fetchSurvey, saveSurveyResponse } from '@/lib/firestore';
+import { Survey, Question, Response } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { Button, Container, Group, Input, Center } from '@mantine/core';
 import { IconArrowRight, IconChartBar, IconShare } from '@tabler/icons-react';
 import { copyLink } from '@/lib/utils';
+import {
+  Input,
+  Center,
+  Container,
+  Title,
+  Text,
+  Textarea,
+  Select,
+  Button,
+  Paper,
+  Stack,
+  Group,
+  Checkbox,
+  Radio,
+  RadioGroup,
+  RangeSlider,
+  Slider
+} from '@mantine/core';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
-  const [responses, setResponses] = useState<any>({});
+  const [responses, setResponses] = useState<{[index: number]: any}>({});
   const router = useRouter();
 
   useEffect(() => {
@@ -28,13 +45,190 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     getSurvey();
   }, [params.surveyId]);
 
-  const handleInputChange = (questionIndex: number, response: string) => {
-    setResponses({ ...responses, [questionIndex]: response });
+  const updateResponse = (index: number, value: any) => {
+    setResponses(prev => ({
+      ...prev,
+      [index]: value
+    }));
   };
 
   const handleSubmit = () => {
-    saveSurveyResponses(params.surveyId, responses);
-    alert('Your responses have been saved. Thank you for participating in this poll.');
+    saveSurveyResponse(params.surveyId, responses);
+    alert('Your responses have been saved. Thank you for participating in this survey.');
+    setResponses({});
+  };
+
+  const renderQuestion = (question: Question, index: number) => {
+    switch (question.type) {
+      case 'text':
+        return (
+          <>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Textarea
+              value={responses[index] || ''}
+              onChange={(e) => updateResponse(index, e.target.value)}
+              required={question.required}
+              resize="vertical"
+            />
+          </>
+        );
+
+      case 'singleChoice':
+        return (
+          <>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <RadioGroup
+              value={responses[index] || ''}
+              onChange={(value) => updateResponse(index, value)}
+              required={question.required}
+            >
+              <Stack>
+                {question.options?.map((option, optIndex) => (
+                  <Radio
+                    key={optIndex}
+                    value={option}
+                    label={option}
+                  />
+                ))}
+              </Stack>
+            </RadioGroup>
+          </>
+        );
+
+      case 'multipleChoice':
+        return (
+          <>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Checkbox.Group
+              value={responses[index] || []}
+              onChange={(value) => updateResponse(index, value)}
+              required={question.required}
+            >
+              <Stack>
+                {question.options?.map((option, optIndex) => (
+                  <Checkbox
+                    key={optIndex}
+                    value={option}
+                    label={option}
+                  />
+                ))}
+              </Stack>
+            </Checkbox.Group>
+          </>
+        );
+
+      case 'dropdownList':
+        return (
+          <>
+          <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+          <Select
+            w="fit-content"
+            data={question.options || []}
+            value={responses[index] || null}
+            onChange={(value) => updateResponse(index, value)}
+            required={question.required}
+          />
+          </>
+        );
+
+      case 'discreteScale':
+        if (question.rangeEnabled) {
+          const getScale = (v: number) => v / 10;
+
+          return (
+            <>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Stack>
+                <RangeSlider
+                  scale={getScale}
+                  min={0}
+                  max={question.options ? question.options?.length * 10 - 10 : 50}
+                  step={10}
+                  marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
+                  onChange={(value) => updateResponse(index, [value[0] / 10, value[1] / 10])}
+                  defaultValue={responses[index] || [10, 30]}
+                  p="8%"
+                  mb="xl"
+                  styles={{
+                    markLabel: {
+                      whiteSpace: 'normal',
+                      display: 'block',
+                      textAlign: 'center'
+                    }
+                  }}
+                />
+              </Stack>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Slider
+                label={(value) => question.options?.[value] || value}
+                marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
+                min={0}
+                max={(question.options?.length || 1) - 1}
+                defaultValue={Math.floor((question.options?.length || 1) / 2)}
+                onChange={(value) => updateResponse(index, value)}
+                color="default"
+                p="8%"
+                mb="xl"
+                styles={{
+                  markLabel: {
+                    whiteSpace: 'pre-wrap',
+                    display: 'block',
+                    textAlign: 'center'
+                  }
+                }}
+              />
+            </>
+          );
+        }
+
+      case 'continousScale':
+        if (question.rangeEnabled) {
+          return (
+            <>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Stack>
+                <Group 
+                  style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }} 
+                  p="5%">
+                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <RangeSlider
+                    value={responses[index] || [20, 60]}
+                    onChange={(value) => updateResponse(index, value)}
+                  />
+                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                </Group>
+              </Stack>
+            </>
+          );
+        } else {
+          return (
+            <>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Stack>
+                <Group 
+                  style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }} 
+                  p="5%">
+                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <Slider
+                    value={responses[index] || 50}
+                    onChange={(value) => updateResponse(index, value)}
+                    color="default"
+                  />
+                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                </Group>
+              </Stack>
+            </>
+          );
+        }
+
+      default:
+        return null;
+    }
   };
 
   if (loading) {
@@ -57,41 +251,20 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   }
 
   return (
-    <Container>
-      <h1>{survey?.title}</h1>
-      <form onSubmit={handleSubmit}>
-        {survey?.questions.map((question, index) => (
-          <div key={index} className="question-container">
-            <h3>{question.question}</h3>
-            {question.type === 'text' ? (
-              <Input
-                type="text"
-                value={responses[index] || ''}
-                onChange={(e: any) => handleInputChange(index, e.target.value)}
-                required
-              />
-            ) : question.type === 'multipleChoice' && (
-              <div>
-                {question.options?.map((option, optionIndex) => (
-                  <label key={optionIndex}>
-                    <Input
-                      type="radio"
-                      name={`question-${index}`}
-                      value={option}
-                      checked={responses[index] === option}
-                      onChange={(e: any) => handleInputChange(index, e.target.value)}
-                      required
-                    />
-                    {option}
-                  </label>
-                ))}
-              </div>
-            )}
-          </div>
+    <Container size="md" py="xl">
+      <Title order={2}>{survey.title}</Title>
+      <Text c="dimmed" mb="lg">{survey.description}</Text>
+
+      <Stack gap="lg">
+        {survey.questions.map((question, index) => (
+          <Paper key={index} shadow="xs" p="md" withBorder>
+            {renderQuestion(question, index)}
+          </Paper>
         ))}
-        <Group mt="xl" grow>
+
+        <Group grow>
           <Group>
-            <Button type="submit" rightSection={<IconArrowRight size={16} />}>
+            <Button onClick={handleSubmit} type="submit" rightSection={<IconArrowRight size={16} />}>
               Submit
             </Button>
             {user && user.uid === survey?.author &&
@@ -111,7 +284,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </Button>
           </Group>
         </Group>
-      </form>
+      </Stack>
     </Container>
   );
 }

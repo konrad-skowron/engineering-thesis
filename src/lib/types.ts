@@ -1,4 +1,4 @@
-export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'dropdownList' | 'ranking' | 'discreteScale' | 'continousScale';
+export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'dropdownList' | 'discreteScale' | 'continousScale';
 
 export interface Question {
   type: QuestionType;
@@ -14,12 +14,12 @@ export interface Survey {
   author: string;
   authorName: string;
   title: string;
-  discription: string;
+  description: string;
   questions: Question[];
 }
 
 export interface Response {
-  [questionIndex: string]: string;
+  [questionIndex: number]: any;
 }
 
 export interface Results {

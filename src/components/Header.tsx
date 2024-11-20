@@ -15,7 +15,6 @@ import {
   Burger,
   Button,
   Group,
-  Center,
   Container,
   Avatar,
   UnstyledButton,
@@ -71,21 +70,20 @@ export function Header() {
           <Group gap={5} visibleFrom="sm">
             {items}
           </Group>
+          <Group gap={5} hiddenFrom="sm" visibleFrom="xs">
+            {items[0]}
+            {items[1]}
+          </Group>
 
           <Skeleton visible={loading} width={loading ? '20%' : 'auto'} height={loading ? 35 : 'auto'}>
             {!user && !loading ? (
               <>
-                <Group visibleFrom="xs">
+                <Group>
                   <Link href="/login" style={{ textDecoration: 'none' }}>
                     <Button variant="default">Log in</Button>
                   </Link>
                   <Link href="/register" style={{ textDecoration: 'none' }}>
                     <Button>Sign up</Button>
-                  </Link>
-                </Group>
-                <Group hiddenFrom="xs" gap={0}>
-                  <Link href="/login" style={{ textDecoration: 'none' }}>
-                    <Button variant="default">Log in</Button>
                   </Link>
                 </Group>
               </>
@@ -106,7 +104,7 @@ export function Header() {
                     >
                       <Group gap={7}>
                         <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={32} />
-                        <Text fw={500} size="sm" lh={1} mr={3} visibleFrom="xs">
+                        <Text fw={500} size="sm" lh={1} mr={3} visibleFrom="sm">
                           {user?.displayName || user?.email}
                         </Text>
                         <IconChevronDown style={{ width: rem(12), height: rem(12) }} stroke={1.5} />
