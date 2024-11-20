@@ -51,8 +51,8 @@ export const exportToCSV = (survey : Survey, responses : Response[]) => {
     const row = [
       index + 1,
       ...survey.questions.map((_, qIndex) => {
-        const response = response[qIndex] || '';
-        return `"${response.replace(/"/g, '""')}"`;
+        const qResponse = response[qIndex] || '';
+        return `"${qResponse.replace(/"/g, '""')}"`;
       })
     ];
     csvContent += row.join(',') + '\n';
