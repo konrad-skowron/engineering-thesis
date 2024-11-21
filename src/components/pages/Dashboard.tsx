@@ -10,7 +10,7 @@ import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, Icon
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
-import Closed from "../Closed";
+import Completed from "../Completed";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -82,7 +82,7 @@ export default function Dashboard() {
 
   return (
     <RouteProtector>
-      <Container>
+      <Container pt="xl" pb="xl">
         <div>
           <Title order={2}>Dashboard</Title>
           <Button onClick={createSurvey} leftSection={<IconPlus size={16} />} mt="lg" mb="xs">
@@ -126,7 +126,7 @@ export default function Dashboard() {
                 <Text visibleFrom="xs">{participants[survey.id]}</Text>
               </div>
               <div>
-                {survey.active ? <LiveDot /> : <Closed />}
+                {survey.active ? <LiveDot /> : <Completed />}
               </div>
               <div>
                 <Menu
@@ -147,6 +147,10 @@ export default function Dashboard() {
                     </ActionIcon>
                   </Menu.Target>
                   <Menu.Dropdown>
+                    <Menu.Item leftSection={<IconChartBar size={14} />}
+                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
+                      Show results
+                    </Menu.Item>
                     {survey.active ? (
                       <Menu.Item leftSection={<IconLock size={14} />}
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, false)}>
@@ -159,10 +163,6 @@ export default function Dashboard() {
                     <Menu.Item leftSection={<IconShare size={14} />}
                       onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
                       Share
-                    </Menu.Item>
-                    <Menu.Item leftSection={<IconChartBar size={14} />}
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
-                      Show results
                     </Menu.Item>
 
                     <Menu.Divider />

@@ -109,7 +109,7 @@ export default function SurveyCreator() {
 
   return (
     <RouteProtector>
-      <Container size="md" py="xl">
+      <Container pt="xl" pb="xl">
         <Title order={2}>Create a Survey</Title>
         <Text c="dimmed" mb="lg">Complete the below fields to create your survey.</Text>
         <Stack gap="lg">

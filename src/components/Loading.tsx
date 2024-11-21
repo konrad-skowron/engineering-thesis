@@ -13,7 +13,7 @@ export function Loading() {
   }, []);
 
   return (
-    <Center>
+    <Center p="xl">
       Loading{dots}
     </Center>
   );

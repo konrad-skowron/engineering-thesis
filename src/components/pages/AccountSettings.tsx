@@ -21,7 +21,7 @@ export default function AccountSettings() {
 
   return (
     <RouteProtector>
-      <Container>
+      <Container pt="xl" pb="xl">
         <div>
           <Title order={2}>Settings</Title>
           <Button variant="light" color="red" mt="lg" leftSection={<IconTrash size={16} />} onClick={handleDeleteAccount}>Delete account</Button>

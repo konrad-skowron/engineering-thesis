@@ -285,7 +285,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   }
 
   return (
-    <Container size="md" py="xl">
+    <Container pt="xl" pb="xl">
       <Title order={2}>{survey.title}</Title>
       <Text c="dimmed" mb="lg">{survey.description}</Text>
 
@@ -317,13 +317,12 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             >
               Share
             </Button>
-            <ActionIcon
+            <Button
               onClick={copyLink}
               variant='default'
-              size='lg'
               hiddenFrom='xs'>
               <IconShare size={16} />
-            </ActionIcon>
+            </Button>
           </Group>
         </Group>
       </Stack>

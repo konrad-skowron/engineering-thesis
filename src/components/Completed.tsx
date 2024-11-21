@@ -1,7 +1,7 @@
 import React from 'react';
 import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
 
-const Closed = () => {
+const Completed = () => {
   const theme = useMantineTheme();
   const { colorScheme } = useMantineColorScheme();
 
@@ -26,4 +26,4 @@ const Closed = () => {
   );
 };
 
-export default Closed;
+export default Completed;
