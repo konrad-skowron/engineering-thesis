@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal, ActionIcon } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
 import { calculateResults, copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
 
@@ -106,9 +106,17 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
             onClick={copyLink}
             leftSection={<IconShare size={16} />}
             variant='default'
+            visibleFrom='xs'
           >
             Share
           </Button>
+          <ActionIcon
+            onClick={copyLink}
+            variant='default'
+            size='lg'
+            hiddenFrom='xs'>
+            <IconShare size={16} />
+          </ActionIcon>
         </Group>
       </Group>
 

@@ -24,7 +24,8 @@ import {
   Radio,
   RadioGroup,
   RangeSlider,
-  Slider
+  Slider,
+  ActionIcon
 } from '@mantine/core';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
@@ -32,7 +33,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const { user } = useAuth();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
-  const [responses, setResponses] = useState<{[index: number]: any}>({});
+  const [responses, setResponses] = useState<{ [index: number]: any }>({});
   const router = useRouter();
 
   const discreteScaleRangeDv = [10, 30];
@@ -85,7 +86,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
         return;
       }
     }
-    
+
     saveSurveyResponse(params.surveyId, newResponses);
     alert('Your responses have been saved. Thank you for participating in this survey.');
     setResponses({});
@@ -153,14 +154,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'dropdownList':
         return (
           <>
-          <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
-          <Select
-            w="fit-content"
-            data={question.options || []}
-            value={responses[index] || null}
-            onChange={(value) => updateResponse(index, value)}
-            required={question.required}
-          />
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Select
+              w="fit-content"
+              data={question.options || []}
+              value={responses[index] || null}
+              onChange={(value) => updateResponse(index, value)}
+              required={question.required}
+            />
           </>
         );
 
@@ -225,8 +226,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
               <Stack>
-                <Group 
-                  style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }} 
+                <Group
+                  style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider
@@ -243,8 +244,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
               <Stack>
-                <Group 
-                  style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }} 
+                <Group
+                  style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
@@ -312,9 +313,17 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               onClick={copyLink}
               leftSection={<IconShare size={16} />}
               variant='default'
+              visibleFrom='xs'
             >
               Share
             </Button>
+            <ActionIcon
+              onClick={copyLink}
+              variant='default'
+              size='lg'
+              hiddenFrom='xs'>
+              <IconShare size={16} />
+            </ActionIcon>
           </Group>
         </Group>
       </Stack>
