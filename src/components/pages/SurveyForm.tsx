@@ -334,15 +334,15 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                 </Button>
               </Group>
               <Group grow mt="sm">
+                <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
+                  Show results
+                </Button>
                 <Button
                   onClick={copyLink}
                   leftSection={<IconShare size={16} />}
                   variant='default'
                 >
                   Share
-                </Button>
-                <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
-                  Show results
                 </Button>
               </Group>
             </Box>) : (
