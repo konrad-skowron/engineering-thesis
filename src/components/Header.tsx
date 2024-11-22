@@ -78,12 +78,17 @@ export function Header() {
           <Skeleton visible={loading} width={loading ? '20%' : 'auto'} height={loading ? 35 : 'auto'}>
             {!user && !loading ? (
               <>
-                <Group>
+                <Group visibleFrom="sm">
                   <Link href="/login" style={{ textDecoration: 'none' }}>
                     <Button variant="default">Log in</Button>
                   </Link>
                   <Link href="/register" style={{ textDecoration: 'none' }}>
                     <Button>Sign up</Button>
+                  </Link>
+                </Group>
+                <Group hiddenFrom="sm" gap={0}>
+                  <Link href="/login" style={{ textDecoration: 'none' }}>
+                    <Button variant="default">Log in</Button>
                   </Link>
                 </Group>
               </>

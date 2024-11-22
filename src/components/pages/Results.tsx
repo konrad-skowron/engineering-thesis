@@ -110,7 +110,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
               ))}
             </Stack>
 
-            <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} mt='lg'>
+            <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} mt='lg' visibleFrom='xs'>
               <Group wrap="nowrap">
                 <Button
                   onClick={() => router.push(`/${params.surveyId}`)}
@@ -131,19 +131,37 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   onClick={copyLink}
                   leftSection={<IconShare size={16} />}
                   variant='default'
-                  visibleFrom='xs'
                 >
-                  Share
-                </Button>
-                <Button
-                  onClick={copyLink}
-                  variant='default'
-                  hiddenFrom='xs'>
-                  <IconShare size={16} />
+                    Share
                 </Button>
               </Group>
             </Group>
-
+            <Box mt='lg' hiddenFrom='xs'>
+              <Group grow>
+                <Button
+                  onClick={() => router.push(`/${params.surveyId}`)}
+                  leftSection={<IconArrowLeft size={16} />}
+                >
+                  Back to survey
+                </Button>
+              </Group>
+              <Group grow mt='sm'>
+                <Button
+                  leftSection={<IconFileDownload size={16} />}
+                  variant='default'
+                  onClick={() => setOpened(!opened)}
+                >
+                  Export results
+                </Button>
+                <Button
+                  onClick={copyLink}
+                  leftSection={<IconShare size={16} />}
+                  variant='default'
+                >
+                    Share
+                </Button>
+              </Group>
+            </Box>
 
             <Modal
               opened={opened}

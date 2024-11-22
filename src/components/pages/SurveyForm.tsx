@@ -25,7 +25,7 @@ import {
   RadioGroup,
   RangeSlider,
   Slider,
-  ActionIcon
+  Box
 } from '@mantine/core';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
@@ -296,7 +296,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
           </Paper>
         ))}
 
-        <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }}>
+        <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} visibleFrom='xs'>
           <Group wrap="nowrap">
             <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
               Submit
@@ -325,6 +325,41 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </Button>
           </Group>
         </Group>
+        <Box hiddenFrom='xs'>
+          {user && user.uid === survey?.author ? (
+            <Box>
+              <Group grow>
+                <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
+                  Submit
+                </Button>
+              </Group>
+              <Group grow mt="sm">
+                <Button
+                  onClick={copyLink}
+                  leftSection={<IconShare size={16} />}
+                  variant='default'
+                >
+                  Share
+                </Button>
+                <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
+                  Show results
+                </Button>
+              </Group>
+            </Box>) : (
+            <Group grow>
+              <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
+                Submit
+              </Button>
+              <Button
+                onClick={copyLink}
+                leftSection={<IconShare size={16} />}
+                variant='default'
+              >
+                Share
+              </Button>
+            </Group>
+          )}
+        </Box>
       </Stack>
     </Container>
   );
