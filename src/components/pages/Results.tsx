@@ -7,7 +7,8 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
 import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal, ActionIcon, Tabs, useMantineColorScheme, useMantineTheme } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
-import { calculateResults, copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
+import { copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
+import { BarChart, DonutChart } from '@mantine/charts';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -47,67 +48,125 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
       <Box bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]} pb="lg" pt='xl'>
         <Container>
           <Title order={1}>{survey?.title}</Title>
-          <Text mb="lg" c={'dimmed'} size='sm'>by {survey?.authorName}</Text>
-          <Text mb="lg">Total responses: {responses.length}</Text>
+          <Text c={'dimmed'} size='sm'>by {survey?.authorName}</Text>
         </Container>
       </Box>
 
       <Tabs defaultValue="summary" variant='outline' pb='xl'>
         <Tabs.List justify='Center' bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
-          <Tabs.Tab value="summary" 
+          <Tabs.Tab value="summary"
             bg={summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
             onClick={() => setSummaryOpen(true)}
-            style={{ borderBottomColor: !summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent'}}>
+            style={{ borderBottomColor: !summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
             Summary
           </Tabs.Tab>
           <Tabs.Tab value="individual"
             bg={!summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
             onClick={() => setSummaryOpen(false)}
-            style={{ borderBottomColor: summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent'}}>
+            style={{ borderBottomColor: summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
             Individual
           </Tabs.Tab>
         </Tabs.List>
 
         <Tabs.Panel value="summary">
           <Container>
-
             <Stack gap="lg" mt={'lg'}>
-              {survey?.questions.map((question, index) => (
-                <Paper key={index} p="md" withBorder>
-                  <Title order={3} mb="md">{question.question}</Title>
-                  {question.type === 'multipleChoice' ? (
-                    <Stack gap="sm">
-                      {Object.entries(calculateResults(survey, responses, index) || { 'No responses yet.': { count: 0, percentage: 0 } }).map(([option, data]) => (
-                        <Box key={option}>
-                          <Group pos="absolute">
-                            <Text>{option}</Text>
-                            <Text weight={500}>
-                              {data.count} ({data.percentage}%)
-                            </Text>
-                          </Group>
-                          <Box
-                            sx={(theme: MantineTheme) => ({
-                              backgroundColor: theme.colors.blue[4],
-                              height: 8,
-                              borderRadius: theme.radius.sm,
-                              width: `${data.percentage}%`,
-                              transition: 'width 0.3s ease'
-                            })}
-                          />
-                        </Box>
-                      ))}
-                    </Stack>
-                  ) : (
-                    <Stack gap="xs">
-                      <ScrollArea h={150} type="auto">
-                        {(calculateResults(survey, responses, index) as string[] || ['No responses yet.']).map((response, i) => (
-                          <Text key={i}>{response}</Text>
+              {survey?.questions.map((question, index) => {
+                const questionResponses = responses.map((response) => response[index]);
+                let result;
+
+                switch (question.type) {
+                  case 'text':
+                    result = (
+                      <Stack gap='xs'>
+                        {questionResponses.map((response, idx) => (
+                          response && response.length > 0 && <Text key={idx}>{response}</Text>
                         ))}
-                      </ScrollArea>
-                    </Stack>
-                  )}
-                </Paper>
-              ))}
+                      </Stack>
+                    );
+                    break;
+
+                  case 'singleChoice':
+                    const singleChoiceCounts = question.options?.reduce((acc, option) => {
+                      acc[option] = questionResponses.filter((resp) => resp === option).length;
+                      return acc;
+                    }, {} as Record<string, number>);
+                    result = (
+                      <Stack>
+                        {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
+                          <Text key={option}>
+                            {option}: {count}
+                          </Text>
+                        ))}
+                      </Stack>
+                    );
+                    break;
+
+                  case 'multipleChoice':
+                    const multipleChoiceCounts = question.options?.reduce((acc, option) => {
+                      acc[option] = questionResponses.reduce(
+                        (count, response) => count + (response?.includes(option) ? 1 : 0),
+                        0
+                      );
+                      return acc;
+                    }, {} as Record<string, number>);
+                    result = (
+                      <Stack>
+                        {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
+                          <Text key={option}>
+                            {option}: {count}
+                          </Text>
+                        ))}
+                      </Stack>
+                    );
+                    break;
+
+                  case 'dropdownList':
+                    const dropdownCounts = question.options?.reduce((acc, option) => {
+                      acc[option] = questionResponses.filter((resp) => resp === option).length;
+                      return acc;
+                    }, {} as Record<string, number>);
+                    result = (
+                      <Stack>
+                        {Object.entries(dropdownCounts || {}).map(([option, count]) => (
+                          <Text key={option}>
+                            {option}: {count}
+                          </Text>
+                        ))}
+                      </Stack>
+                    );
+                    break;
+
+                  case 'discreteScale':
+                  case 'continousScale':
+                    const average = (
+                      questionResponses.reduce((sum, value) => sum + (value || 0), 0) /
+                      questionResponses.length
+                    ).toFixed(2);
+                    result = (
+                      <Text>
+                        Average Score: {average}
+                      </Text>
+                    );
+                    break;
+
+                  default:
+                    result = <Text c="red">No data available for this question type.</Text>;
+                }
+
+                if (questionResponses.length === 0) {
+                  result = <Text c="dimmed">No responses yet.</Text>;
+                }
+
+                return (
+                  <Paper key={index} p="md" withBorder>
+                    <Title order={4}>{question.question}</Title>
+                    <Text c="dimmed" size="sm" mb='md'>Total responses: {questionResponses.length}</Text>
+                    {result}
+                  </Paper>
+                );
+              })}
+
             </Stack>
 
             <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} mt='lg' visibleFrom='xs'>
@@ -132,7 +191,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   leftSection={<IconShare size={16} />}
                   variant='default'
                 >
-                    Share
+                  Share
                 </Button>
               </Group>
             </Group>
@@ -158,7 +217,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   leftSection={<IconShare size={16} />}
                   variant='default'
                 >
-                    Share
+                  Share
                 </Button>
               </Group>
             </Box>
@@ -188,7 +247,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
         <Tabs.Panel value="individual">
           <Container>
-            Individual response
+            <Text mt='xl'>Coming soon...</Text>
           </Container>
         </Tabs.Panel>
       </Tabs>
