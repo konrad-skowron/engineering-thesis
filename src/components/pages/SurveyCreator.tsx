@@ -162,16 +162,20 @@ export default function SurveyCreator() {
                     ]}
                   />
 
-                  <Box h='100%'>
-                    <ActionIcon
-                      color="red"
-                      variant="subtle"
-                      onClick={() => removeQuestion(index)}
-                      h='100%'
-                    >
-                      <IconTrash size={18} />
-                    </ActionIcon>
-                  </Box>
+                  <ActionIcon
+                    color="red"
+                    variant="subtle"
+                    onClick={() => removeQuestion(index)}
+                    style={{
+                      height: 'auto',
+                      alignSelf: 'stretch',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    <IconTrash size={18} />
+                  </ActionIcon>
                 </Group>
 
                 <Divider />
