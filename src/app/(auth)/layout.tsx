@@ -6,7 +6,7 @@ export default function AuthLayout({
   children: React.ReactNode;
 }) {
   return (
-    <Center style={{ height: '100vh' }}>
+    <Center>
       {children}
     </Center>
   )

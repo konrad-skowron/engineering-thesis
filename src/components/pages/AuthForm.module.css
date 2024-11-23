@@ -4,3 +4,10 @@
     var(--mantine-font-family);
   font-weight: 900;
 }
+
+.wrapper {
+  height: 100vh;
+  display: flex;
+  align-items: safe center;
+  overflow-y: auto;
+}
