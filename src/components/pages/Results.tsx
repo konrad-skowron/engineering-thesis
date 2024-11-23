@@ -72,7 +72,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
           <Container>
             <Stack gap="lg" mt={'lg'}>
               {survey?.questions.map((question, index) => {
-                const questionResponses = responses.map((response) => response[index]);
+                const questionResponses = responses.map((response) => response[index]).filter(response => response !== undefined);
                 let result;
 
                 switch (question.type) {
@@ -80,7 +80,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Stack gap='xs'>
                         {questionResponses.map((response, idx) => (
-                          response && response.length > 0 && <Text key={idx}>{response}</Text>
+                          <Text key={idx}>{response}</Text>
                         ))}
                       </Stack>
                     );
