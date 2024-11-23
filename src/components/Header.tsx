@@ -22,7 +22,8 @@ import {
   rem,
   Skeleton,
   Drawer,
-  SimpleGrid
+  SimpleGrid,
+  Box
 } from '@mantine/core';
 import Link from "next/link";
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -86,11 +87,11 @@ export function Header() {
                     <Button>Sign up</Button>
                   </Link>
                 </Group>
-                <Group hiddenFrom="sm" gap={0}>
+                <Box hiddenFrom="sm">
                   <Link href="/login" style={{ textDecoration: 'none' }}>
                     <Button variant="default">Log in</Button>
                   </Link>
-                </Group>
+                </Box>
               </>
             ) : (
               <Group justify="space-between">

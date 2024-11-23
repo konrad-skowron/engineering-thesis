@@ -15,7 +15,6 @@ import {
   Stack,
   Container,
   Title,
-  rem
 } from '@mantine/core';
 import { GoogleButton } from '@/components/GoogleButton';
 import { useAuth } from '@/components/auth/AuthProvider';
@@ -27,7 +26,7 @@ interface AuthenticationFormProps extends PaperProps {
   type: 'log in' | 'sign up';
 }
 
-export function AuthForm({ type, ...props }: AuthenticationFormProps) {
+export function AuthForm({ type }: AuthenticationFormProps) {
   const { user, logInWithGoogle, logIn, signUp } = useAuth();
   const router = useRouter();
 
