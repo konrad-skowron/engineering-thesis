@@ -208,7 +208,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   Back to survey
                 </Button>
               </Group>
-              <Group grow mt='sm'>
+              <Group grow mt='md'>
                 <Button
                   leftSection={<IconFileDownload size={16} />}
                   variant='default'
