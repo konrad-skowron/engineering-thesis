@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, Stack, Button, MantineTheme, ScrollArea, Modal, ActionIcon, Tabs, useMantineColorScheme, useMantineTheme } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, Stack, Button, Pagination, ScrollArea, Modal, ActionIcon, Tabs, useMantineColorScheme, useMantineTheme, Center, Divider } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
 import { copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, DonutChart } from '@mantine/charts';
@@ -21,6 +21,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   const [summaryOpen, setSummaryOpen] = useState(true);
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
+  const [activePage, setPage] = useState(1);
 
   useEffect(() => {
     const getData = async () => {
@@ -96,7 +97,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       return acc;
                     }, {} as Record<string, number>);
                     result = (
-                      <Stack>
+                      <Stack gap='xs'>
                         {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
                           <Text key={option}>
                             {option}: {count}
@@ -115,7 +116,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       return acc;
                     }, {} as Record<string, number>);
                     result = (
-                      <Stack>
+                      <Stack gap='xs'>
                         {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
                           <Text key={option}>
                             {option}: {count}
@@ -131,7 +132,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       return acc;
                     }, {} as Record<string, number>);
                     result = (
-                      <Stack>
+                      <Stack gap='xs'>
                         {Object.entries(dropdownCounts || {}).map(([option, count]) => (
                           <Text key={option}>
                             {option}: {count}
@@ -170,7 +171,6 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   </Paper>
                 );
               })}
-
             </Stack>
 
             <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} mt='lg' visibleFrom='xs'>
@@ -251,9 +251,66 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
         <Tabs.Panel value="individual">
           <Container>
-            <Text mt='xl'>Coming soon...</Text>
+            <Stack gap="lg" mt={'lg'}>
+              {survey?.questions.map((question, index) => {
+                const questionResponses = responses[activePage - 1];
+                let result;
+
+                switch (question.type) {
+                  case 'text':
+                  case 'singleChoice':
+                  case 'dropdownList':
+                    result = (
+                      <Stack gap='xs'>
+                        <Text>{questionResponses[index]}</Text>
+                      </Stack>
+                    );
+                    break;
+
+                  case 'multipleChoice':
+                    result = (
+                      <Stack>
+                        {questionResponses[index] !== undefined &&
+                          <Text>{questionResponses[index].join(', ')}</Text>}
+                      </Stack>
+                    );
+                    break;
+
+                  case 'discreteScale':
+                  case 'continousScale':
+                    result = (
+                      <Text>
+                        {questionResponses[index]}
+                      </Text>
+                    );
+                    break;
+
+                  default:
+                    result = <Text c="red">No data available for this question type.</Text>;
+                }
+
+                if (questionResponses[index] === undefined) {
+                  result = <Text c="dimmed">No response.</Text>;
+                }
+
+                return (
+                  <Paper key={index} p="md" withBorder>
+                    <Title order={4}>{question.question}</Title>
+                    {result}
+                  </Paper>
+                );
+              })}
+            </Stack>
+            <Center mt="lg">
+              <Pagination
+                total={responses.length}
+                value={activePage}
+                onChange={setPage}
+              />
+            </Center>
           </Container>
         </Tabs.Panel>
+
       </Tabs>
     </Box >
   );
