@@ -53,19 +53,23 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
       </Box>
 
       <Tabs defaultValue="summary" variant='outline' pb='xl'>
-        <Tabs.List justify='Center' bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
-          <Tabs.Tab value="summary"
-            bg={summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
-            onClick={() => setSummaryOpen(true)}
-            style={{ borderBottomColor: !summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
-            Summary
-          </Tabs.Tab>
-          <Tabs.Tab value="individual"
-            bg={!summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
-            onClick={() => setSummaryOpen(false)}
-            style={{ borderBottomColor: summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
-            Individual
-          </Tabs.Tab>
+        <Tabs.List bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]}>
+          <Container w='100%'>
+            <Group justify='end' gap={0}>
+              <Tabs.Tab value="summary"
+                bg={summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
+                onClick={() => setSummaryOpen(true)}
+                style={{ borderBottomColor: !summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
+                Summary
+              </Tabs.Tab>
+              <Tabs.Tab value="individual"
+                bg={!summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
+                onClick={() => setSummaryOpen(false)}
+                style={{ borderBottomColor: summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
+                Individual
+              </Tabs.Tab>
+            </Group>
+          </Container>
         </Tabs.List>
 
         <Tabs.Panel value="summary">
