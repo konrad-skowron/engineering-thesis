@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, Stack, Button, Pagination, ScrollArea, Modal, ActionIcon, Tabs, useMantineColorScheme, useMantineTheme, Center, Divider } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
 import { copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, DonutChart } from '@mantine/charts';
@@ -143,14 +143,23 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     break;
 
                   case 'discreteScale':
+                    const discreteAverage = Math.round(
+                      questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length
+                    );
+                    result = (
+                      <Text>
+                        Average response: {discreteAverage} - {question.options?.[+discreteAverage - 1]}
+                      </Text>
+                    );
+                    break;
+
                   case 'continousScale':
-                    const average = (
-                      questionResponses.reduce((sum, value) => sum + (value || 0), 0) /
-                      questionResponses.length
+                    const continousAverage = (
+                      questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length
                     ).toFixed(2);
                     result = (
                       <Text>
-                        Average Score: {average}
+                        Average response: {continousAverage} / 100
                       </Text>
                     );
                     break;
@@ -165,7 +174,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
                 return (
                   <Paper key={index} p="md" withBorder>
-                    <Title order={4}>{question.question}</Title>
+                    <Title order={4}>{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Title>
                     <Text c="dimmed" size="sm" mb='md'>Total responses: {questionResponses.length}</Text>
                     {result}
                   </Paper>
@@ -256,46 +265,162 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 const questionResponses = responses[activePage - 1];
                 let result;
 
-                switch (question.type) {
-                  case 'text':
-                  case 'singleChoice':
-                  case 'dropdownList':
-                    result = (
-                      <Stack gap='xs'>
-                        <Text>{questionResponses[index]}</Text>
-                      </Stack>
-                    );
-                    break;
-
-                  case 'multipleChoice':
-                    result = (
-                      <Stack>
-                        {questionResponses[index] !== undefined &&
-                          <Text>{questionResponses[index].join(', ')}</Text>}
-                      </Stack>
-                    );
-                    break;
-
-                  case 'discreteScale':
-                  case 'continousScale':
-                    result = (
-                      <Text>
-                        {questionResponses[index]}
-                      </Text>
-                    );
-                    break;
-
-                  default:
-                    result = <Text c="red">No data available for this question type.</Text>;
-                }
-
                 if (questionResponses[index] === undefined) {
                   result = <Text c="dimmed">No response.</Text>;
+                } else {
+
+                  switch (question.type) {
+                    case 'text':
+                      result = (
+                        <Textarea
+                          value={questionResponses[index].toString() || ''}
+                          disabled
+                        />
+                      );
+                      break;
+
+                    case 'singleChoice':
+                      result = (
+                        <RadioGroup
+                          value={questionResponses[index].toString() || null}
+                        >
+                          <Stack>
+                            {question.options?.map((option, optIndex) => (
+                              <Radio
+                                key={optIndex}
+                                value={option}
+                                label={option}
+                                disabled
+                              />
+                            ))}
+                          </Stack>
+                        </RadioGroup>
+                      );
+                      break;
+
+                    case 'multipleChoice':
+                      result = (
+                        <Checkbox.Group
+                          value={questionResponses[index] || []}
+                        >
+                          <Stack>
+                            {question.options?.map((option, optIndex) => (
+                              <Checkbox
+                                key={optIndex}
+                                value={option}
+                                label={option}
+                                disabled
+                              />
+                            ))}
+                          </Stack>
+                        </Checkbox.Group>
+                      );
+                      break;
+
+                    case 'dropdownList':
+                      result = (
+                        <Select
+                          w="fit-content"
+                          data={question.options || []}
+                          value={questionResponses[index].toString() || null}
+                          disabled
+                        />
+                      );
+                      break;
+
+                    case 'discreteScale':
+                      if (question.rangeEnabled) {
+                        const getScale = (v: number) => v / 10;
+
+                        result = (
+                          <Stack>
+                            <RangeSlider
+                              labelAlwaysOn
+                              scale={getScale}
+                              min={0}
+                              max={question.options ? question.options?.length * 10 - 10 : 50}
+                              step={10}
+                              marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
+                              defaultValue={questionResponses[index] || [0, 50]}
+                              p="8%"
+                              mb="xl"
+                              styles={{
+                                markLabel: {
+                                  whiteSpace: 'pre-wrap',
+                                  display: 'block',
+                                  textAlign: 'center'
+                                }
+                              }}
+                            />
+                          </Stack>
+                        );
+                      } else {
+                        result = (
+                          <Slider
+                            labelAlwaysOn
+                            label={(value) => question.options?.[value] || value}
+                            marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
+                            min={0}
+                            max={(question.options?.length || 1) - 1}
+                            defaultValue={questionResponses[index] || 0}
+                            color="default"
+                            p="8%"
+                            mb="xl"
+                            styles={{
+                              markLabel: {
+                                whiteSpace: 'pre-wrap',
+                                display: 'block',
+                                textAlign: 'center'
+                              }
+                            }}
+                          />
+                        );
+                      }
+                      break;
+
+                    case 'continousScale':
+                      if (question.rangeEnabled) {
+                        result = (
+                          <Stack>
+                            <Group
+                              style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
+                              p="5%">
+                              <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                              <RangeSlider
+                                value={questionResponses[index] || [0, 50]}
+                                labelAlwaysOn
+                              />
+                              <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                            </Group>
+                          </Stack>
+                        );
+                      } else {
+                        result = (
+                          <Stack>
+                            <Group
+                              style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
+                              p="5%">
+                              <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                              <Slider
+                                value={questionResponses[index]}
+                                color="default"
+                                labelAlwaysOn
+                              />
+                              <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                            </Group>
+                          </Stack>
+                        );
+                      }
+                      break;
+
+                    default:
+                      result = <Text c="red">No data available for this question type.</Text>;
+                  }
                 }
 
                 return (
                   <Paper key={index} p="md" withBorder>
-                    <Title order={4}>{question.question}</Title>
+                    <Title order={4} mb='md'>{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Title>
                     {result}
                   </Paper>
                 );
