@@ -56,7 +56,7 @@ export function LandingPage() {
 
         <Text className={classes.description} c="placeholder">
           Build fully functional and accessible web surveys with ease. 
-          The service includes all the needed tools for conducting surveys 
+          The service includes all of the needed tools for conducting surveys 
           using a continuous as well as a discrete Likert scale.
         </Text>
 
