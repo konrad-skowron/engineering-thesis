@@ -143,25 +143,42 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     break;
 
                   case 'discreteScale':
-                    const discreteAverage = Math.round(
-                      questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length
-                    );
-                    result = (
-                      <Text>
-                        Average response: {discreteAverage} - {question.options?.[+discreteAverage - 1]}
-                      </Text>
-                    );
+                    if (question.rangeEnabled) {
+                      const firstElementAverage = (questionResponses.reduce((sum, [first]) => sum + first, 0) / questionResponses.length).toFixed(2);
+                      const secondElementAverage = (questionResponses.reduce((sum, [, second]) => sum + second, 0) / questionResponses.length).toFixed(2);
+                      result = (
+                        <Text>
+                          Average range: {firstElementAverage} - {secondElementAverage}
+                        </Text>
+                      );
+                      
+                    } else {
+                      const discreteAverage = (questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length).toFixed(2);
+                      result = (
+                        <Text>
+                          Average response: {discreteAverage}
+                        </Text>
+                      );
+                    }
                     break;
 
                   case 'continousScale':
-                    const continousAverage = (
-                      questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length
-                    ).toFixed(2);
-                    result = (
-                      <Text>
-                        Average response: {continousAverage} / 100
-                      </Text>
-                    );
+                    if (question.rangeEnabled) {
+                      const firstElementAverage = (questionResponses.reduce((sum, [first]) => sum + first, 0) / questionResponses.length).toFixed(2);
+                      const secondElementAverage = (questionResponses.reduce((sum, [, second]) => sum + second, 0) / questionResponses.length).toFixed(2);
+                      result = (
+                        <Text>
+                          Average range: {firstElementAverage} - {secondElementAverage}
+                        </Text>
+                      );
+                    } else {
+                      const continousAverage = (questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length).toFixed(2);
+                      result = (
+                        <Text>
+                          Average response: {continousAverage} / 100
+                        </Text>
+                      );
+                    }
                     break;
 
                   default:
