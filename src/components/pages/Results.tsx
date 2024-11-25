@@ -336,12 +336,13 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                           <Stack>
                             <RangeSlider
                               labelAlwaysOn
+                              color={colorScheme === 'dark' ? 'rgb(105, 105, 105)' : 'rgb(206, 212, 218)'}
                               scale={getScale}
                               min={0}
                               max={question.options ? question.options?.length * 10 - 10 : 50}
                               step={10}
                               marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
-                              defaultValue={questionResponses[index] || [0, 50]}
+                              value={questionResponses[index].map((v: number) => v * 10) || [0, 50]}
                               p="8%"
                               mb="xl"
                               styles={{
@@ -362,7 +363,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
                             min={0}
                             max={(question.options?.length || 1) - 1}
-                            defaultValue={questionResponses[index] || 0}
+                            value={questionResponses[index] || 0}
                             color="default"
                             p="8%"
                             mb="xl"
@@ -387,8 +388,9 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                               p="5%">
                               <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                               <RangeSlider
-                                value={questionResponses[index] || [0, 50]}
                                 labelAlwaysOn
+                                value={questionResponses[index] || [0, 50]}
+                                color={colorScheme === 'dark' ? 'rgb(105, 105, 105)' : 'rgb(206, 212, 218)'}
                               />
                               <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                             </Group>

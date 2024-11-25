@@ -276,7 +276,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
 
   if (!survey?.active) {
     return (
-      <Container>
+      <Container p='xl'>
         <Center>
           This survey has been closed.
         </Center>
