@@ -59,7 +59,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
       await signInWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      alert("Error loging in" + error);
+      alert("Invalid email or password");
+      console.error("Error logging in ", error);
       setLoading(false);
       throw error;
     }
@@ -71,7 +72,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       await setPersistence(auth, rememberMe ? browserLocalPersistence : browserSessionPersistence);
       await createUserWithEmailAndPassword(auth, email, password);
     } catch (error) {
-      alert("Error signing in" + error);
+      alert("Email already in use");
+      console.error("Error signing in ", error);
       setLoading(false);
       throw error;
     }
@@ -83,7 +85,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await signInWithPopup(auth, provider);
     } catch (error) {
-      console.error("Error signing in with Google", error);
+      console.error("Error signing in with Google ", error);
       setLoading(false);
     }
   }
@@ -94,7 +96,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       return auth.signOut();
     } catch (error) {
-      console.error("Error signing out with Google", error);
+      console.error("Error signing out with Google ", error);
       setLoading(false);
     }
   }
@@ -106,7 +108,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         await deleteUser(user);
       }
     } catch (error) {
-      console.error("Error deleting account", error);
+      console.error("Error deleting account ", error);
       setLoading(false);
     }
   }
@@ -115,7 +117,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     try {
       await sendPasswordResetEmail(auth, email);
     } catch (error) {
-      console.error("Error resetting password", error);
+      console.error("Error resetting password ", error);
     }
   }
 
