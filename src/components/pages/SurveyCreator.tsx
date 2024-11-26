@@ -103,6 +103,23 @@ export default function SurveyCreator() {
     if (!user) {
       return;
     }
+    if (!surveyTitle) {
+      alert('Please enter a survey title.');
+      return;
+    }
+    for (let i = 0; i < questions.length; i++) {
+      if (!questions[i].question) {
+        alert('Please fill each required field.');
+        return;
+      }
+      if (questions[i].type === 'discreteScale' && !questions[i].rangeEnabled) {
+        for (let j = 0; j < questions[i].options!.length; j++) {
+          if (questions[i].options![j] === '') {
+            updateOption(i, j, String(j + 1));
+          }
+        }
+      }
+    }
     const surveyId = await saveSurvey(surveyTitle, surveyDescription, questions, user);
     router.push(`/${surveyId}`);
   };

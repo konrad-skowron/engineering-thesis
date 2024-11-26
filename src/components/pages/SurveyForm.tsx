@@ -34,6 +34,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [responses, setResponses] = useState<{ [index: number]: any }>({});
+  const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
 
   const discreteScaleRangeDv = [10, 30];
@@ -58,7 +59,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     }));
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const newResponses = { ...responses };
 
     for (const [index, question] of survey?.questions.entries() || []) {
@@ -87,9 +88,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       }
     }
 
-    saveSurveyResponse(params.surveyId, newResponses);
-    alert('Your responses have been saved. Thank you for participating in this survey.');
-    setResponses({});
+    await saveSurveyResponse(params.surveyId, newResponses);
+    setSubmitted(true);
   };
 
   const renderQuestion = (question: Question, index: number) => {
@@ -280,6 +280,17 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
         <Center>
           This survey has been closed.
         </Center>
+      </Container>
+    );
+  }
+
+  if (submitted) {
+    return (
+      <Container pt="xl" pb="xl">
+        <Paper shadow="xs" p="md" withBorder>
+          <Title order={2} c='green'>Success</Title>
+          <Text mt='xs'>Your responses have been saved. Thank you for participating in this survey.</Text>
+        </Paper>
       </Container>
     );
   }

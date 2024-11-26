@@ -1,5 +1,5 @@
 import { db } from '@/lib/firebase';
-import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove } from "firebase/firestore";
+import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove, updateDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { Survey, Question, Response } from "@/lib/types";
 
@@ -66,12 +66,15 @@ export const fetchUserSurveys = async (user : User): Promise<any[]> => {
   }
 };
 
-export const saveSurveyResponse = async (surveyId: string, responses: any) => {
+export const saveSurveyResponse = async (surveyId: string, response: any) => {
   try {
-    await setDoc(doc(db, 'results', surveyId), {
-      responses: arrayUnion(responses),
+    const surveyRef = doc(db, 'results', surveyId);
+    const uniqueResponse = { ...response, _id: self.crypto.randomUUID() };
+    
+    await updateDoc(surveyRef, {
+      responses: arrayUnion(uniqueResponse),
       updatedAt: new Date()
-    }, { merge: true });
+    });
   } catch (e) {   
     console.error('Error saving survey responses: ', e);
   }
