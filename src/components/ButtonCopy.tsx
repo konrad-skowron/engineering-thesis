@@ -6,10 +6,9 @@ export function ButtonCopy(url: { url: string; }) {
     <CopyButton value={url.url}>
       {({ copied, copy }) => (
         <Tooltip
-          label="Link copied!"
+          label="Link copied"
           offset={5}
           position="bottom"
-          radius="xl"
           transitionProps={{ duration: 100, transition: 'slide-down' }}
           opened={copied}
         >

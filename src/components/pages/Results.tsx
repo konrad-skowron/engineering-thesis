@@ -5,8 +5,8 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon } from '@mantine/core';
-import { IconFileDownload, IconArrowLeft, IconShare, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
+import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex } from '@mantine/core';
+import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
 import { TableOfContents } from '../TableOfContents';
@@ -124,7 +124,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       return acc;
                     }, {} as Record<string, number>);
                     result = (
-                      <Group align='flex-start' grow>
+                      <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
                           {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
                             <Text key={option}>
@@ -132,8 +132,10 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             </Text>
                           ))}
                         </Stack>
-                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                          data={Object.entries(singleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
+                        <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
+                          <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                            data={Object.entries(singleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
+                        </Box>
                       </Group>
                     );
                     break;
@@ -148,7 +150,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     }, {} as Record<string, number>);
                     const totalSelections = Object.values(multipleChoiceCounts || {}).reduce((sum, count) => sum + count, 0);
                     result = (
-                      <Group align='flex-start' grow>
+                      <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
                           {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
                             <Text key={option}>
@@ -156,8 +158,10 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             </Text>
                           ))}
                         </Stack>
-                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                          data={Object.entries(multipleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
+                        <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
+                          <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                            data={Object.entries(multipleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
+                        </Box>
                       </Group>
                     );
                     break;
@@ -168,7 +172,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       return acc;
                     }, {} as Record<string, number>);
                     result = (
-                      <Group align='flex-start' grow>
+                      <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
                           {Object.entries(dropdownCounts || {}).map(([option, count]) => (
                             <Text key={option}>
@@ -176,8 +180,10 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             </Text>
                           ))}
                         </Stack>
-                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                          data={Object.entries(dropdownCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
+                        <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
+                          <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                            data={Object.entries(dropdownCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
+                        </Box>
                       </Group>
                     );
                     break;
@@ -201,12 +207,14 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       console.log(questionResponses);
                       console.log(discreteCounts);
                       result = (
-                        <Group align='flex-start' grow>
+                        <Group align='flex-start' grow wrap="nowrap">
                           <Text>
                             Average response: {discreteAverage}
                           </Text>
-                          <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                            data={Object.entries(discreteCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
+                          <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
+                            <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                              data={Object.entries(discreteCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
+                          </Box>
                         </Group>
                       );
                     }
@@ -236,12 +244,14 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         }
                       }
                       result = (
-                        <Group align='flex-start' grow>
+                        <Group align='flex-start' grow wrap="nowrap">
                           <Text>
                             Average response: {continousAverage} / 100
                           </Text>
-                          <LineChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                            data={Object.entries(fullRange || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' curveType="linear" />
+                          <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>  
+                            <LineChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                              data={Object.entries(fullRange || {}).map(([option, count]) => ({ name: option, Count: count }))} curveType="linear" />
+                          </Box>
                         </Group>
                       );
                     }
@@ -271,7 +281,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     {expandedQuestions[index] ?
                       result :
                       <Center mb='-0.75rem'>
-                        <Button size='sm' variant='transparent' onClick={() => toggleExpand(index)} style={{fontWeight: 'normal'}}>
+                        <Button size='sm' color="indigo" variant='transparent' onClick={() => toggleExpand(index)} style={{ fontWeight: 'normal' }}>
                           Expand responses
                         </Button>
                       </Center>}

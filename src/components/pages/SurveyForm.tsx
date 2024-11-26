@@ -6,7 +6,7 @@ import { fetchSurvey, saveSurveyResponse } from '@/lib/firestore';
 import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
-import { IconArrowRight, IconChartBar, IconShare } from '@tabler/icons-react';
+import { IconArrowRight, IconChartBar } from '@tabler/icons-react';
 import {
   Input,
   Center,
