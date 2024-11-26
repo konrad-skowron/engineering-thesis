@@ -98,7 +98,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         </Tabs.List>
 
         <Tabs.Panel value="summary">
-          <TableOfContents links={links} />
+          {/* <TableOfContents links={links} /> */}
           <Container>
             <Stack gap="lg" mt={'lg'}>
               {survey?.questions.map((question, index) => {
@@ -280,7 +280,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     </Group>
                     {expandedQuestions[index] ?
                       result :
-                      <Center mb='-0.75rem'>
+                      <Center m='-0.75rem'>
                         <Button size='sm' color="indigo" variant='transparent' onClick={() => toggleExpand(index)} style={{ fontWeight: 'normal' }}>
                           Expand responses
                         </Button>

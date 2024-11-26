@@ -302,7 +302,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
         <Title order={2}>{survey.title}</Title>
         <Text c="dimmed" mb="xl">{survey.description}</Text>
       </Container>
-      <TableOfContents links={survey.questions.map((question, index) => ({ label: question.question, link: `#question-${index}`, order: 1 }))} />
+      {/* <TableOfContents links={survey.questions.map((question, index) => ({ label: question.question, link: `#question-${index}`, order: 1 }))} /> */}
       <Container pb='xl'>
         <Stack gap="lg">
           {survey.questions.map((question, index) => (
