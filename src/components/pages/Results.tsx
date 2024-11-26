@@ -5,8 +5,8 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox } from '@mantine/core';
-import { IconFileDownload, IconArrowLeft, IconShare } from '@tabler/icons-react';
+import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon } from '@mantine/core';
+import { IconFileDownload, IconArrowLeft, IconShare, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
 
@@ -22,6 +22,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   const { colorScheme } = useMantineColorScheme();
   const theme = useMantineTheme();
   const [activePage, setPage] = useState(1);
+  const [expandedQuestions, setExpandedQuestions] = useState<Record<number, boolean>>({});
   const colors = ['indigo', 'yellow', 'teal', 'gray', 'red', 'pink', 'grape', 'violet', 'blue', 'cyan', 'green', 'lime', 'orange'];
 
   useEffect(() => {
@@ -40,6 +41,20 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
     getData();
   }, [params.surveyId, user, router]);
+
+  useEffect(() => {
+    if (survey?.questions) {
+      const initialExpandedState = Object.fromEntries(survey.questions.map((_, index) => [index, true]));
+      setExpandedQuestions(initialExpandedState);
+    }
+  }, [survey?.questions]);
+
+  const toggleExpand = (index: number) => {
+    setExpandedQuestions((prev) => ({
+      ...prev,
+      [index]: !prev[index],
+    }));
+  };
 
   if (loading) {
     return <Loading />;
@@ -85,11 +100,11 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   case 'text':
                     result = (
                       <Stack gap='xs'>
-                        <Paper bg={colorScheme === 'dark' ? theme.colors.dark[6] : theme.colors.gray[1]} p='sm' radius='sm'>
-                          {questionResponses.map((response, idx) => (
-                            <Text key={idx}>{response}</Text>
-                          ))}
-                        </Paper>
+                        {questionResponses.map((response, idx) => (
+                          <Paper key={idx} bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]} radius='sm' p='6px'>
+                            <Text>{response}</Text>
+                          </Paper>
+                        ))}
                       </Stack>
                     );
                     break;
@@ -132,7 +147,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             </Text>
                           ))}
                         </Stack>
-                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy" 
+                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                           data={Object.entries(multipleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
                       </Group>
                     );
@@ -152,7 +167,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             </Text>
                           ))}
                         </Stack>
-                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy" 
+                        <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                           data={Object.entries(dropdownCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
                       </Group>
                     );
@@ -167,7 +182,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                           Average range: {firstElementAverage} - {secondElementAverage}
                         </Text>
                       );
-                      
+
                     } else {
                       const discreteAverage = (questionResponses.reduce((sum, value) => sum + (value + 1 || 0), 0) / questionResponses.length).toFixed(2);
                       const discreteCounts = question.options?.reduce((acc, option) => {
@@ -182,7 +197,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             Average response: {discreteAverage}
                           </Text>
                           <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                          data={Object.entries(discreteCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
+                            data={Object.entries(discreteCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' />
                         </Group>
                       );
                     }
@@ -217,7 +232,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             Average response: {continousAverage} / 100
                           </Text>
                           <LineChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                          data={Object.entries(fullRange || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' curveType="linear" />
+                            data={Object.entries(fullRange || {}).map(([option, count]) => ({ name: option, Count: count }))} mb='md' mr='md' curveType="linear" />
                         </Group>
                       );
                     }
@@ -233,9 +248,18 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
                 return (
                   <Paper key={index} p="md" withBorder>
-                    <Title order={4}>{question.question}</Title>
-                    <Text c="dimmed" size="sm" mb='md'>Total responses: {questionResponses.length}</Text>
-                    {result}
+                    <Group justify='space-between' align='flex-start'>
+                      <Box>
+                        <Title order={4}>{question.question}</Title>
+                        <Text c="dimmed" size="sm" mb="md">
+                          Total responses: {questionResponses.length}
+                        </Text>
+                      </Box>
+                      <ActionIcon variant='transparent' color='gray' c='dimmed' onClick={() => toggleExpand(index)}>
+                        {expandedQuestions[index] ? <IconArrowBarUp size={18} title='Collapse responses'/> : <IconArrowBarDown size={18} title='Expand responses'/>}
+                      </ActionIcon>
+                    </Group>
+                    {expandedQuestions[index] && result}
                   </Paper>
                 );
               })}
@@ -298,7 +322,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
               opened={opened}
               onClose={() => setOpened(false)}
               title="Export results"
-              overlayProps={{ blur: 4 }}
+              overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}
               centered
             >
               <Group grow>
