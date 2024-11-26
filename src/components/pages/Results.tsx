@@ -9,6 +9,7 @@ import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select,
 import { IconFileDownload, IconArrowLeft, IconShare, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
+import { TableOfContents } from '../TableOfContents';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -56,6 +57,12 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
     }));
   };
 
+  const links = survey?.questions.map((question, index) => ({
+    label: question.question,
+    link: `#question-${index}`,
+    order: 1,
+  })) || [];
+
   if (loading) {
     return <Loading />;
   }
@@ -90,6 +97,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         </Tabs.List>
 
         <Tabs.Panel value="summary">
+          <TableOfContents links={links} />
           <Container>
             <Stack gap="lg" mt={'lg'}>
               {survey?.questions.map((question, index) => {
@@ -247,7 +255,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 }
 
                 return (
-                  <Paper key={index} p="md" withBorder>
+                  <Paper key={index} p="md" withBorder id={`question-${index}`}>
                     <Group justify='space-between' align='flex-start'>
                       <Box>
                         <Title order={4}>{question.question}</Title>
@@ -256,10 +264,16 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         </Text>
                       </Box>
                       <ActionIcon variant='transparent' color='gray' c='dimmed' onClick={() => toggleExpand(index)}>
-                        {expandedQuestions[index] ? <IconArrowBarUp size={18} title='Collapse responses'/> : <IconArrowBarDown size={18} title='Expand responses'/>}
+                        {expandedQuestions[index] ? <IconArrowBarUp size={18} title='Collapse responses' /> : <IconArrowBarDown size={18} title='Expand responses' />}
                       </ActionIcon>
                     </Group>
-                    {expandedQuestions[index] && result}
+                    {expandedQuestions[index] ?
+                      result :
+                      <Center mb='-0.75rem'>
+                        <Button size='sm' variant='transparent' onClick={() => toggleExpand(index)} style={{fontWeight: 'normal'}}>
+                          Expand responses
+                        </Button>
+                      </Center>}
                   </Paper>
                 );
               })}

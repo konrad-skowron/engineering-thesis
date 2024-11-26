@@ -27,6 +27,7 @@ import {
   Slider,
   Box
 } from '@mantine/core';
+import { TableOfContents } from '../TableOfContents';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -296,57 +297,73 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   }
 
   return (
-    <Container pt="xl" pb="xl">
-      <Title order={2}>{survey.title}</Title>
-      <Text c="dimmed" mb="lg">{survey.description}</Text>
+    <Box>
+      <Container pt="xl">
+        <Title order={2}>{survey.title}</Title>
+        <Text c="dimmed" mb="xl">{survey.description}</Text>
+      </Container>
+      <TableOfContents links={survey.questions.map((question, index) => ({ label: question.question, link: `#question-${index}`, order: 1 }))} />
+      <Container pb='xl'>
+        <Stack gap="lg">
+          {survey.questions.map((question, index) => (
+            <Paper key={index} shadow="xs" p="md" withBorder id={`question-${index}`}>
+              {renderQuestion(question, index)}
+            </Paper>
+          ))}
 
-      <Stack gap="lg">
-        {survey.questions.map((question, index) => (
-          <Paper key={index} shadow="xs" p="md" withBorder>
-            {renderQuestion(question, index)}
-          </Paper>
-        ))}
-
-        <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} visibleFrom='xs'>
-          <Group wrap="nowrap">
-            <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-              Submit
-            </Button>
-            {user && user.uid === survey?.author &&
-              <Link href={`/${params.surveyId}/results`}>
-                <Button variant='default' leftSection={<IconChartBar size={16} />}>
-                  Show results
-                </Button>
-              </Link>}
+          <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} visibleFrom='xs'>
+            <Group wrap="nowrap">
+              <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
+                Submit
+              </Button>
+              {user && user.uid === survey?.author &&
+                <Link href={`/${params.surveyId}/results`}>
+                  <Button variant='default' leftSection={<IconChartBar size={16} />}>
+                    Show results
+                  </Button>
+                </Link>}
+            </Group>
+            <Group justify='end'>
+              <Button
+                onClick={copyLink}
+                leftSection={<IconShare size={16} />}
+                variant='default'
+                visibleFrom='xs'
+              >
+                Share
+              </Button>
+              <Button
+                onClick={copyLink}
+                variant='default'
+                hiddenFrom='xs'>
+                <IconShare size={16} />
+              </Button>
+            </Group>
           </Group>
-          <Group justify='end'>
-            <Button
-              onClick={copyLink}
-              leftSection={<IconShare size={16} />}
-              variant='default'
-              visibleFrom='xs'
-            >
-              Share
-            </Button>
-            <Button
-              onClick={copyLink}
-              variant='default'
-              hiddenFrom='xs'>
-              <IconShare size={16} />
-            </Button>
-          </Group>
-        </Group>
-        <Box hiddenFrom='xs'>
-          {user && user.uid === survey?.author ? (
-            <Box>
+          <Box hiddenFrom='xs'>
+            {user && user.uid === survey?.author ? (
+              <Box>
+                <Group grow>
+                  <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
+                    Submit
+                  </Button>
+                </Group>
+                <Group grow mt="md">
+                  <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
+                    Show results
+                  </Button>
+                  <Button
+                    onClick={copyLink}
+                    leftSection={<IconShare size={16} />}
+                    variant='default'
+                  >
+                    Share
+                  </Button>
+                </Group>
+              </Box>) : (
               <Group grow>
                 <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
                   Submit
-                </Button>
-              </Group>
-              <Group grow mt="md">
-                <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
-                  Show results
                 </Button>
                 <Button
                   onClick={copyLink}
@@ -356,22 +373,10 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   Share
                 </Button>
               </Group>
-            </Box>) : (
-            <Group grow>
-              <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-                Submit
-              </Button>
-              <Button
-                onClick={copyLink}
-                leftSection={<IconShare size={16} />}
-                variant='default'
-              >
-                Share
-              </Button>
-            </Group>
-          )}
-        </Box>
-      </Stack>
-    </Container>
+            )}
+          </Box>
+        </Stack>
+      </Container>
+    </Box>
   );
 }
