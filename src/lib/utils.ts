@@ -5,12 +5,6 @@ export const formatTimestamp = (createdAt : any) => {
   return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
 }
 
-export const copyLink = () => {
-  const link = window.location.href;
-  navigator.clipboard.writeText(link);
-  alert('Link copied to clipboard');
-};
-
 export const calculateResults = (survey: Survey, responses: Response[], questionIndex: number) => {
   const question = survey?.questions[questionIndex];
   if (!question) return null;

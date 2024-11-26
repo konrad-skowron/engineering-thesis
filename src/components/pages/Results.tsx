@@ -7,9 +7,10 @@ import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
 import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconShare, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
-import { copyLink, exportToCSV, exportToJSON } from '@/lib/utils';
+import { exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
 import { TableOfContents } from '../TableOfContents';
+import { ButtonCopy } from '../ButtonCopy';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -296,13 +297,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 </Button>
               </Group>
               <Group justify='end'>
-                <Button
-                  onClick={copyLink}
-                  leftSection={<IconShare size={16} />}
-                  variant='default'
-                >
-                  Share
-                </Button>
+                <ButtonCopy url={window.location.href} />
               </Group>
             </Group>
             <Box mt='lg' hiddenFrom='xs'>
@@ -322,13 +317,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 >
                   Export results
                 </Button>
-                <Button
-                  onClick={copyLink}
-                  leftSection={<IconShare size={16} />}
-                  variant='default'
-                >
-                  Share
-                </Button>
+                <ButtonCopy url={window.location.href} />
               </Group>
             </Box>
 

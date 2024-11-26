@@ -7,7 +7,6 @@ import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { IconArrowRight, IconChartBar, IconShare } from '@tabler/icons-react';
-import { copyLink } from '@/lib/utils';
 import {
   Input,
   Center,
@@ -28,6 +27,7 @@ import {
   Box
 } from '@mantine/core';
 import { TableOfContents } from '../TableOfContents';
+import { ButtonCopy } from '../ButtonCopy';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -324,20 +324,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                 </Link>}
             </Group>
             <Group justify='end'>
-              <Button
-                onClick={copyLink}
-                leftSection={<IconShare size={16} />}
-                variant='default'
-                visibleFrom='xs'
-              >
-                Share
-              </Button>
-              <Button
-                onClick={copyLink}
-                variant='default'
-                hiddenFrom='xs'>
-                <IconShare size={16} />
-              </Button>
+              <ButtonCopy url={window.location.href} />
             </Group>
           </Group>
           <Box hiddenFrom='xs'>
@@ -352,26 +339,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
                     Show results
                   </Button>
-                  <Button
-                    onClick={copyLink}
-                    leftSection={<IconShare size={16} />}
-                    variant='default'
-                  >
-                    Share
-                  </Button>
+                  <ButtonCopy url={window.location.href} />
                 </Group>
               </Box>) : (
               <Group grow>
                 <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
                   Submit
                 </Button>
-                <Button
-                  onClick={copyLink}
-                  leftSection={<IconShare size={16} />}
-                  variant='default'
-                >
-                  Share
-                </Button>
+                <ButtonCopy url={window.location.href} />
               </Group>
             )}
           </Box>
