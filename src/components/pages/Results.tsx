@@ -102,7 +102,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       <Stack gap='xs'>
                         {questionResponses.map((response, idx) => (
                           <Paper key={idx} bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]} radius='sm' p='6px'>
-                            <Text>{response}</Text>
+                            <Text size='sm'>{response}</Text>
                           </Paper>
                         ))}
                       </Stack>
