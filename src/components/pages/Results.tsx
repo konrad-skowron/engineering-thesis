@@ -233,7 +233,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
                 return (
                   <Paper key={index} p="md" withBorder>
-                    <Title order={4}>{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Title>
+                    <Title order={4}>{question.question}</Title>
                     <Text c="dimmed" size="sm" mb='md'>Total responses: {questionResponses.length}</Text>
                     {result}
                   </Paper>
