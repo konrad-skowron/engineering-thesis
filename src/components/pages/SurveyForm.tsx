@@ -24,7 +24,8 @@ import {
   RadioGroup,
   RangeSlider,
   Slider,
-  Box
+  Box,
+  NumberInput
 } from '@mantine/core';
 import { TableOfContents } from '../TableOfContents';
 import { ButtonCopy } from '../ButtonCopy';
@@ -108,6 +109,19 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
           </>
         );
 
+        case 'number':
+          return (
+            <>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <NumberInput
+                value={responses[index] || ''}
+                onChange={(value) => updateResponse(index, value)}
+                required={question.required}
+                w="fit-content"
+              />
+            </>
+          );
+
       case 'singleChoice':
         return (
           <>
@@ -158,6 +172,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
             <Select
               w="fit-content"
+              placeholder="Pick value"
               data={question.options || []}
               value={responses[index] || null}
               onChange={(value) => updateResponse(index, value)}

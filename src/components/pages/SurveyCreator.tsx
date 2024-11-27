@@ -60,7 +60,7 @@ export default function SurveyCreator() {
     } else if (type === 'continousScale') {
       return ['', ''];
     } else {
-      return undefined;
+      return [];
     }
   }
 
@@ -171,6 +171,7 @@ export default function SurveyCreator() {
                     onChange={(value: any) => updateQuestion(index, 'type', value)}
                     data={[
                       { value: 'text', label: 'Text Response' },
+                      { value: 'number', label: 'Number Response' },
                       { value: 'singleChoice', label: 'Single Choice' },
                       { value: 'multipleChoice', label: 'Multiple Choice' },
                       { value: 'dropdownList', label: 'Dropdown List' },
@@ -211,7 +212,7 @@ export default function SurveyCreator() {
                   />
                 )}
 
-                {q.type !== 'text' && (
+                {q.type !== 'text' && q.type !== 'number' && (
                   <Box>
                     {q.type !== 'continousScale' ? (
                       <>

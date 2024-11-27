@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
@@ -115,6 +115,25 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                           </Paper>
                         ))}
                       </Stack>
+                    );
+                    break;
+
+                  case 'number':
+                    const numberCounts = questionResponses.reduce((acc, option) => {
+                      acc[option] = questionResponses.filter((resp) => resp === option).length;
+                      return acc;
+                    }, {} as Record<string, number>);
+                    const average = (questionResponses.reduce((acc, response) => acc + response, 0) / questionResponses.length).toFixed(2);
+                    result = (
+                      <Group align='flex-start' grow wrap="nowrap">
+                        <Text>
+                          Average number: {average}
+                        </Text>
+                        <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
+                          <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                            data={Object.entries(numberCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
+                        </Box>
+                      </Group>
                     );
                     break;
 
@@ -377,6 +396,16 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         <Textarea
                           value={questionResponses[index].toString() || ''}
                           disabled
+                        />
+                      );
+                      break;
+
+                    case 'number':
+                      result = (
+                        <NumberInput
+                          value={questionResponses[index].toString() || ''}
+                          disabled
+                          w="fit-content"
                         />
                       );
                       break;

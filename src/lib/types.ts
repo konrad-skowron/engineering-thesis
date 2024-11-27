@@ -1,4 +1,4 @@
-export type QuestionType = 'text' | 'singleChoice' | 'multipleChoice' | 'dropdownList' | 'discreteScale' | 'continousScale';
+export type QuestionType = 'text' | 'number' | 'singleChoice' | 'multipleChoice' | 'dropdownList' | 'discreteScale' | 'continousScale';
 
 export interface Question {
   type: QuestionType;
