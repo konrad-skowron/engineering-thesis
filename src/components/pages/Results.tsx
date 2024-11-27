@@ -236,7 +236,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         return acc;
                       }, {} as Record<number, number>);
                       const fullRange = []
-                      for (let i = 0; i < 100; i++) {
+                      for (let i = 1; i <= 100; i++) {
                         if (continousCounts[i]) {
                           fullRange.push(continousCounts[i]);
                         } else {
