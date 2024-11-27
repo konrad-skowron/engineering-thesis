@@ -1,5 +1,4 @@
-'use client';
-
+'use client'
 import React, { useState, useRef, useEffect } from 'react';
 import classes from './MyRangeSlider.module.css';
 import { Tooltip } from '@mantine/core';

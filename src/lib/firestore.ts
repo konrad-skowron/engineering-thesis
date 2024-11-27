@@ -67,14 +67,13 @@ export const fetchUserSurveys = async (user : User): Promise<any[]> => {
 };
 
 export const saveSurveyResponse = async (surveyId: string, response: any) => {
-  try {
-    const surveyRef = doc(db, 'results', surveyId);
+  try {;
     const uniqueResponse = { ...response, _id: self.crypto.randomUUID() };
     
-    await updateDoc(surveyRef, {
+    await setDoc(doc(db, 'results', surveyId), {
       responses: arrayUnion(uniqueResponse),
       updatedAt: new Date()
-    });
+    }, { merge: true });
   } catch (e) {   
     console.error('Error saving survey responses: ', e);
   }
@@ -112,7 +111,7 @@ export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Re
     });
     return participantsMap;
   } catch (error) {
-    console.error('Error fetching all survey responses:', error);
+    console.error('Error fetching all survey responses: ', error);
     return {};
   }
 };
