@@ -174,9 +174,9 @@ export default function SurveyCreator() {
                       { value: 'number', label: 'Number Response' },
                       { value: 'singleChoice', label: 'Single Choice' },
                       { value: 'multipleChoice', label: 'Multiple Choice' },
-                      { value: 'dropdownList', label: 'Dropdown List' },
                       { value: 'discreteScale', label: 'Discrete Scale' },
-                      { value: 'continousScale', label: 'Continuous Scale' }
+                      { value: 'continousScale', label: 'Continuous Scale' },
+                      { value: 'dropdownList', label: 'Dropdown List' },
                     ]}
                   />
 
