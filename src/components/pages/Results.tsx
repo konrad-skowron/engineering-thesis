@@ -128,7 +128,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         <Stack gap='xs'>
                           {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
                             <Text key={option}>
-                              {option}: {count} ({questionResponses.length > 0 ? (count / questionResponses.length) * 100 : 0}%)
+                              {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(2) : 0}%)
                             </Text>
                           ))}
                         </Stack>
@@ -154,7 +154,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         <Stack gap='xs'>
                           {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
                             <Text key={option}>
-                              {option}: {count} ({totalSelections > 0 ? (count / totalSelections) * 100 : 0}%)
+                              {option}: {count} ({totalSelections > 0 ? ((count / totalSelections) * 100).toFixed(2) : 0}%)
                             </Text>
                           ))}
                         </Stack>
@@ -176,7 +176,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         <Stack gap='xs'>
                           {Object.entries(dropdownCounts || {}).map(([option, count]) => (
                             <Text key={option}>
-                              {option}: {count} ({questionResponses.length > 0 ? (count / questionResponses.length) * 100 : 0}%)
+                              {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(2) : 0}%)
                             </Text>
                           ))}
                         </Stack>
