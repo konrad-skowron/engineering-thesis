@@ -5,7 +5,7 @@ import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex } from '@mantine/core';
+import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
@@ -126,14 +126,16 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
-                          {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
-                            <Text key={option}>
-                              {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(2) : 0}%)
-                            </Text>
-                          ))}
+                          <SimpleGrid cols={2}>
+                            {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
+                              <Text key={option}>
+                                {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(0) : 0}%)
+                              </Text>
+                            ))}
+                          </SimpleGrid>
                         </Stack>
                         <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
-                          <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                          <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                             data={Object.entries(singleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
                         </Box>
                       </Group>
@@ -152,14 +154,16 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
-                          {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
-                            <Text key={option}>
-                              {option}: {count} ({totalSelections > 0 ? ((count / totalSelections) * 100).toFixed(2) : 0}%)
-                            </Text>
-                          ))}
+                          <SimpleGrid cols={2}>
+                            {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
+                              <Text key={option}>
+                                {option}: {count} ({totalSelections > 0 ? ((count / totalSelections) * 100).toFixed(0) : 0}%)
+                              </Text>
+                            ))}
+                          </SimpleGrid>
                         </Stack>
                         <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
-                          <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                          <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                             data={Object.entries(multipleChoiceCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
                         </Box>
                       </Group>
@@ -174,14 +178,16 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
-                          {Object.entries(dropdownCounts || {}).map(([option, count]) => (
-                            <Text key={option}>
-                              {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(2) : 0}%)
-                            </Text>
-                          ))}
+                          <SimpleGrid cols={2}>
+                            {Object.entries(dropdownCounts || {}).map(([option, count]) => (
+                              <Text key={option}>
+                                {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(0) : 0}%)
+                              </Text>
+                            ))}
+                          </SimpleGrid>
                         </Stack>
                         <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
-                          <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                          <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                             data={Object.entries(dropdownCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
                         </Box>
                       </Group>
@@ -212,7 +218,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             Average response: {discreteAverage}
                           </Text>
                           <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
-                            <BarChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                            <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                               data={Object.entries(discreteCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
                           </Box>
                         </Group>
@@ -236,7 +242,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         return acc;
                       }, {} as Record<number, number>);
                       const fullRange = []
-                      for (let i = 1; i <= 100; i++) {
+                      for (let i = 0; i <= 100; i++) {
                         if (continousCounts[i]) {
                           fullRange.push(continousCounts[i]);
                         } else {
@@ -248,8 +254,8 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                           <Text>
                             Average response: {continousAverage} / 100
                           </Text>
-                          <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>  
-                            <LineChart h={150} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
+                          <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
+                            <LineChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
                               data={Object.entries(fullRange || {}).map(([option, count]) => ({ name: option, Count: count }))} curveType="linear" />
                           </Box>
                         </Group>
@@ -267,7 +273,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
 
                 return (
                   <Paper key={index} p="md" withBorder id={`question-${index}`}>
-                    <Group justify='space-between' align='flex-start'>
+                    <Group justify='space-between' align='flex-start' wrap='nowrap'>
                       <Box>
                         <Title order={4}>{question.question}</Title>
                         <Text c="dimmed" size="sm" mb="md">
