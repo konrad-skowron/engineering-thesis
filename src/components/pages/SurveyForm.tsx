@@ -114,7 +114,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
               <NumberInput
-                value={responses[index] || ''}
+                placeholder="Enter a number"
+                value={responses[index] || null}
                 onChange={(value) => updateResponse(index, value)}
                 required={question.required}
                 w="fit-content"
