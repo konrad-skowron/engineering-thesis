@@ -9,8 +9,8 @@ import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select,
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
-import { TableOfContents } from '../TableOfContents';
 import { ButtonCopy } from '../ButtonCopy';
+import { TableOfContents } from '../TableOfContents';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -58,11 +58,11 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
     }));
   };
 
-  const links = survey?.questions.map((question, index) => ({
-    label: question.question,
-    link: `#question-${index}`,
-    order: 1,
-  })) || [];
+  // const links = survey?.questions.map((question, index) => ({
+  //   label: question.question,
+  //   link: `#question-${index}`,
+  //   order: 1,
+  // })) || [];
 
   if (loading) {
     return <Loading />;

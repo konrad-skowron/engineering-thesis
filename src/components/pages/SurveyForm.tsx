@@ -27,8 +27,8 @@ import {
   Box,
   NumberInput
 } from '@mantine/core';
-import { TableOfContents } from '../TableOfContents';
 import { ButtonCopy } from '../ButtonCopy';
+import { TableOfContents } from '../TableOfContents';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
@@ -282,12 +282,11 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     }
   };
 
-  if (loading) {
-    return <Loading />;
-  }
-
   if (!survey && !loading) {
     router.replace('/' + params.surveyId + '/not-found');
+  }
+
+  if (loading || !survey) {
     return <Loading />;
   }
 
