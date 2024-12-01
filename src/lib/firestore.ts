@@ -2,6 +2,7 @@ import { db } from '@/lib/firebase';
 import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove, updateDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { Survey, Question, Response } from "@/lib/types";
+import { v4 as uuidv4 } from 'uuid';
 
 export const saveSurvey = async (surveyTitle: string, surveyDescription: string, questions: Question[], user : User) : Promise<string> => {
   try {
@@ -68,7 +69,7 @@ export const fetchUserSurveys = async (user : User): Promise<any[]> => {
 
 export const saveSurveyResponse = async (surveyId: string, response: any) => {
   try {;
-    const uniqueResponse = { ...response, _id: self.crypto.randomUUID() };
+    const uniqueResponse = { ...response, _id: uuidv4() };
     
     await setDoc(doc(db, 'results', surveyId), {
       responses: arrayUnion(uniqueResponse),
