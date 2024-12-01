@@ -25,21 +25,25 @@ const features = [
 export function LandingPage() {
 
   const items = features.map((feature) => (
-    <div key={feature.title}>
+    <div key={feature.title} className={classes.icon}>
       <ThemeIcon
-        size={44}
+        size={50}
         radius="md"
         variant="gradient"
         gradient={{ deg: 133, from: 'blue', to: 'cyan' }}
+        mr="md"
+        mb="sm"
       >
         <feature.icon style={{ width: rem(26), height: rem(26) }} stroke={1.5} />
       </ThemeIcon>
-      <Text fz="lg" mt="sm" fw={500}>
-        {feature.title}
-      </Text>
-      <Text c="dimmed" fz="sm">
-        {feature.description}
-      </Text>
+      <div>
+        <Text fz="md" fw={500} c='white'>
+          {feature.title}
+        </Text>
+        <Text c="dimmed" fz="sm">
+          {feature.description}
+        </Text>
+      </div>
     </div>
   ));
 
@@ -60,7 +64,10 @@ export function LandingPage() {
           using a continuous as well as a discrete Likert scale.
         </Text>
 
-        <SimpleGrid cols={3} spacing="xl" mt="xl">
+        <SimpleGrid cols={3} spacing="xl" mt="xl" visibleFrom='sm'>
+          {items}
+        </SimpleGrid>
+        <SimpleGrid cols={1} spacing="xl" mt="xl" hiddenFrom='sm'>
           {items}
         </SimpleGrid>
 
@@ -71,6 +78,7 @@ export function LandingPage() {
               className={classes.control}
               variant="gradient"
               gradient={{ from: 'blue', to: 'cyan' }}
+              radius='md'
             >
               Get started
             </Button>
