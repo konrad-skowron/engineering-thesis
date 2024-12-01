@@ -25,3 +25,19 @@ class ResizeObserver {
 }
 
 window.ResizeObserver = ResizeObserver;
+
+jest.mock("next/navigation", () => ({
+  useRouter() {
+    return {
+      prefetch: jest.fn(),
+      push: jest.fn(),
+      replace: jest.fn(),
+      back: jest.fn(),
+      forward: jest.fn(),
+      refresh: jest.fn()
+    };
+  },
+  usePathname: jest.fn(),
+  useSearchParams: jest.fn(),
+  useParams: jest.fn()
+}));

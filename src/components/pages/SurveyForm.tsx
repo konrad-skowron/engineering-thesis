@@ -41,7 +41,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
 
   const discreteScaleRangeDv = [10, 30];
   const discreteScaleDv = (length: number) => Math.floor((length) / 2);
-  const continuousScaleRangeDv = [20, 60];
+  const continuousScaleRangeDv = [25, 75];
   const continuousScaleDv = 50;
 
   useEffect(() => {
