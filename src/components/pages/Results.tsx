@@ -383,6 +383,8 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
           <Container>
             <Stack gap="lg" mt={'lg'}>
               {survey?.questions.map((question, index) => {
+                if (!responses[activePage - 1]) return null;
+
                 const questionResponses = responses[activePage - 1];
                 let result;
 
