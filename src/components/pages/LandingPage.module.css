@@ -34,6 +34,10 @@
   }
 }
 
+.smallTitle {
+  color: light-dark(var(--mantine-color-black), var(--mantine-color-white));
+}
+
 .description {
   margin-top: var(--mantine-spacing-xl);
   font-size: rem(22px);

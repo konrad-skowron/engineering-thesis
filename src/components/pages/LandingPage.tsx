@@ -37,7 +37,7 @@ export function LandingPage() {
         <feature.icon style={{ width: rem(26), height: rem(26) }} stroke={1.5} />
       </ThemeIcon>
       <div>
-        <Text fz="md" fw={500} c='white'>
+        <Text fz="md" fw={500} className={classes.smallTitle}>
           {feature.title}
         </Text>
         <Text c="dimmed" fz="sm">
