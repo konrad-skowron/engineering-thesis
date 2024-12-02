@@ -1,7 +1,8 @@
 import React from 'react';
-import { render, screen, act } from '../../../../test-utils';
+import { render, screen, act, waitFor } from '../../../../test-utils';
 import Results from '../../../../src/app/(main)/[surveyId]/results/page';
-import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
+import { fetchSurvey } from '@/lib/firestore';
+import { onSnapshot } from 'firebase/firestore';
 
 const id = 'someId';
 
@@ -14,35 +15,48 @@ const survey = {
   ]
 };
 
-const responses = [
-  ['John Doe'],
-  ['Jane Doe']
-];
+const responses = {
+  responses: [
+    { 0: 'John Doe' },
+    { 0: 'Jane Doe' }
+  ]
+};
 
 jest.mock('../../../../src/lib/firestore.ts', () => ({
-  fetchSurvey: jest.fn(),
-  fetchSurveyResponses: jest.fn(),
+  fetchSurvey: jest.fn()
 }));
 
 describe('Results', () => {
   it('renders a survey results', async () => {
     (fetchSurvey as jest.Mock).mockResolvedValue(survey);
-    (fetchSurveyResponses as jest.Mock).mockResolvedValue(responses);
+    (onSnapshot as jest.Mock).mockImplementation((docRef, callback) => {
+      callback({
+        exists: () => true,
+        data: () => responses,
+      });
+    });
 
     await act(async () => {
       render(<Results params={Promise.resolve({ surveyId: id })} />);
     });
 
-    expect(screen.getByText('Test survey')).toBeInTheDocument();
-    expect(screen.getAllByText('What is your name?')[0]).toBeInTheDocument();
-    expect(screen.getByText('Total responses: 2')).toBeInTheDocument();
-    expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
-    expect(screen.getAllByText('Jane Doe')[0]).toBeInTheDocument();
+    await waitFor(() => {
+      expect(screen.getByText('Test survey')).toBeInTheDocument();
+      expect(screen.getAllByText('What is your name?')[0]).toBeInTheDocument();
+      expect(screen.getByText('Total responses: 2')).toBeInTheDocument();
+      expect(screen.getAllByText('John Doe')[0]).toBeInTheDocument();
+      expect(screen.getAllByText('Jane Doe')[0]).toBeInTheDocument();
+    })
   });
 
   it('renders no results yet', async () => {
     (fetchSurvey as jest.Mock).mockResolvedValue(survey);
-    (fetchSurveyResponses as jest.Mock).mockResolvedValue([]);
+    (onSnapshot as jest.Mock).mockImplementation((docRef, callback) => {
+      callback({
+        exists: () => false,
+        data: () => { responses: [] },
+      });
+    });
 
     await act(async () => {
       render(<Results params={Promise.resolve({ surveyId: id })} />);

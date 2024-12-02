@@ -1,9 +1,10 @@
 'use client'
 import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchSurvey, fetchSurveyResponses } from '@/lib/firestore';
+import { fetchSurvey } from '@/lib/firestore';
+import { db } from '@/lib/firebase';
+import { doc, onSnapshot } from 'firebase/firestore';
 import { Loading } from '@/components/Loading';
-import { useAuth } from '@/components/auth/AuthProvider';
 import { Survey, Response } from '@/lib/types';
 import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
@@ -15,7 +16,6 @@ import { TableOfContents } from '../TableOfContents';
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
   const [opened, setOpened] = useState(false);
-  const { user } = useAuth();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
@@ -34,15 +34,19 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         router.replace(`/${params.surveyId}/not-found`);
         return;
       }
-
-      const fetchedResponses = await fetchSurveyResponses(params.surveyId);
       setSurvey(fetchedSurvey);
-      setResponses(fetchedResponses);
+
+      onSnapshot(doc(db, 'results', params.surveyId), (doc) => {
+        if (doc.exists()) {
+          setResponses(doc.data().responses || []);
+        }
+      });
+
       setLoading(false);
     };
 
     getData();
-  }, [params.surveyId, user, router]);
+  }, [params.surveyId, router]);
 
   useEffect(() => {
     if (survey?.questions) {
@@ -229,8 +233,6 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         acc[option] = questionResponses.filter((resp) => question.options?.[resp] === option).length;
                         return acc;
                       }, {} as Record<string, number>);
-                      console.log(questionResponses);
-                      console.log(discreteCounts);
                       result = (
                         <Group align='flex-start' grow wrap="nowrap">
                           <Text>

@@ -1,4 +1,5 @@
 import '@testing-library/jest-dom'
+import { onSnapshot } from 'firebase/firestore';
 
 const { getComputedStyle } = window;
 window.getComputedStyle = (elt) => getComputedStyle(elt);
@@ -42,8 +43,9 @@ jest.mock('next/navigation', () => ({
 
 jest.mock("firebase/firestore", () => ({
   getFirestore: jest.fn(),
-  arrayUnion: jest.fn((...elements) => elements),
   doc: jest.fn(),
   setDoc: jest.fn(),
   getDoc: jest.fn(),
+  onSnapshot: jest.fn(),
+  arrayUnion: jest.fn((...elements) => elements),
 }));

@@ -80,19 +80,6 @@ export const saveSurveyResponse = async (surveyId: string, response: any) => {
   }
 };
 
-export const fetchSurveyResponses = async (surveyId: string): Promise<Response[]> => {
-  try {
-    const docSnap = await getDoc(doc(db, 'results', surveyId));
-
-    if (docSnap.exists()) {
-      return docSnap.data().responses || [];
-    }
-  } catch (error) {
-    console.error('Error fetching survey responses: ', error);
-  }
-  return [];
-};
-
 export const fetchAllSurveyParticipants= async (surveyIds: string[]): Promise<Record<string, number>> => {
   if (surveyIds.length === 0) {
     return {};
