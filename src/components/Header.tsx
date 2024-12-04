@@ -109,7 +109,7 @@ export function Header() {
                       className={cx(classes.user, { [classes.userActive]: userMenuOpened })}
                     >
                       <Group gap={7}>
-                        <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={32} name={user?.displayName?.split(' ').map(word => word.charAt(0)).join('') || user?.email?.charAt(0) || undefined} color="initials" />
+                        <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={32} name={user?.displayName || user?.email?.charAt(0) || undefined} color="initials" variant="filled" />
                         <Text fw={500} size="sm" lh={1} mr={3} visibleFrom="sm">
                           {user?.displayName || user?.email}
                         </Text>
@@ -160,7 +160,7 @@ export function Header() {
         title={<Group gap="xs"><Image src="/favicon.ico" alt="logo" width={24} height={24} /><b>Survey Maker</b></Group>}
         position="top" offset={10} radius="md" overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}>
         <Group>
-          <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={56} name={user?.displayName?.split(' ').map(word => word.charAt(0)).join('') || user?.email?.charAt(0) || undefined} color="initials" />
+          <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={56} name={user?.displayName || user?.email?.charAt(0) || undefined} color="initials" variant="filled" />
           <Text fw={500} lh={1} mr={3}>
             {user?.displayName || user?.email}
             {user?.displayName &&
