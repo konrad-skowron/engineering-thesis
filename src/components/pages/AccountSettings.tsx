@@ -1,9 +1,9 @@
 'use client'
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import { Container, Button, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
-import RouteProtector from '@/components/auth/RouteProtector';
+import RouteProtector from '@/components/RouteProtector';
 import { deleteAllUserData } from '@/lib/firestore';
 
 export default function AccountSettings() {

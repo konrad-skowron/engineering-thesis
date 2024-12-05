@@ -1,10 +1,10 @@
 'use client'
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantine/core';
 import { useState, useEffect } from "react";
-import RouteProtector from '@/components/auth/RouteProtector';
+import RouteProtector from '@/components/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firestore';
 import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";

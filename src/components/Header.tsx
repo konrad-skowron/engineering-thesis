@@ -26,7 +26,7 @@ import {
   Box
 } from '@mantine/core';
 import Link from "next/link";
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 

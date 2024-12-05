@@ -1,5 +1,5 @@
 import { render, screen } from '../../../test-utils';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Account from '../../../src/app/(main)/account/page';
 import { act } from 'react';
@@ -22,7 +22,7 @@ jest.mock('firebase/auth', () => ({
   }),
 }));
 
-jest.mock('../../../src/components/auth/AuthProvider.tsx', () => ({
+jest.mock('../../../src/components/AuthProvider.tsx', () => ({
   useAuth: jest.fn(),
 }));
 

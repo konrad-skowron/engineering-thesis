@@ -5,7 +5,7 @@ import React, { useState, useEffect, use } from 'react';
 import { fetchSurvey, saveSurveyResponse } from '@/lib/firestore';
 import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import { IconArrowRight, IconChartBar } from '@tabler/icons-react';
 import {
   Input,

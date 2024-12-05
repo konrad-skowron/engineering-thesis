@@ -10,7 +10,7 @@ import {
   Container,
   Title
 } from '@mantine/core';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import classes from './AuthForm.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';

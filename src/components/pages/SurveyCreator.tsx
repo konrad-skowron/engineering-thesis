@@ -1,7 +1,7 @@
 'use client'
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { useAuth } from '@/components/auth/AuthProvider';
+import { useAuth } from '@/components/AuthProvider';
 import { saveSurvey } from '@/lib/firestore';
 import { Question, QuestionType } from '@/lib/types';
 import {
@@ -23,7 +23,7 @@ import {
   Divider
 } from '@mantine/core';
 import { IconPlus, IconTrash, IconX } from '@tabler/icons-react';
-import RouteProtector from '@/components/auth/RouteProtector';
+import RouteProtector from '@/components/RouteProtector';
 
 export default function SurveyCreator() {
   const router = useRouter();
