@@ -11,12 +11,12 @@ const Completed = () => {
                   justifyContent: 'center',
                   color: 
                   colorScheme === 'dark'
-                    ? theme.colors.green[6]
-                    : theme.colors.green[7],
+                    ? theme.colors.green[3]
+                    : theme.colors.green[6],
                   backgroundColor:
                   colorScheme === 'dark'
-                    ? 'rgba(47, 158, 68, 0.1)'
-                    : 'rgba(47, 158, 68, 0.2)',
+                    ? 'rgba(64,192,87,.15)'
+                    : 'rgba(64,192,87,.1)',
                   borderRadius: theme.radius.xl, 
                   width: 'fit-content',
                   height: 'fit-content',

@@ -271,7 +271,23 @@ export default function SurveyCreator() {
             </Paper>
           ))}
 
-          <Group>
+          <Group visibleFrom='xs'>
+            <Button
+              variant="default"
+              leftSection={<IconPlus size={16} />}
+              onClick={addQuestion}
+            >
+              Add question
+            </Button>
+
+            <Button
+              color="blue"
+              onClick={saveAndRedirect}
+            >
+              Create survey
+            </Button>
+          </Group>
+          <Group hiddenFrom='xs' grow>
             <Button
               variant="default"
               leftSection={<IconPlus size={16} />}

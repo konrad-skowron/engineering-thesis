@@ -172,7 +172,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
           <>
             <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
             <Select
-              w="fit-content"
               placeholder="Pick value"
               data={question.options || []}
               value={responses[index] || null}
