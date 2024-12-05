@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { Container, Button, Group, Text, Menu, ActionIcon, Title } from '@mantine/core';
+import { Container, Button, Group, Text, Menu, ActionIcon, Title, useMantineColorScheme } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firestore';
@@ -20,6 +20,7 @@ export default function Dashboard() {
   const [participants, setParticipants] = useState<Record<string, number>>({});
   const [gettingSurveys, setGettingSurveys] = useState(true);
   const [openSurveyMenu, setOpenSurveyMenu] = useState<string | null>(null);
+  const { colorScheme } = useMantineColorScheme();
 
   useEffect(() => {
     const getSurveys = async () => {
@@ -122,10 +123,12 @@ export default function Dashboard() {
                   </Text>
                 </div>
                 <div>
-                  <ActionIcon variant="transparent" color="gray" hiddenFrom="xs">
-                    <IconUsers size={15} />&nbsp;{participants[survey.id]}
-                  </ActionIcon>
-                  <Text visibleFrom="xs">{participants[survey.id]}</Text>
+                  <Group gap={1} wrap="nowrap">
+                    <ActionIcon variant="transparent" hiddenFrom="xs" color={colorScheme === 'dark' ? 'gray' : 'black'}>
+                      <IconUsers size={15} />
+                    </ActionIcon>
+                    <Text>{participants[survey.id]}</Text>
+                  </Group>
                 </div>
                 <div>
                   {survey.active ? <LiveDot /> : <Completed />}
