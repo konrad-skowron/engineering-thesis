@@ -11,6 +11,7 @@ import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
 import Completed from "../Completed";
+import { Loading } from "../Loading";
 
 export default function Dashboard() {
   const { user } = useAuth();
@@ -79,6 +80,10 @@ export default function Dashboard() {
     setSurveyActive(surveyId, isActive);
     setSurveys(surveys.map(survey => survey.id === surveyId ? { ...survey, active: isActive } : survey));
   };
+
+  if (gettingSurveys) {
+    return <Loading />;
+  }
 
   return (
     <RouteProtector>
