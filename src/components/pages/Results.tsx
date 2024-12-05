@@ -36,7 +36,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
       }
       setSurvey(fetchedSurvey);
 
-      onSnapshot(doc(db, 'results', params.surveyId), (doc) => {
+      const unsubscribe = onSnapshot(doc(db, 'results', params.surveyId), (doc) => {
         if (doc.exists()) {
           setResponses(doc.data().responses || []);
         }

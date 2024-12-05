@@ -81,108 +81,108 @@ export default function Dashboard() {
     setSurveys(surveys.map(survey => survey.id === surveyId ? { ...survey, active: isActive } : survey));
   };
 
-  if (gettingSurveys) {
-    return <Loading />;
-  }
-
   return (
     <RouteProtector>
-      <Container pt="xl" pb="xl">
-        <div>
-          <Title order={2}>Dashboard</Title>
-          <Button onClick={createSurvey} leftSection={<IconPlus size={16} />} mt="lg" mb="xs">
-            Create survey
-          </Button>
-        </div>
-
-        <Group visibleFrom="xs" justify="space-between" mt="xl" pl="25px" pr="25px" style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr auto' }}>
-          <b>Survey</b>
-          <b>Participants</b>
-          <b>Status</b>
-          <div style={{ visibility: "hidden" }}>
-            <ActionIcon variant="subtle" color="gray" radius="xl" c="dimmed">
-              <IconDots />
-            </ActionIcon>
+      {!gettingSurveys ? (
+        <Container pt="xl" pb="xl">
+          <div>
+            <Title order={2}>Dashboard</Title>
+            <Button onClick={createSurvey} leftSection={<IconPlus size={16} />} mt="lg" mb="xs">
+              Create survey
+            </Button>
           </div>
-        </Group>
-        <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="25px" pr="25px">
-          <b>Survey</b>
-        </Group>
 
-        {surveys.length === 0 && !gettingSurveys &&
-          <Text mt="md" pl="25px">You have not created any surveys yet.</Text>}
+          <Group visibleFrom="xs" justify="space-between" mt="xl" pl="25px" pr="25px" style={{ display: 'grid', gridTemplateColumns: '3fr 1fr 1fr auto' }}>
+            <b>Survey</b>
+            <b>Participants</b>
+            <b>Status</b>
+            <div style={{ visibility: "hidden" }}>
+              <ActionIcon variant="subtle" color="gray" radius="xl" c="dimmed">
+                <IconDots />
+              </ActionIcon>
+            </div>
+          </Group>
+          <Group hiddenFrom="xs" justify="space-between" mt="xl" pl="25px" pr="25px">
+            <b>Survey</b>
+          </Group>
 
-        {surveys.map((survey, index) => (
-          <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
-            <Group mt="md" p="25px" className={classes.survey}>
-              <div>
-                <Text fw={500} lh={1} mr={3}>
-                  {survey.title}
-                  <br />
-                  <Text size="sm" c="dimmed" component="span">
-                    {formatTimestamp(survey.createdAt)}
+          {surveys.length === 0 &&
+            <Text mt="md" pl="25px">You have not created any surveys yet.</Text>}
+
+          {surveys.map((survey, index) => (
+            <Link key={index} href={`/${survey.id}`} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <Group mt="md" p="25px" className={classes.survey}>
+                <div>
+                  <Text fw={500} lh={1} mr={3}>
+                    {survey.title}
+                    <br />
+                    <Text size="sm" c="dimmed" component="span">
+                      {formatTimestamp(survey.createdAt)}
+                    </Text>
                   </Text>
-                </Text>
-              </div>
-              <div>
-                <ActionIcon variant="transparent" color="gray" hiddenFrom="xs">
-                  <IconUsers size={15} />&nbsp;{participants[survey.id]}
-                </ActionIcon>
-                <Text visibleFrom="xs">{participants[survey.id]}</Text>
-              </div>
-              <div>
-                {survey.active ? <LiveDot /> : <Completed />}
-              </div>
-              <div>
-                <Menu
-                  opened={openSurveyMenu === survey.id}
-                  onClose={() => setOpenSurveyMenu(null)}
-                  trigger="click"
-                  position="bottom-end"
-                  withinPortal
-                >
-                  <Menu.Target>
-                    <ActionIcon variant="subtle" color="gray" c="dimmed" radius="xl"
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        setOpenSurveyMenu(openSurveyMenu === survey.id ? null : survey.id);
-                      }}>
-                      <IconDots />
-                    </ActionIcon>
-                  </Menu.Target>
-                  <Menu.Dropdown>
-                    <Menu.Item leftSection={<IconChartBar size={14} />}
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
-                      Show results
-                    </Menu.Item>
-                    {survey.active ? (
-                      <Menu.Item leftSection={<IconLock size={14} />}
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, false)}>
-                        Close survey
-                      </Menu.Item>) : (
-                      <Menu.Item leftSection={<IconLockOpen size={14} />}
-                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, true)}>
-                        Reopen survey
-                      </Menu.Item>)}
-                    <Menu.Item leftSection={<IconShare size={14} />}
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
-                      Share
-                    </Menu.Item>
+                </div>
+                <div>
+                  <ActionIcon variant="transparent" color="gray" hiddenFrom="xs">
+                    <IconUsers size={15} />&nbsp;{participants[survey.id]}
+                  </ActionIcon>
+                  <Text visibleFrom="xs">{participants[survey.id]}</Text>
+                </div>
+                <div>
+                  {survey.active ? <LiveDot /> : <Completed />}
+                </div>
+                <div>
+                  <Menu
+                    opened={openSurveyMenu === survey.id}
+                    onClose={() => setOpenSurveyMenu(null)}
+                    trigger="click"
+                    position="bottom-end"
+                    withinPortal
+                  >
+                    <Menu.Target>
+                      <ActionIcon variant="subtle" color="gray" c="dimmed" radius="xl"
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                          e.preventDefault();
+                          e.stopPropagation();
+                          setOpenSurveyMenu(openSurveyMenu === survey.id ? null : survey.id);
+                        }}>
+                        <IconDots />
+                      </ActionIcon>
+                    </Menu.Target>
+                    <Menu.Dropdown>
+                      <Menu.Item leftSection={<IconChartBar size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
+                        Show results
+                      </Menu.Item>
+                      {survey.active ? (
+                        <Menu.Item leftSection={<IconLock size={14} />}
+                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, false)}>
+                          Close survey
+                        </Menu.Item>) : (
+                        <Menu.Item leftSection={<IconLockOpen size={14} />}
+                          onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, true)}>
+                          Reopen survey
+                        </Menu.Item>)}
+                      <Menu.Item leftSection={<IconShare size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
+                        Share
+                      </Menu.Item>
 
-                    <Menu.Divider />
+                      <Menu.Divider />
 
-                    <Menu.Item leftSection={<IconTrash size={14} />} color="red"
-                      onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleDeleteSurvey(e, survey.id)}>
-                      Delete survey
-                    </Menu.Item>
-                  </Menu.Dropdown>
-                </Menu>
-              </div>
-            </Group>
-          </Link>
-        ))}
-      </Container>
+                      <Menu.Item leftSection={<IconTrash size={14} />} color="red"
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleDeleteSurvey(e, survey.id)}>
+                        Delete survey
+                      </Menu.Item>
+                    </Menu.Dropdown>
+                  </Menu>
+                </div>
+              </Group>
+            </Link>
+          ))}
+        </Container>
+      ) : (
+        <Loading />
+      )}
     </RouteProtector>
   );
 }
