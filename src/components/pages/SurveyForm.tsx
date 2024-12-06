@@ -249,6 +249,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <RangeSlider
                     defaultValue={continuousScaleRangeDv}
                     onChange={(value) => updateResponse(index, value)}
+                    minRange={1}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
