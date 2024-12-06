@@ -39,10 +39,10 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const [submitted, setSubmitted] = useState(false);
   const router = useRouter();
 
-  const discreteScaleRangeDv = [10, 30];
-  const discreteScaleDv = (length: number) => Math.floor((length) / 2);
-  const continuousScaleRangeDv = [25, 75];
+  const discreteScaleDv = (length: number) => Math.floor(length / 2);
+  const discreteScaleRangeDv = (length: number) => [Math.floor(length * 1 / 4) * 10, Math.floor(length * 3 / 4) * 10] as [number, number];
   const continuousScaleDv = 50;
+  const continuousScaleRangeDv = [25, 75] as [number, number];
 
   useEffect(() => {
     const getSurvey = async () => {
@@ -69,7 +69,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
         switch (question.type) {
           case 'discreteScale':
             if (question.rangeEnabled) {
-              newResponses[index] = discreteScaleRangeDv;
+              newResponses[index] = discreteScaleRangeDv(question.options?.length || 1);
             } else {
               newResponses[index] = discreteScaleDv(question.options?.length || 1);
             }
@@ -195,8 +195,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   max={question.options ? question.options?.length * 10 - 10 : 50}
                   step={10}
                   marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
+                  defaultValue={discreteScaleRangeDv(question.options?.length || 1)}
                   onChange={(value) => updateResponse(index, [value[0] / 10, value[1] / 10])}
-                  defaultValue={responses[index] || discreteScaleRangeDv}
                   p="8%"
                   mb="xl"
                   styles={{
@@ -247,7 +247,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider
-                    value={responses[index] || continuousScaleRangeDv}
+                    defaultValue={continuousScaleRangeDv}
                     onChange={(value) => updateResponse(index, value)}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
@@ -265,7 +265,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
-                    value={responses[index] || continuousScaleDv}
+                    defaultValue={continuousScaleDv}
                     onChange={(value) => updateResponse(index, value)}
                     color="default"
                   />
