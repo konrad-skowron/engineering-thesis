@@ -1,4 +1,5 @@
 import { Survey, Response } from "./types";
+import { GoogleGenerativeAI } from '@google/generative-ai'
 
 export const formatTimestamp = (createdAt : any) => {
   const date = new Date(createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1e6));
@@ -33,11 +34,10 @@ export const calculateResults = (survey: Survey, responses: Response[], question
   return null;
 };
 
-export const exportToCSV = (survey : Survey, responses : Response[]) => {
+export const exportToCSV = (survey: Survey, responses: Response[]) => {
   if (!survey) return;
 
-  let csvContent = "data:text/csv;charset=utf-8,";
-  
+  let csvContent = "\uFEFF";
   const headers = ['Response ID', ...survey.questions.map(q => q.question)];
   csvContent += headers.join(',') + '\n';
 
@@ -45,28 +45,30 @@ export const exportToCSV = (survey : Survey, responses : Response[]) => {
     const row = [
       index + 1,
       ...survey.questions.map((_, qIndex) => {
-        const qResponse = response[qIndex] || '';
+        const qResponse = String(response[qIndex] || '');
         return `"${qResponse.replace(/"/g, '""')}"`;
       })
     ];
     csvContent += row.join(',') + '\n';
   });
 
-  const encodedUri = encodeURI(csvContent);
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
   const link = document.createElement('a');
-  link.setAttribute('href', encodedUri);
+  const url = URL.createObjectURL(blob);
+
+  link.setAttribute('href', url);
   link.setAttribute('download', `${survey.title}_results.csv`);
   document.body.appendChild(link);
   link.click();
   document.body.removeChild(link);
+
+  URL.revokeObjectURL(url);
 };
 
-export const exportToJSON = (survey : Survey, responses : Response[]) => {
-  if (!survey) return;
-
+const aggregateResults = (survey: Survey, responses: Response[]) => {
   const data = {
     surveyTitle: survey.title,
-    totalResponses: responses.length,
+    participants: responses.length,
     questions: survey.questions.map((question, index) => ({
       question: question.question,
       type: question.type,
@@ -74,6 +76,14 @@ export const exportToJSON = (survey : Survey, responses : Response[]) => {
         responses.map(a => a[index]).filter(Boolean)
     }))
   };
+
+  return data;
+};
+
+export const exportToJSON = (survey : Survey, responses : Response[]) => {
+  if (!survey) return;
+
+  const data = aggregateResults(survey, responses);
 
   const jsonString = `data:text/json;charset=utf-8,${encodeURIComponent(
     JSON.stringify(data, null, 2)
@@ -86,3 +96,29 @@ export const exportToJSON = (survey : Survey, responses : Response[]) => {
   link.click();
   document.body.removeChild(link);
 };
+
+export const geminiSummary = async (survey : Survey, responses : Response[]) => {
+  if (!survey) return;
+
+  const data = aggregateResults(survey, responses);
+  const genAI = new GoogleGenerativeAI(process.env.NEXT_PUBLIC_GEMINI_API_KEY || '');
+  const model = genAI.getGenerativeModel({ model: "gemini-pro"});
+
+  const prompt = `
+      Based on the following survey responses, 
+      create a one-sentence summary of about the results. 
+
+      Here is the survey with responses in JSON format: ${JSON.stringify(data, null, 2)}
+  `;
+
+  try {
+      const result = await model.generateContent(prompt);
+      const response = await result.response;
+      const text = response.text();
+
+      return text;
+  } catch (e) {
+      console.error(e);
+      return "Error contacting Gemini";
+  }
+}

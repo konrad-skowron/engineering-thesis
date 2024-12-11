@@ -1,7 +1,7 @@
 import { db } from '@/lib/firebase/config';
 import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove, updateDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
-import { Survey, Question, Response } from "@/lib/types";
+import { Survey, Question } from "@/lib/types";
 import { v4 as uuidv4 } from 'uuid';
 
 export const saveSurvey = async (surveyTitle: string, surveyDescription: string, questions: Question[], user : User) : Promise<string> => {

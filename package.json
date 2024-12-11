@@ -14,6 +14,7 @@
     "test:safari": "npx playwright test --headed --browser=webkit"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.21.0",
     "@mantine/charts": "^7.14.2",
     "@mantine/core": "^7.13.4",
     "@mantine/form": "^7.13.4",

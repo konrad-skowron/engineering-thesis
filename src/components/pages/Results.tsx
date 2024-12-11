@@ -7,15 +7,17 @@ import { doc, onSnapshot } from 'firebase/firestore';
 import { Loading } from '@/components/Loading';
 import { Survey, Response } from '@/lib/types';
 import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
+import { useDisclosure } from '@mantine/hooks';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
-import { exportToCSV, exportToJSON } from '@/lib/utils';
+import { exportToCSV, exportToJSON, geminiSummary } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
 import { ButtonCopy } from '../ButtonCopy';
-import { TableOfContents } from '../TableOfContents';
+// import { TableOfContents } from '../TableOfContents';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
   const [opened, setOpened] = useState(false);
+  const [isOpened, { open, close }] = useDisclosure(false);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
@@ -26,6 +28,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   const [activePage, setPage] = useState(1);
   const [expandedQuestions, setExpandedQuestions] = useState<Record<number, boolean>>({});
   const colors = ['indigo', 'yellow', 'teal', 'gray', 'red', 'pink', 'grape', 'violet', 'blue', 'cyan', 'green', 'lime', 'orange'];
+  const [aiSummary, setAiSummary] = useState<string | null>(null);
 
   useEffect(() => {
     const getData = async () => {
@@ -60,6 +63,17 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
       ...prev,
       [index]: !prev[index],
     }));
+  };
+
+  const getSummary = async () => {
+    if (!survey) return;
+
+    open();
+
+    if (!aiSummary) {
+      const fetchedSummary = await geminiSummary(survey, responses);
+      setAiSummary(fetchedSummary || null);
+    }
   };
 
   // const links = survey?.questions.map((question, index) => ({
@@ -334,7 +348,14 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 </Button>
               </Group>
               <Group justify='end'>
-                <ButtonCopy url={window.location.href} />
+              <ButtonCopy url={window.location.href} />
+                {/* <Button
+                  leftSection="✨"
+                  variant='default'
+                  onClick={getSummary}
+                >
+                  Summarize with AI
+                </Button> */}
               </Group>
             </Group>
             <Box mt='lg' hiddenFrom='xs'>
@@ -355,13 +376,20 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   Export results
                 </Button>
                 <ButtonCopy url={window.location.href} />
+                {/* <Button
+                  leftSection="✨"
+                  variant='default'
+                  onClick={getSummary}
+                >
+                  Summarize with AI
+                </Button> */}
               </Group>
             </Box>
 
             <Modal
               opened={opened}
               onClose={() => setOpened(false)}
-              title="Export results"
+              title={<Flex gap='0.3rem'><IconFileDownload size={17} />Export results</Flex>}
               overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}
               centered
             >
@@ -377,6 +405,10 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   Generate .json
                 </Button>
               </Group>
+            </Modal>
+
+            <Modal opened={isOpened} onClose={close} title="✨ AI Summary" overlayProps={{ blur: 6, backgroundOpacity: 0.3 }} centered>
+              {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
             </Modal>
           </Container>
         </Tabs.Panel>

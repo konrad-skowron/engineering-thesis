@@ -28,7 +28,7 @@ import {
   NumberInput
 } from '@mantine/core';
 import { ButtonCopy } from '../ButtonCopy';
-import { TableOfContents } from '../TableOfContents';
+// import { TableOfContents } from '../TableOfContents';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
