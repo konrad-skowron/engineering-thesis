@@ -10,6 +10,9 @@ export const metadata: Metadata = {
     template: "%s - Survey Maker"
   },
   description: "Conduct surveys using a continuous Likert scale",
+  verification: {
+    google: 'Kq-ysbVqYzZ1cvvNVCfZVOs_3Fx1MJqgaN1_djAAXdg',
+  }
 };
 
 export default function RootLayout({
