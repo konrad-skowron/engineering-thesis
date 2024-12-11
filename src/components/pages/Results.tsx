@@ -6,7 +6,7 @@ import { db } from '@/lib/firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { Loading } from '@/components/Loading';
 import { Survey, Response } from '@/lib/types';
-import { Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
+import { Popover, Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON, geminiSummary } from '@/lib/utils';
@@ -16,8 +16,7 @@ import { ButtonCopy } from '../ButtonCopy';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
   const params = use(props.params);
-  const [opened, setOpened] = useState(false);
-  const [isOpened, { open, close }] = useDisclosure(false);
+  const [opened, { open, close }] = useDisclosure(false);
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [survey, setSurvey] = useState<Survey | null>(null);
@@ -66,14 +65,9 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   };
 
   const getSummary = async () => {
-    if (!survey) return;
-
-    open();
-
-    if (!aiSummary) {
-      const fetchedSummary = await geminiSummary(survey, responses);
-      setAiSummary(fetchedSummary || null);
-    }
+    if (!survey || aiSummary) return;
+    const fetchedSummary = await geminiSummary(survey, responses);
+    setAiSummary(fetchedSummary || null);
   };
 
   // const links = survey?.questions.map((question, index) => ({
@@ -342,20 +336,26 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 <Button
                   leftSection={<IconFileDownload size={16} />}
                   variant='default'
-                  onClick={() => setOpened(!opened)}
+                  onClick={open}
                 >
                   Export results
                 </Button>
               </Group>
               <Group justify='end'>
-              <ButtonCopy url={window.location.href} />
-                {/* <Button
-                  leftSection="✨"
-                  variant='default'
-                  onClick={getSummary}
-                >
-                  Summarize with AI
-                </Button> */}
+                <ButtonCopy url={window.location.href} />
+                {/* <Popover width='20rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
+                  <Popover.Target>
+                    <Button
+                      leftSection="✨"
+                      variant='default'
+                    >
+                      Summarize with AI
+                    </Button>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
+                  </Popover.Dropdown>
+                </Popover> */}
               </Group>
             </Group>
             <Box mt='lg' hiddenFrom='xs'>
@@ -371,25 +371,31 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 <Button
                   leftSection={<IconFileDownload size={16} />}
                   variant='default'
-                  onClick={() => setOpened(!opened)}
+                  onClick={open}
                 >
                   Export results
                 </Button>
                 <ButtonCopy url={window.location.href} />
-                {/* <Button
-                  leftSection="✨"
-                  variant='default'
-                  onClick={getSummary}
-                >
-                  Summarize with AI
-                </Button> */}
+                {/* <Popover width='15rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
+                  <Popover.Target>
+                    <Button
+                      leftSection="✨"
+                      variant='default'
+                    >
+                      Summarize with AI
+                    </Button>
+                  </Popover.Target>
+                  <Popover.Dropdown>
+                    {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
+                  </Popover.Dropdown>
+                </Popover> */}
               </Group>
             </Box>
 
             <Modal
               opened={opened}
-              onClose={() => setOpened(false)}
-              title={<Flex gap='0.3rem'><IconFileDownload size={17} />Export results</Flex>}
+              onClose={close}
+              title={<Flex gap='xs'><IconFileDownload size={17} />Export results</Flex>}
               overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}
               centered
             >
@@ -405,10 +411,6 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   Generate .json
                 </Button>
               </Group>
-            </Modal>
-
-            <Modal opened={isOpened} onClose={close} title="✨ AI Summary" overlayProps={{ blur: 6, backgroundOpacity: 0.3 }} centered>
-              {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
             </Modal>
           </Container>
         </Tabs.Panel>
