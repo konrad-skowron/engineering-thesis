@@ -11,7 +11,6 @@ import { useDisclosure } from '@mantine/hooks';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON, geminiSummary } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
-import { ButtonCopy } from '../ButtonCopy';
 // import { TableOfContents } from '../TableOfContents';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
@@ -342,8 +341,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 </Button>
               </Group>
               <Group justify='end'>
-                <ButtonCopy url={window.location.href} />
-                {/* <Popover width='20rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
+                <Popover width='20rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
                   <Popover.Target>
                     <Button
                       leftSection="✨"
@@ -355,7 +353,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   <Popover.Dropdown>
                     {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
                   </Popover.Dropdown>
-                </Popover> */}
+                </Popover>
               </Group>
             </Group>
             <Box mt='lg' hiddenFrom='xs'>
@@ -375,8 +373,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 >
                   Export results
                 </Button>
-                <ButtonCopy url={window.location.href} />
-                {/* <Popover width='15rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
+                <Popover width='15rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
                   <Popover.Target>
                     <Button
                       leftSection="✨"
@@ -388,7 +385,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   <Popover.Dropdown>
                     {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
                   </Popover.Dropdown>
-                </Popover> */}
+                </Popover>
               </Group>
             </Box>
 
