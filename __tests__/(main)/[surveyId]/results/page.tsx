@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, act, waitFor } from '../../../../test-utils';
 import Results from '../../../../src/app/(main)/[surveyId]/results/page';
-import { fetchSurvey } from '@/lib/firestore';
+import { fetchSurvey } from '@/lib/firebase/firestore';
 import { onSnapshot } from 'firebase/firestore';
 
 const id = 'someId';
@@ -22,7 +22,7 @@ const responses = {
   ]
 };
 
-jest.mock('../../../../src/lib/firestore.ts', () => ({
+jest.mock('../../../../src/lib/firebase/firestore.ts', () => ({
   fetchSurvey: jest.fn()
 }));
 

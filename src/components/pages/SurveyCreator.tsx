@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { saveSurvey } from '@/lib/firestore';
+import { saveSurvey } from '@/lib/firebase/firestore';
 import { Question, QuestionType } from '@/lib/types';
 import {
   Container,

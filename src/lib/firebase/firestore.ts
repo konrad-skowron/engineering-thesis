@@ -1,4 +1,4 @@
-import { db } from '@/lib/firebase';
+import { db } from '@/lib/firebase/config';
 import { doc, setDoc, getDoc, getDocs, addDoc, collection, query, where, arrayUnion, deleteDoc, arrayRemove, updateDoc } from "firebase/firestore";
 import { User } from "firebase/auth";
 import { Survey, Question, Response } from "@/lib/types";

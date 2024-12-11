@@ -3,7 +3,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Account from '../../../src/app/(main)/account/page';
 import { act } from 'react';
-import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firestore';
+import { fetchUserSurveys, fetchAllSurveyParticipants } from '@/lib/firebase/firestore';
 
 jest.mock('firebase/auth', () => ({
   getAuth: jest.fn(() => ({
@@ -26,7 +26,7 @@ jest.mock('../../../src/components/AuthProvider.tsx', () => ({
   useAuth: jest.fn(),
 }));
 
-jest.mock('../../../src/lib/firestore.ts', () => ({
+jest.mock('../../../src/lib/firebase/firestore.ts', () => ({
   fetchUserSurveys: jest.fn(),
   fetchAllSurveyParticipants: jest.fn(),
 }));

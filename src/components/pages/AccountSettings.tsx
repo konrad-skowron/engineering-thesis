@@ -4,7 +4,7 @@ import { useRouter } from 'next/navigation';
 import { Container, Button, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import RouteProtector from '@/components/RouteProtector';
-import { deleteAllUserData } from '@/lib/firestore';
+import { deleteAllUserData } from '@/lib/firebase/firestore';
 
 export default function AccountSettings() {
   const { user, deleteAccount } = useAuth();

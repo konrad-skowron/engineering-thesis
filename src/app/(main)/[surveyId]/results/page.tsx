@@ -1,6 +1,6 @@
 import Results from "@/components/pages/Results";
 import type { Metadata } from 'next'
-import { fetchSurvey } from "@/lib/firestore";
+import { fetchSurvey } from "@/lib/firebase/firestore";
 
 type Props = {
   params: Promise<{ surveyId: string }>

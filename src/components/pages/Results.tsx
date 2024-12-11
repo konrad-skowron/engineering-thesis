@@ -1,8 +1,8 @@
 'use client'
 import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchSurvey } from '@/lib/firestore';
-import { db } from '@/lib/firebase';
+import { fetchSurvey } from '@/lib/firebase/firestore';
+import { db } from '@/lib/firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { Loading } from '@/components/Loading';
 import { Survey, Response } from '@/lib/types';

@@ -5,7 +5,7 @@ import { useAuth } from '@/components/AuthProvider';
 import { Container, Button, Group, Text, Menu, ActionIcon, Title, useMantineColorScheme } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
-import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firestore';
+import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firebase/firestore';
 import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';

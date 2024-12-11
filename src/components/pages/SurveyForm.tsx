@@ -2,7 +2,7 @@
 import { notFound, useRouter } from 'next/navigation';
 import Link from 'next/link';
 import React, { useState, useEffect, use } from 'react';
-import { fetchSurvey, saveSurveyResponse } from '@/lib/firestore';
+import { fetchSurvey, saveSurveyResponse } from '@/lib/firebase/firestore';
 import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
