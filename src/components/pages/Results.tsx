@@ -113,7 +113,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
           <Container>
             <Stack gap="lg" mt={'lg'}>
               {survey?.questions.map((question, index) => {
-                const questionResponses = responses.map((response) => response[index]).filter(response => response !== undefined);
+                const questionResponses = responses.map((response) => response[index]).filter(response => response !== undefined && response !== null && response !== '');
                 let result;
 
                 switch (question.type) {
@@ -421,7 +421,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 const questionResponses = responses[activePage - 1];
                 let result;
 
-                if (questionResponses[index] === undefined) {
+                if (questionResponses[index] === undefined || questionResponses[index] === null || questionResponses[index] === '') {
                   result = <Text c="dimmed">No response.</Text>;
                 } else {
 
