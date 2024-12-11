@@ -4,7 +4,7 @@ export interface Question {
   type: QuestionType;
   question: string;
   required: boolean;
-  rangeEnabled: boolean;
+  rangeEnabled?: boolean;
   options?: string[];
 }
 

@@ -230,12 +230,12 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       const secondElementAverage = (questionResponses.reduce((sum, [, second]) => sum + second, 0) / questionResponses.length).toFixed(2);
                       result = (
                         <Text>
-                          Average range: {firstElementAverage} - {secondElementAverage}
+                          Average response: {firstElementAverage} - {secondElementAverage}
                         </Text>
                       );
 
                     } else {
-                      const discreteAverage = (questionResponses.reduce((sum, value) => sum + (value + 1 || 0), 0) / questionResponses.length).toFixed(2);
+                      const discreteAverage = (questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length).toFixed(2);
                       const discreteCounts = question.options?.reduce((acc, option) => {
                         acc[option] = questionResponses.filter((resp) => question.options?.[resp] === option).length;
                         return acc;
@@ -247,7 +247,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                           </Text>
                           <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
                             <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                              data={Object.entries(discreteCounts || {}).map(([option, count]) => ({ name: option, Count: count }))} />
+                              data={Object.entries(discreteCounts || {}).map(([option, count], index) => ({ name: option || questionResponses[index], Count: count }))} />
                           </Box>
                         </Group>
                       );
@@ -260,7 +260,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       const secondElementAverage = (questionResponses.reduce((sum, [, second]) => sum + second, 0) / questionResponses.length).toFixed(2);
                       result = (
                         <Text>
-                          Average range: {firstElementAverage} - {secondElementAverage}
+                          Average response: {firstElementAverage} - {secondElementAverage}
                         </Text>
                       );
                     } else {

@@ -112,13 +112,6 @@ export default function SurveyCreator() {
         alert('Please fill each required field.');
         return;
       }
-      if (questions[i].type === 'discreteScale' && !questions[i].rangeEnabled) {
-        for (let j = 0; j < questions[i].options!.length; j++) {
-          if (questions[i].options![j] === '') {
-            updateOption(i, j, String(j + 1));
-          }
-        }
-      }
     }
     const surveyId = await saveSurvey(surveyTitle, surveyDescription, questions, user);
     router.push(`/${surveyId}`);
@@ -225,7 +218,7 @@ export default function SurveyCreator() {
                               {q.type === 'singleChoice' && <Radio disabled />}
                               {q.type === 'multipleChoice' && <Checkbox disabled />}
                               {q.type === 'dropdownList' && <Text>{optionIndex + 1}.</Text>}
-                              {q.type === 'discreteScale' && <Text>{optionIndex + 1}</Text>}
+                              {q.type === 'discreteScale' && <Text>{optionIndex}</Text>}
                               <TextInput
                                 style={{ flex: 1 }}
                                 placeholder={q.type === 'discreteScale' ? `Label (optional)` : `Option ${optionIndex + 1}`}
