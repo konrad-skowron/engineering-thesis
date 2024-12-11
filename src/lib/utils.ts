@@ -74,7 +74,7 @@ export const geminiSummary = async (survey : Survey, responses : Response[]) => 
   const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash"});
 
   const prompt = `
-    Provide a one-sentence summary of the main themes and trends from the following survey responses: ${JSON.stringify(data, null, 2)}
+    Provide a one-sentence summary of the main themes and trends from the following survey responses: ${JSON.stringify(data)}
   `;
 
   try {
