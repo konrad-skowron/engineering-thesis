@@ -351,7 +351,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    {!aiSummary ? <Center p="xl">Thinking...</Center> : (
+                    {!aiSummary ? <Center>Thinking...</Center> : (
                       aiSummary === GEMINI_ERROR_MSG ?
                         <Center c='red'>{aiSummary}</Center> : <Center>{aiSummary}</Center>)}
                   </Popover.Dropdown>
@@ -385,7 +385,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    {!aiSummary ? <Center p="xl">Thinking...</Center> : (
+                    {!aiSummary ? <Center>Thinking...</Center> : (
                       aiSummary === GEMINI_ERROR_MSG ?
                         <Center c='red'>{aiSummary}</Center> : <Center>{aiSummary}</Center>)}
                   </Popover.Dropdown>
