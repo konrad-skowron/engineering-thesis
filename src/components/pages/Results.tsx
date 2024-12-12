@@ -9,7 +9,7 @@ import { Survey, Response } from '@/lib/types';
 import { Popover, Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useMantineColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
-import { exportToCSV, exportToJSON, geminiSummary } from '@/lib/utils';
+import { exportToCSV, exportToJSON, geminiSummary, GEMINI_ERROR_MSG } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
 // import { TableOfContents } from '../TableOfContents';
 
@@ -351,7 +351,9 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
+                    {!aiSummary ? <Center p="xl">Thinking...</Center> : (
+                      aiSummary === GEMINI_ERROR_MSG ?
+                        <Center c='red'>{aiSummary}</Center> : <Center>{aiSummary}</Center>)}
                   </Popover.Dropdown>
                 </Popover>
               </Group>
@@ -379,11 +381,13 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       leftSection="✨"
                       variant='default'
                     >
-                      Summarize with AI
+                      Summarize
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    {!aiSummary ? <Loading /> : <Text>{aiSummary}</Text>}
+                    {!aiSummary ? <Center p="xl">Thinking...</Center> : (
+                      aiSummary === GEMINI_ERROR_MSG ?
+                        <Center c='red'>{aiSummary}</Center> : <Center>{aiSummary}</Center>)}
                   </Popover.Dropdown>
                 </Popover>
               </Group>

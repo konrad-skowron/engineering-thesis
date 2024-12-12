@@ -1,6 +1,8 @@
 import { Survey, Response } from "./types";
 import { GoogleGenerativeAI } from '@google/generative-ai'
 
+export const GEMINI_ERROR_MSG = "Error contacting Gemini.";
+
 export const formatTimestamp = (createdAt : any) => {
   const date = new Date(createdAt.seconds * 1000 + Math.floor(createdAt.nanoseconds / 1e6));
   return date.toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'});
@@ -67,6 +69,7 @@ export const exportToJSON = (survey : Survey, responses : Response[]) => {
 
 export const geminiSummary = async (survey : Survey, responses : Response[]) => {
   if (!survey) return;
+  if (!responses || responses.length === 0) return 'No responses yet.';
   if (responses.length > 100) return 'Too many responses.';
 
   const data = aggregateResults(survey, responses);
@@ -85,6 +88,6 @@ export const geminiSummary = async (survey : Survey, responses : Response[]) => 
       return text;
   } catch (e) {
       console.error(e);
-      return "Error contacting Gemini.";
+      return GEMINI_ERROR_MSG;
   }
 }
