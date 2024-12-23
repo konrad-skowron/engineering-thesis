@@ -76,7 +76,7 @@ export function Header() {
             {items[1]}
           </Group>
 
-          <Skeleton visible={loading} width={loading ? '20%' : 'auto'} height={loading ? 35 : 'auto'}>
+          <Skeleton visible={loading} width={loading ? '20%' : 'auto'} height={loading ? 35 : 'auto'} visibleFrom='xs'>
             {!user && !loading ? (
               <>
                 <Group visibleFrom="sm">
@@ -95,7 +95,6 @@ export function Header() {
               </>
             ) : (
               <Group justify="space-between">
-                <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
                 <Menu
                   width={260}
                   position="bottom-end"
@@ -153,25 +152,28 @@ export function Header() {
                 </Menu>
               </Group>)}
           </Skeleton>
+          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
         </div>
       </Container>
 
       <Drawer opened={opened} onClose={toggle} size="15rem"
         title={<Group gap="xs"><Image src="/favicon.ico" alt="logo" width={24} height={24} /><b>Survey Maker</b></Group>}
         position="top" offset={10} radius="md" overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}>
-        <Group>
-          <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={56} name={user?.displayName || user?.email?.charAt(0) || undefined} color="initials" variant="filled" />
-          <Text fw={500} lh={1} mr={3}>
-            {user?.displayName || user?.email}
-            {user?.displayName &&
-              <>
-                <br />
-                <Text size="xs" c="dimmed" component="span">
-                  {user?.email}
-                </Text>
-              </>}
-          </Text>
-        </Group>
+        <Skeleton visible={loading}>
+          <Group>
+            <Avatar src={user?.photoURL} alt='user photo' radius="xl" size={56} name={user?.displayName || user?.email?.charAt(0) || undefined} color="initials" variant="filled" />
+            <Text fw={500} lh={1} mr={3}>
+              {user?.displayName || user?.email}
+              {user?.displayName &&
+                <>
+                  <br />
+                  <Text size="xs" c="dimmed" component="span">
+                    {user?.email}
+                  </Text>
+                </>}
+            </Text>
+          </Group>
+        </Skeleton>
         <SimpleGrid cols={2} mt="lg">
           <Button variant="default" justify="left" onClick={() => { router.push('/account'); toggle(); }} leftSection={<IconHome size={16} />}>Dashboard</Button>
           <Button variant="default" justify="left" onClick={() => { router.push('/settings'); toggle(); }} leftSection={<IconSettings size={16} />}>Settings</Button>
