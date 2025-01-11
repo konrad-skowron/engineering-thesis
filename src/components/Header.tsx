@@ -31,8 +31,8 @@ import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 const links = [
-  { link: '/account', label: 'Dashboard' },
   { link: '/create', label: 'Create Survey' },
+  { link: '/account', label: 'Dashboard' },
   { link: '/settings', label: 'Settings' },
 ];
 
@@ -152,7 +152,16 @@ export function Header() {
                 </Menu>
               </Group>)}
           </Skeleton>
-          <Burger opened={opened} onClick={toggle} hiddenFrom="xs" size="sm" />
+
+          <Box hiddenFrom="xs">
+            {(user || loading) ? (
+              <Burger opened={opened} onClick={toggle} size="sm" />
+            ) :
+              <Link href="/login" style={{ textDecoration: 'none' }}>
+                <Button variant="default">Log in</Button>
+              </Link>
+            }
+          </Box>
         </div>
       </Container>
 
