@@ -1,6 +1,12 @@
 # Survey Maker
 This project is a web application for conducting surveys using a continuous Likert scale and much more.
 
+<p align="center">
+  <a href="#tech-stack">Tech stack</a> •
+  <a href="#installation">Installation</a> •
+  <a href="#live-version">Live version</a>
+</p>
+
 ## Tech stack
 
 ### Frontend
