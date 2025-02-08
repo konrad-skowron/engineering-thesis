@@ -1,9 +1,9 @@
 import React from 'react';
-import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
+import { useMantineTheme, useComputedColorScheme } from '@mantine/core';
 
 const Completed = () => {
   const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const colorScheme = useComputedColorScheme();
 
   return (
     <div style={{ display: 'flex',

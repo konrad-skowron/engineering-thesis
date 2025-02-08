@@ -2,7 +2,7 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { Container, Button, Group, Text, Menu, ActionIcon, Title, useMantineColorScheme } from '@mantine/core';
+import { Container, Button, Group, Text, Menu, ActionIcon, Title, useComputedColorScheme } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firebase/firestore';
@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [participants, setParticipants] = useState<Record<string, number>>({});
   const [gettingSurveys, setGettingSurveys] = useState(true);
   const [openSurveyMenu, setOpenSurveyMenu] = useState<string | null>(null);
-  const { colorScheme } = useMantineColorScheme();
+  const colorScheme = useComputedColorScheme();
 
   useEffect(() => {
     const getSurveys = async () => {

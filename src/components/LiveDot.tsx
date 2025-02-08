@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
-import { useMantineTheme, useMantineColorScheme } from '@mantine/core';
+import { useMantineTheme, useComputedColorScheme } from '@mantine/core';
 
 const LiveDot = () => {
   const [visible, setVisible] = useState(true);
   const theme = useMantineTheme();
-  const { colorScheme } = useMantineColorScheme();
+  const colorScheme = useComputedColorScheme();
 
   useEffect(() => {
     const interval = setInterval(() => {
