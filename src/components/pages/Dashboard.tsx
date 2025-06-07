@@ -61,10 +61,7 @@ export default function Dashboard() {
   const editSurvey = (e: React.MouseEvent<HTMLDivElement>, surveyId: string) => {
     e.preventDefault();
     e.stopPropagation();
-    if (participants[surveyId] > 0) {
-      alert('You cannot edit a survey that has participants.');
-      return;
-    }
+    if (participants[surveyId] > 0) return;
     router.push(`/${surveyId}/edit`);
   };
 
@@ -166,7 +163,7 @@ export default function Dashboard() {
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
                         Show results
                       </Menu.Item>
-                      <Box onClick={(e: React.MouseEvent<HTMLDivElement>) => editSurvey(e, survey.id)}>
+                      <Box onClick={(e: React.MouseEvent<HTMLDivElement>) => editSurvey(e, survey.id)} title={participants[survey.id] > 0 ? "Cannot edit survey with participants" : ""}>
                         <Menu.Item leftSection={<IconEdit size={14} />} disabled={participants[survey.id] > 0}>
                             Edit survey
                         </Menu.Item>
