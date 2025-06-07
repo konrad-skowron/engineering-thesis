@@ -64,7 +64,7 @@ export default function SurveyCreator() {
         const participants = participantsMap[surveyId] || 0;
         if (participants > 0) {
           if (!ignore) {
-            setEditError('You cannot edit this survey because it already has responses.');
+            setEditError('Survey already has responses.');
             setCanEdit(false);
             setLoading(false);
           }
@@ -181,7 +181,8 @@ export default function SurveyCreator() {
       <RouteProtector>
         <Container pt="xl" pb="xl">
           <Paper shadow="xs" p="md" withBorder>
-            <Text c="red">{editError}</Text>
+            <Title order={2} c="red">Access Denied</Title>
+            <Text mt='xs'>{editError}</Text>
           </Paper>
         </Container>
       </RouteProtector>
