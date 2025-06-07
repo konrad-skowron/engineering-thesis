@@ -37,6 +37,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const [survey, setSurvey] = useState<Survey | null>(null);
   const [responses, setResponses] = useState<{ [index: number]: any }>({});
   const [submitted, setSubmitted] = useState(false);
+  const [fieldsDisabled, setFieldsDisabled] = useState(false);
   const router = useRouter();
 
   const discreteScaleDv = (length: number) => Math.floor(length / 2);
@@ -50,6 +51,12 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       setSurvey(fetchedSurvey);
       setLoading(false);
     };
+
+    const saved = localStorage.getItem(`survey_${params.surveyId}`);
+    if (saved) {
+      setResponses(JSON.parse(saved));
+      setFieldsDisabled(true);
+    }
 
     getSurvey();
   }, [params.surveyId]);
@@ -91,7 +98,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     }
 
     await saveSurveyResponse(params.surveyId, newResponses);
+    localStorage.setItem(`survey_${params.surveyId}`, JSON.stringify(newResponses)); // Save to localStorage
     setSubmitted(true);
+    setFieldsDisabled(true);
   };
 
   const renderQuestion = (question: Question, index: number) => {
@@ -105,22 +114,25 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               onChange={(e) => updateResponse(index, e.target.value)}
               required={question.required}
               resize="vertical"
+              disabled={fieldsDisabled}
             />
           </>
         );
 
-        case 'number':
-          return (
-            <>
-              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
-              <NumberInput
-                placeholder="Enter a number"
-                onChange={(value) => updateResponse(index, value)}
-                required={question.required}
-                w="fit-content"
-              />
-            </>
-          );
+      case 'number':
+        return (
+          <>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <NumberInput
+              placeholder="Enter a number"
+              value={responses[index] || ''}
+              onChange={(value) => updateResponse(index, value)}
+              required={question.required}
+              w="fit-content"
+              disabled={fieldsDisabled}
+            />
+          </>
+        );
 
       case 'singleChoice':
         return (
@@ -137,6 +149,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     key={optIndex}
                     value={option}
                     label={option}
+                    disabled={fieldsDisabled}
                   />
                 ))}
               </Stack>
@@ -159,6 +172,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     key={optIndex}
                     value={option}
                     label={option}
+                    disabled={fieldsDisabled}
                   />
                 ))}
               </Stack>
@@ -176,6 +190,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               value={responses[index] || null}
               onChange={(value) => updateResponse(index, value)}
               required={question.required}
+              disabled={fieldsDisabled}
             />
           </>
         );
@@ -194,7 +209,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   max={question.options ? question.options?.length * 10 - 10 : 50}
                   step={10}
                   marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
-                  defaultValue={discreteScaleRangeDv(question.options?.length || 1)}
+                  defaultValue={responses[index].map((v: number) => v * 10) || discreteScaleRangeDv(question.options?.length || 1)}
                   onChange={(value) => updateResponse(index, [value[0] / 10, value[1] / 10])}
                   p="8%"
                   mb="xl"
@@ -205,6 +220,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                       textAlign: 'center'
                     }
                   }}
+                  disabled={fieldsDisabled}
                 />
               </Stack>
             </>
@@ -218,7 +234,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                 marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
                 min={0}
                 max={(question.options?.length || 1) - 1}
-                defaultValue={discreteScaleDv(question.options?.length || 1)}
+                defaultValue={responses[index] || discreteScaleDv(question.options?.length || 1)}
                 onChange={(value) => updateResponse(index, value)}
                 color="default"
                 p="8%"
@@ -230,6 +246,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     textAlign: 'center'
                   }
                 }}
+                disabled={fieldsDisabled}
               />
             </>
           );
@@ -247,21 +264,23 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider
-                    defaultValue={continuousScaleRangeDv}
+                    defaultValue={responses[index] || continuousScaleRangeDv}
                     onChange={(value) => updateResponse(index, value)}
                     minRange={1}
+                    disabled={fieldsDisabled}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
                 <Group
                   hiddenFrom='xs'
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 3r 1fr' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider
-                    defaultValue={continuousScaleRangeDv}
+                    defaultValue={responses[index] || continuousScaleRangeDv}
                     onChange={(value) => updateResponse(index, value)}
                     minRange={1}
+                    disabled={fieldsDisabled}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
@@ -279,21 +298,23 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
-                    defaultValue={continuousScaleDv}
+                    defaultValue={responses[index] || continuousScaleDv}
                     onChange={(value) => updateResponse(index, value)}
                     color="default"
+                    disabled={fieldsDisabled}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
                 <Group
                   hiddenFrom='xs'
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 3fr 1fr' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
-                    defaultValue={continuousScaleDv}
+                    defaultValue={responses[index] || continuousScaleDv}
                     onChange={(value) => updateResponse(index, value)}
                     color="default"
+                    disabled={fieldsDisabled}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
@@ -351,45 +372,71 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </Paper>
           ))}
 
-          <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} visibleFrom='xs'>
-            <Group wrap="nowrap">
-              <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-                Submit
-              </Button>
-              {user && user.uid === survey?.author &&
-                <Link href={`/${params.surveyId}/results`}>
-                  <Button variant='default' leftSection={<IconChartBar size={16} />}>
-                    Show results
-                  </Button>
-                </Link>}
-            </Group>
-            <Group justify='end'>
-              <ButtonCopy url={window.location.href} />
-            </Group>
-          </Group>
-          <Box hiddenFrom='xs'>
-            {user && user.uid === survey?.author ? (
-              <Box>
-                <Group grow>
+          {!fieldsDisabled ? (
+            <>
+              <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} visibleFrom='xs'>
+                <Group wrap="nowrap">
                   <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
                     Submit
                   </Button>
+                  {user && user.uid === survey?.author &&
+                    <Link href={`/${params.surveyId}/results`}>
+                      <Button variant='default' leftSection={<IconChartBar size={16} />}>
+                        Show results
+                      </Button>
+                    </Link>}
                 </Group>
-                <Group grow mt="md">
-                  <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
-                    Show results
-                  </Button>
+                <Group justify='end'>
                   <ButtonCopy url={window.location.href} />
                 </Group>
-              </Box>) : (
-              <Group grow>
-                <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-                  Submit
-                </Button>
-                <ButtonCopy url={window.location.href} />
               </Group>
-            )}
-          </Box>
+              <Box hiddenFrom='xs'>
+                {user && user.uid === survey?.author ? (
+                  <Box>
+                    <Group grow>
+                      <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
+                        Submit
+                      </Button>
+                    </Group>
+                    <Group grow mt="md">
+                      <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
+                        Show results
+                      </Button>
+                      <ButtonCopy url={window.location.href} />
+                    </Group>
+                  </Box>) : (
+                  <Group grow>
+                    <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
+                      Submit
+                    </Button>
+                    <ButtonCopy url={window.location.href} />
+                  </Group>
+                )}
+              </Box>
+            </>
+          ) : (
+            <>
+              <Group visibleFrom='xs' justify='end'>
+                {user && user.uid === survey?.author &&
+                  <Link href={`/${params.surveyId}/results`}>
+                    <Button variant='default' leftSection={<IconChartBar size={16} />}>
+                      Show results
+                    </Button>
+                  </Link>}
+              </Group>
+              <Group hiddenFrom='xs' grow>
+                {user && user.uid === survey?.author &&
+                  <Link href={`/${params.surveyId}/results`}>
+                    <Button variant='default' leftSection={<IconChartBar size={16} />}>
+                      Show results
+                    </Button>
+                  </Link>}
+              </Group>
+              {!user || user.uid !== survey?.author ? (
+                <Center mb='xs'>
+                  <Text c="dimmed" size='sm'>Your responses have been saved. Thank you for participating in this survey.</Text>
+                </Center>) : null}
+            </>)}
         </Stack>
       </Container>
     </Box>

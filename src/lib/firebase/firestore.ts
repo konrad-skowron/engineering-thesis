@@ -142,3 +142,25 @@ export const setSurveyActive = async (surveyId: string, isActive: boolean) => {
     console.error("Error opening survey: ", e);
   }
 }
+
+export const updateSurvey = async (
+  surveyId: string,
+  surveyTitle: string,
+  surveyDescription: string,
+  questions: Question[],
+  user: User
+): Promise<void> => {
+  try {
+    const surveyRef = doc(db, 'surveys', surveyId);
+    await setDoc(surveyRef, {
+      title: surveyTitle,
+      description: surveyDescription,
+      questions: questions,
+      author: user.uid,
+      authorName: user.displayName || user.email || 'Unknown',
+      updatedAt: new Date(),
+    }, { merge: true });
+  } catch (e) {
+    console.error('Error updating survey: ', e);
+  }
+};

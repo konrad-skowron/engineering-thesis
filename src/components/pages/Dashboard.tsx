@@ -2,11 +2,11 @@
 import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { Container, Button, Group, Text, Menu, ActionIcon, Title, useComputedColorScheme } from '@mantine/core';
+import { Container, Button, Group, Text, Menu, ActionIcon, Title, useComputedColorScheme, Box } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firebase/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
@@ -56,6 +56,16 @@ export default function Dashboard() {
     e.preventDefault();
     e.stopPropagation();
     router.push(`/${surveyId}/results`);
+  };
+
+  const editSurvey = (e: React.MouseEvent<HTMLDivElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (participants[surveyId] > 0) {
+      alert('You cannot edit a survey that has participants.');
+      return;
+    }
+    router.push(`/${surveyId}/edit`);
   };
 
   const copyLink = (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
@@ -156,6 +166,11 @@ export default function Dashboard() {
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => showResults(e, survey.id)}>
                         Show results
                       </Menu.Item>
+                      <Box onClick={(e: React.MouseEvent<HTMLDivElement>) => editSurvey(e, survey.id)}>
+                        <Menu.Item leftSection={<IconEdit size={14} />} disabled={participants[survey.id] > 0}>
+                            Edit survey
+                        </Menu.Item>
+                      </Box>
                       {survey.active ? (
                         <Menu.Item leftSection={<IconLock size={14} />}
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, false)}>

@@ -1,8 +1,8 @@
 'use client'
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState, useEffect } from 'react';
+import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { saveSurvey } from '@/lib/firebase/firestore';
+import { saveSurvey, fetchSurvey, updateSurvey, fetchAllSurveyParticipants } from '@/lib/firebase/firestore';
 import { Question, QuestionType } from '@/lib/types';
 import {
   Container,
@@ -24,13 +24,65 @@ import {
 } from '@mantine/core';
 import { IconPlus, IconTrash, IconX } from '@tabler/icons-react';
 import RouteProtector from '@/components/RouteProtector';
+import { Loading } from '@/components/Loading';
 
 export default function SurveyCreator() {
   const router = useRouter();
+  const params = useParams();
   const { user } = useAuth();
   const [surveyTitle, setSurveyTitle] = useState<string>('');
   const [surveyDescription, setSurveyDescription] = useState<string>('');
   const [questions, setQuestions] = useState<Question[]>([{ type: 'text', question: '', rangeEnabled: false, required: false }]);
+  const [loading, setLoading] = useState(false);
+  const [canEdit, setCanEdit] = useState(true);
+  const [editError, setEditError] = useState<string | null>(null);
+  const surveyId = params?.surveyId as string | undefined;
+
+  useEffect(() => {
+    let ignore = false;
+    const checkEditPermissions = async () => {
+      if (surveyId) {
+        setLoading(true);
+        const survey = await fetchSurvey(surveyId);
+        if (!survey) {
+          if (!ignore) {
+            setEditError('Survey not found.');
+            setCanEdit(false);
+            setLoading(false);
+          }
+          return;
+        }
+        if (survey.author !== user?.uid) {
+          if (!ignore) {
+            setEditError('You are not the author of this survey.');
+            setCanEdit(false);
+            setLoading(false);
+          }
+          return;
+        }
+        const participantsMap = await fetchAllSurveyParticipants([surveyId]);
+        const participants = participantsMap[surveyId] || 0;
+        if (participants > 0) {
+          if (!ignore) {
+            setEditError('You cannot edit this survey because it already has responses.');
+            setCanEdit(false);
+            setLoading(false);
+          }
+          return;
+        }
+        if (!ignore) {
+          setSurveyTitle(survey.title);
+          setSurveyDescription(survey.description);
+          setQuestions(survey.questions);
+          setCanEdit(true);
+          setEditError(null);
+          setLoading(false);
+        }
+      }
+    };
+    checkEditPermissions();
+    return () => { ignore = true; };
+  }, [surveyId, user]);
 
   const addQuestion = () => {
     setQuestions([...questions, { type: 'text', question: '', rangeEnabled: false, required: false }]);
@@ -100,9 +152,7 @@ export default function SurveyCreator() {
   };
 
   const saveAndRedirect = async () => {
-    if (!user) {
-      return;
-    }
+    if (!user) return;
     if (!surveyTitle) {
       alert('Please enter a survey title.');
       return;
@@ -113,9 +163,30 @@ export default function SurveyCreator() {
         return;
       }
     }
-    const surveyId = await saveSurvey(surveyTitle, surveyDescription, questions, user);
-    router.push(`/${surveyId}`);
+    let id = surveyId;
+    if (surveyId) {
+      await updateSurvey(surveyId, surveyTitle, surveyDescription, questions, user);
+    } else {
+      id = await saveSurvey(surveyTitle, surveyDescription, questions, user);
+    }
+    router.push(`/${id}`);
   };
+
+  if (loading) {
+    return <Loading />;
+  }
+
+  if (!canEdit && editError) {
+    return (
+      <RouteProtector>
+        <Container pt="xl" pb="xl">
+          <Paper shadow="xs" p="md" withBorder>
+            <Text c="red">{editError}</Text>
+          </Paper>
+        </Container>
+      </RouteProtector>
+    );
+  }
 
   return (
     <RouteProtector>
@@ -264,7 +335,7 @@ export default function SurveyCreator() {
             </Paper>
           ))}
 
-          <Group visibleFrom='xs'>
+          <Group visibleFrom='xs' style={{ display: 'grid', gridTemplateColumns: 'auto 1fr' }}>
             <Button
               variant="default"
               leftSection={<IconPlus size={16} />}
@@ -273,12 +344,32 @@ export default function SurveyCreator() {
               Add question
             </Button>
 
-            <Button
-              color="blue"
-              onClick={saveAndRedirect}
-            >
-              Create survey
-            </Button>
+            {surveyId ? (
+              <Group justify='end'>
+                <Button
+                  color="blue"
+                  onClick={saveAndRedirect}
+                >
+                  Save survey
+                </Button>
+                <Button
+                  variant="default"
+                  onClick={router.back}
+                >
+                  Cancel
+                </Button>
+              </Group>
+            ) :
+              <Group justify='flex-start'>
+                <Button
+                  color="blue"
+                  onClick={saveAndRedirect}
+                >
+                  Create survey
+                </Button>
+              </Group>
+            }
+
           </Group>
           <Group hiddenFrom='xs' grow>
             <Button
@@ -293,7 +384,7 @@ export default function SurveyCreator() {
               color="blue"
               onClick={saveAndRedirect}
             >
-              Create survey
+              {surveyId ? 'Save survey' : 'Create survey'}
             </Button>
           </Group>
         </Stack>
