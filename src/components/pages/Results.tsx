@@ -419,7 +419,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         <Tabs.Panel value="individual">
           <Container>
             <Stack gap="lg" mt={'lg'}>
-              {responses.length === 0 && <Text c="dimmed" >No responses yet.</Text>}
+              {responses.length === 0 && <Text c="dimmed">No responses yet.</Text>}
               {survey?.questions.map((question, index) => {
                 if (!responses[activePage - 1]) return null;
 

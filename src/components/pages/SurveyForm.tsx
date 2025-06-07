@@ -426,11 +426,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               </Group>
               <Group hiddenFrom='xs' grow>
                 {user && user.uid === survey?.author &&
-                  <Link href={`/${params.surveyId}/results`}>
-                    <Button variant='default' leftSection={<IconChartBar size={16} />}>
-                      Show results
-                    </Button>
-                  </Link>}
+                  <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
+                    Show results
+                  </Button>}
               </Group>
               {!user || user.uid !== survey?.author ? (
                 <Center mb='xs'>
