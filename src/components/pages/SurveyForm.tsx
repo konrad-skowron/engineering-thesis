@@ -434,7 +434,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               </Group>
               {!user || user.uid !== survey?.author ? (
                 <Center mb='xs'>
-                  <Text c="dimmed" size='sm'>Your responses have been saved. Thank you for participating in this survey.</Text>
+                  <Text c="dimmed" size='sm'>Your response has been recorded. You can fill out this form only once.</Text>
                 </Center>) : null}
             </>)}
         </Stack>

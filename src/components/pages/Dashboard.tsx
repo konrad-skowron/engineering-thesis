@@ -165,7 +165,7 @@ export default function Dashboard() {
                       </Menu.Item>
                       <Box onClick={(e: React.MouseEvent<HTMLDivElement>) => editSurvey(e, survey.id)} title={participants[survey.id] > 0 ? "Cannot edit survey with participants" : ""}>
                         <Menu.Item leftSection={<IconEdit size={14} />} disabled={participants[survey.id] > 0}>
-                            Edit survey
+                          Edit survey
                         </Menu.Item>
                       </Box>
                       {survey.active ? (
