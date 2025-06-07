@@ -5,8 +5,8 @@ import { useAuth } from '@/components/AuthProvider';
 import { Container, Button, Group, Text, Menu, ActionIcon, Title, useComputedColorScheme, Box } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
-import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive } from '@/lib/firebase/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit } from '@tabler/icons-react';
+import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive, fetchSurvey, saveSurvey } from '@/lib/firebase/firestore';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit, IconCopyPlus } from '@tabler/icons-react';
 import { formatTimestamp } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
@@ -63,6 +63,30 @@ export default function Dashboard() {
     e.stopPropagation();
     if (participants[surveyId] > 0) return;
     router.push(`/${surveyId}/edit`);
+  };
+
+  const duplicateSurvey = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (!user) return;
+    const originalSurvey = await fetchSurvey(surveyId);
+    if (!originalSurvey) {
+      alert('Failed to duplicate survey.');
+      return;
+    }
+    const { title, description, questions } = originalSurvey;
+    const newTitle = `${title} (Copy)`;
+    const newSurveyId = await saveSurvey(newTitle, description, questions, user);
+    if (newSurveyId) {
+      const fetchedSurveys = await fetchUserSurveys(user);
+      fetchedSurveys.sort((a, b) => b.createdAt.seconds - a.createdAt.seconds);
+      setSurveys(fetchedSurveys);
+      const surveyIds = fetchedSurveys.map(survey => survey.id);
+      const participantsMap = await fetchAllSurveyParticipants(surveyIds);
+      setParticipants(participantsMap);
+    } else {
+      alert('Failed to duplicate survey.');
+    }
   };
 
   const copyLink = (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
@@ -165,17 +189,21 @@ export default function Dashboard() {
                       </Menu.Item>
                       <Box onClick={(e: React.MouseEvent<HTMLDivElement>) => editSurvey(e, survey.id)} title={participants[survey.id] > 0 ? "Cannot edit survey with participants" : ""}>
                         <Menu.Item leftSection={<IconEdit size={14} />} disabled={participants[survey.id] > 0}>
-                          Edit survey
+                          Edit
                         </Menu.Item>
                       </Box>
+                      <Menu.Item leftSection={<IconCopyPlus size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => duplicateSurvey(e, survey.id)}>
+                        Duplicate
+                      </Menu.Item>
                       {survey.active ? (
                         <Menu.Item leftSection={<IconLock size={14} />}
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, false)}>
-                          Close survey
+                          Close
                         </Menu.Item>) : (
                         <Menu.Item leftSection={<IconLockOpen size={14} />}
                           onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleToggleActive(e, survey.id, true)}>
-                          Reopen survey
+                          Reopen
                         </Menu.Item>)}
                       <Menu.Item leftSection={<IconShare size={14} />}
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
