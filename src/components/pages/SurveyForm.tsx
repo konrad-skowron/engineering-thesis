@@ -242,7 +242,20 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
               <Stack>
                 <Group
+                  visibleFrom='xs'
                   style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
+                  p="5%">
+                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <RangeSlider
+                    defaultValue={continuousScaleRangeDv}
+                    onChange={(value) => updateResponse(index, value)}
+                    minRange={1}
+                  />
+                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                </Group>
+                <Group
+                  hiddenFrom='xs'
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider
@@ -261,7 +274,20 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
               <Stack>
                 <Group
+                  visibleFrom='xs'
                   style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
+                  p="5%">
+                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <Slider
+                    defaultValue={continuousScaleDv}
+                    onChange={(value) => updateResponse(index, value)}
+                    color="default"
+                  />
+                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                </Group>
+                <Group
+                  hiddenFrom='xs'
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
