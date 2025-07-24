@@ -1,8 +1,8 @@
 import Link from 'next/link'
 import { Title, Text, Button, Container, Group, Center } from '@mantine/core';
-import classes from './Error.module.css';
+import classes from './NotFound.module.css';
  
-export default function Error() {
+export default function NotFound() {
   return (
     <Center style={{ height: '100vh' }}>    
       <Container className={classes.root}>

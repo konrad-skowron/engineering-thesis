@@ -1,12 +1,12 @@
-import Error from "@/components/pages/Error"
+import NotFound from "@/components/pages/NotFound"
 import { Metadata } from 'next';
 
 export const metadata: Metadata = {
   title: 'Not found'
 };
 
-export default function NotFound() {
+export default function NotFoundPage() {
   return (
-    <Error />
+    <NotFound />
   );
 }

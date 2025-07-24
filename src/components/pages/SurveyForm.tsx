@@ -198,7 +198,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'discreteScale':
         if (question.rangeEnabled) {
           const getScale = (v: number) => v / 10;
-
           return (
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
@@ -209,7 +208,11 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   max={question.options ? question.options?.length * 10 - 10 : 50}
                   step={10}
                   marks={question.options?.map((opt, i) => ({ value: i * 10, label: opt.split(' ').join('\n') }))}
-                  defaultValue={responses[index].map((v: number) => v * 10) || discreteScaleRangeDv(question.options?.length || 1)}
+                  defaultValue={
+                    Array.isArray(responses[index]) && responses[index].length === 2
+                      ? [responses[index][0] * 10, responses[index][1] * 10]
+                      : discreteScaleRangeDv(question.options?.length || 1)
+                  }
                   onChange={(value) => updateResponse(index, [value[0] / 10, value[1] / 10])}
                   p="8%"
                   mb="xl"
@@ -273,7 +276,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                 </Group>
                 <Group
                   hiddenFrom='xs'
-                  style={{ display: 'grid', gridTemplateColumns: '1fr 3r 1fr' }}
+                  style={{ display: 'grid', gridTemplateColumns: '1fr 3fr 1fr' }}
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <RangeSlider

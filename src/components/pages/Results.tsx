@@ -571,7 +571,20 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                         result = (
                           <Stack>
                             <Group
+                              visibleFrom='xs'
                               style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
+                              p="5%">
+                              <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                              <Slider
+                                value={questionResponses[index]}
+                                color="default"
+                                labelAlwaysOn
+                              />
+                              <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                            </Group>
+                            <Group
+                              hiddenFrom='xs'
+                              style={{ display: 'grid', gridTemplateColumns: '1fr 3fr 1fr' }}
                               p="5%">
                               <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                               <Slider
