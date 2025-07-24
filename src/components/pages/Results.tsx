@@ -156,7 +156,14 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
-                          <SimpleGrid cols={2}>
+                          <SimpleGrid visibleFrom='xs' cols={2}>
+                            {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
+                              <Text key={option}>
+                                {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(0) : 0}%)
+                              </Text>
+                            ))}
+                          </SimpleGrid>
+                          <SimpleGrid hiddenFrom='xs' cols={1}>
                             {Object.entries(singleChoiceCounts || {}).map(([option, count]) => (
                               <Text key={option}>
                                 {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(0) : 0}%)
@@ -184,7 +191,14 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
-                          <SimpleGrid cols={2}>
+                          <SimpleGrid visibleFrom='xs' cols={2}>
+                            {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
+                              <Text key={option}>
+                                {option}: {count} ({totalSelections > 0 ? ((count / totalSelections) * 100).toFixed(0) : 0}%)
+                              </Text>
+                            ))}
+                          </SimpleGrid>
+                          <SimpleGrid hiddenFrom='xs' cols={1}>
                             {Object.entries(multipleChoiceCounts || {}).map(([option, count]) => (
                               <Text key={option}>
                                 {option}: {count} ({totalSelections > 0 ? ((count / totalSelections) * 100).toFixed(0) : 0}%)
@@ -208,7 +222,14 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Stack gap='xs'>
-                          <SimpleGrid cols={2}>
+                          <SimpleGrid visibleFrom='xs' cols={2}>
+                            {Object.entries(dropdownCounts || {}).map(([option, count]) => (
+                              <Text key={option}>
+                                {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(0) : 0}%)
+                              </Text>
+                            ))}
+                          </SimpleGrid>
+                          <SimpleGrid hiddenFrom='xs' cols={1}>
                             {Object.entries(dropdownCounts || {}).map(([option, count]) => (
                               <Text key={option}>
                                 {option}: {count} ({questionResponses.length > 0 ? ((count / questionResponses.length) * 100).toFixed(0) : 0}%)
