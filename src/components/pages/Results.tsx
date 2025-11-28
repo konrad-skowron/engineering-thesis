@@ -565,7 +565,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                             min={0}
                             max={(question.options?.length || 1) - 1}
                             value={questionResponses[index] || 0}
-                            color="default"
+                            color={colorScheme === 'dark' ? 'rgb(66, 66, 66)' : 'rgb(233, 236, 239)'}
                             p="8%"
                             mb="xl"
                             styles={{
