@@ -256,11 +256,20 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       );
 
                     } else {
-                      const discreteAverage = (questionResponses.reduce((sum, value) => sum + (value || 0), 0) / questionResponses.length).toFixed(2);
-                      const discreteCounts = question.options?.reduce((acc, option) => {
-                        acc[option] = questionResponses.filter((resp) => question.options?.[resp] === option).length;
-                        return acc;
-                      }, {} as Record<string, number>);
+                      const discreteAverage = (questionResponses.reduce((sum, value) => sum + (value || 0) + 1, 0) / questionResponses.length).toFixed(2);
+
+                      // Find the maximum value in responses to determine scale length
+                      const maxResponseValue = Math.max(...questionResponses.filter(resp => resp !== null && resp !== undefined));
+                      const scaleLength = Math.max(maxResponseValue + 1, question.options?.length || 0);
+                      
+                      // Create array to maintain proper order
+                      const discreteData = [];
+                      for (let i = 0; i < scaleLength; i++) {
+                        const label = question.options?.[i] || `${i + 1}`;
+                        const count = questionResponses.filter((resp) => resp === i).length;
+                        discreteData.push({ name: label, Count: count });
+                      }
+                      
                       result = (
                         <Group align='flex-start' grow wrap="nowrap">
                           <Text>
@@ -268,7 +277,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                           </Text>
                           <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
                             <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
-                              data={Object.entries(discreteCounts || {}).map(([option, count], index) => ({ name: option || questionResponses[index], Count: count }))} />
+                              data={discreteData} />
                           </Box>
                         </Group>
                       );
