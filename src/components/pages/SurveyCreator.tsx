@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { useRouter, useParams } from 'next/navigation';
 import { useAuth } from '@/components/AuthProvider';
-import { saveSurvey, fetchSurvey, updateSurvey, fetchAllSurveyParticipants } from '@/lib/firebase/firestore';
+import { saveSurvey, fetchSurvey, updateSurvey, fetchAllSurveyParticipants, fetchUserSurveys } from '@/lib/firebase/firestore';
 import { Question, QuestionType } from '@/lib/types';
 import {
   Container,
@@ -80,7 +80,18 @@ export default function SurveyCreator() {
         }
       }
     };
-    checkEditPermissions();
+    const init = async () => {
+      if (!user) return;
+      const surveys = await fetchUserSurveys(user);
+      const surveysCount = surveys.length;
+      if (surveysCount >= 10) {
+        alert('You have reached the limit of 10 surveys. Delete an existing survey to create a new one.');
+        router.replace('/account');
+        return;
+      }
+      await checkEditPermissions();
+    };
+    init();
     return () => { ignore = true; };
   }, [surveyId, user]);
 

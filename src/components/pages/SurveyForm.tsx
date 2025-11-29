@@ -233,12 +233,12 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
               <Slider
-                label={(value) => question.options?.[value] || value}
+                label={(value) => question.options?.[value] || value + 1}
                 marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
                 min={0}
                 max={(question.options?.length || 1) - 1}
-                defaultValue={responses[index] || discreteScaleDv(question.options?.length || 1)}
-                onChange={(value) => updateResponse(index, value)}
+                value={responses[index] ?? discreteScaleDv(question.options?.length || 1)}
+                onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                 color="default"
                 p="8%"
                 mb="xl"
@@ -249,7 +249,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     textAlign: 'center'
                   }
                 }}
-                disabled={fieldsDisabled}
               />
             </>
           );
@@ -301,10 +300,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
-                    defaultValue={responses[index] || continuousScaleDv}
-                    onChange={(value) => updateResponse(index, value)}
+                    value={responses[index] ?? continuousScaleDv}
+                    onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                     color="default"
-                    disabled={fieldsDisabled}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
@@ -314,10 +312,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   p="5%">
                   <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
                   <Slider
-                    defaultValue={responses[index] || continuousScaleDv}
-                    onChange={(value) => updateResponse(index, value)}
+                    value={responses[index] ?? continuousScaleDv}
+                    onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                     color="default"
-                    disabled={fieldsDisabled}
                   />
                   <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
                 </Group>
