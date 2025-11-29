@@ -1,12 +1,17 @@
+'use client';
+
 import { IconCheck, IconCopy } from '@tabler/icons-react';
 import { Button, CopyButton, Tooltip } from '@mantine/core';
+import { useTranslations } from 'next-intl';
 
 export function ButtonCopy(url: { url: string; }) {
+  const t = useTranslations('copyButton');
+
   return (
     <CopyButton value={url.url}>
       {({ copied, copy }) => (
         <Tooltip
-          label="Link copied"
+          label={t('copied')}
           offset={5}
           position="bottom"
           transitionProps={{ duration: 100, transition: 'slide-down' }}
@@ -23,7 +28,7 @@ export function ButtonCopy(url: { url: string; }) {
             }
             onClick={copy}
           >
-            Copy url
+            {t('copyLink')}
           </Button>
         </Tooltip>
       )}

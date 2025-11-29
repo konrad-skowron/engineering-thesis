@@ -21,6 +21,7 @@ import { useAuth } from '@/components/AuthProvider';
 import classes from './AuthForm.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 interface AuthenticationFormProps extends PaperProps {
   type: 'log in' | 'sign up';
@@ -29,6 +30,7 @@ interface AuthenticationFormProps extends PaperProps {
 export function AuthForm({ type }: AuthenticationFormProps) {
   const { user, logInWithGoogle, logIn, signUp } = useAuth();
   const router = useRouter();
+  const t = useTranslations();
 
   useEffect(() => {
     if (user) {
@@ -46,8 +48,8 @@ export function AuthForm({ type }: AuthenticationFormProps) {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email'),
-      password: (val) => (val.length < 6 ? 'Password should include at least 6 characters' : null),
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : t('auth.invalidEmail')),
+      password: (val) => (val.length < 6 ? t('auth.passwordMinLength') : null),
     },
   });
 
@@ -75,16 +77,16 @@ export function AuthForm({ type }: AuthenticationFormProps) {
     <div className={classes.wrapper}>
       <Container size={480} my={40}>
         <Title ta="center" className={classes.title}>
-          Welcome to Survey Maker
+          {t('auth.welcomeTitle')}
         </Title>
         <Text c="dimmed" size="sm" ta="center" mt={5}>
           {type === 'log in'
-            ? "Don't have an account yet? "
-            : 'Already have an account? '}
+            ? t('auth.noAccount') + ' '
+            : t('auth.hasAccount') + ' '}
           <Anchor size="sm" component="button" onClick={() => type === 'log in' ? router.replace('/register') : router.replace('/login')}>
             {type === 'log in'
-              ? 'Sign up'
-              : 'Log in'}
+              ? t('common.signUp')
+              : t('common.logIn')}
           </Anchor>
         </Text>
 
@@ -103,21 +105,21 @@ export function AuthForm({ type }: AuthenticationFormProps) {
 
               <TextInput
                 required
-                label="Email"
-                placeholder="example@domain.com"
+                label={t('common.email')}
+                placeholder={t('auth.emailPlaceholder')}
                 value={form.values.email}
                 onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-                error={form.errors.email && 'Invalid email'}
+                error={form.errors.email && t('auth.invalidEmail')}
                 radius="md"
               />
 
               <PasswordInput
                 required
-                label="Password"
-                placeholder="Your password"
+                label={t('common.password')}
+                placeholder={t('auth.passwordPlaceholder')}
                 value={form.values.password}
                 onChange={(event) => form.setFieldValue('password', event.currentTarget.value)}
-                error={form.errors.password && 'Password should include at least 6 characters'}
+                error={form.errors.password && t('auth.passwordMinLength')}
                 radius="md"
               />
 
@@ -135,25 +137,25 @@ export function AuthForm({ type }: AuthenticationFormProps) {
               <Checkbox
                 checked={form.values.rememberMe}
                 onChange={(event) => form.setFieldValue('rememberMe', event.currentTarget.checked)}
-                label="Remember me" />
+                label={t('auth.rememberMe')} />
               {type === 'log in' && (
                 <Anchor component="button" size="sm" onClick={(e: any) => handleForgotPassword(e)}>
-                  Forgot password?
+                  {t('auth.forgotPassword')}
                 </Anchor>
               )}
             </Group>
 
             <Group justify="space-between" mb="lg" mt="xl">
               <Button type="submit" radius="xl" fullWidth onClick={() => handleLogin()}>
-                {upperFirst(type)}
+                {type === 'log in' ? t('common.logIn') : t('common.signUp')}
               </Button>
             </Group>
 
-            <Divider label="Or continue with" labelPosition="center" my="lg" />
+            <Divider label={t('auth.orContinueWith')} labelPosition="center" my="lg" />
 
             <Group grow mb="sm" mt="lg">
               <a onClick={handleGoogleSignIn}>
-                <GoogleButton radius="xl" style={{ width: '100%' }}>Google</GoogleButton>
+                <GoogleButton radius="xl" style={{ width: '100%' }}>{t('auth.google')}</GoogleButton>
               </a>
             </Group>
           </form>

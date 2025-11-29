@@ -29,18 +29,20 @@ import Link from "next/link";
 import { useAuth } from '@/components/AuthProvider';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-
-const links = [
-  { link: '/create', label: 'Create Survey' },
-  { link: '/account', label: 'Dashboard' },
-  { link: '/settings', label: 'Settings' },
-];
+import { useTranslations } from 'next-intl';
 
 export function Header() {
   const [opened, { toggle }] = useDisclosure(false);
   const [userMenuOpened, setUserMenuOpened] = useState(false);
   const { user, loading, signOut } = useAuth();
   const router = useRouter();
+  const t = useTranslations();
+
+  const links = [
+    { link: '/create', label: t('header.createSurvey') },
+    { link: '/account', label: t('common.dashboard') },
+    { link: '/settings', label: t('common.settings') },
+  ];
 
   const handleSignOut = () => {
     if (opened) {
@@ -81,15 +83,15 @@ export function Header() {
               <>
                 <Group visibleFrom="sm">
                   <Link href="/login" style={{ textDecoration: 'none' }}>
-                    <Button variant="default">Log in</Button>
+                    <Button variant="default">{t('common.logIn')}</Button>
                   </Link>
                   <Link href="/register" style={{ textDecoration: 'none' }}>
-                    <Button>Sign up</Button>
+                    <Button>{t('common.signUp')}</Button>
                   </Link>
                 </Group>
                 <Box hiddenFrom="sm">
                   <Link href="/login" style={{ textDecoration: 'none' }}>
-                    <Button variant="default">Log in</Button>
+                    <Button variant="default">{t('common.logIn')}</Button>
                   </Link>
                 </Box>
               </>
@@ -126,7 +128,7 @@ export function Header() {
                         />
                       }
                     >
-                      Dashboard
+                      {t('common.dashboard')}
                     </Menu.Item>
 
                     <Menu.Item
@@ -135,7 +137,7 @@ export function Header() {
                         <IconSettings style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                       }
                     >
-                      Settings
+                      {t('common.settings')}
                     </Menu.Item>
 
                     <Menu.Divider />
@@ -146,7 +148,7 @@ export function Header() {
                         <IconLogout style={{ width: rem(16), height: rem(16) }} stroke={1.5} />
                       }
                     >
-                      Sign out
+                      {t('common.signOut')}
                     </Menu.Item>
                   </Menu.Dropdown>
                 </Menu>
@@ -158,7 +160,7 @@ export function Header() {
               <Burger opened={opened} onClick={toggle} size="sm" />
             ) :
               <Link href="/login" style={{ textDecoration: 'none' }}>
-                <Button variant="default">Log in</Button>
+                <Button variant="default">{t('common.logIn')}</Button>
               </Link>
             }
           </Box>
@@ -166,7 +168,7 @@ export function Header() {
       </Container>
 
       <Drawer opened={opened} onClose={toggle} size="15rem"
-        title={<Group gap="xs"><Image src="/favicon.ico" alt="logo" width={24} height={24} /><b>Survey Maker</b></Group>}
+        title={<Group gap="xs"><Image src="/favicon.ico" alt="logo" width={24} height={24} /><b>{t('common.appName')}</b></Group>}
         position="top" offset={10} radius="md" overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}>
         <Skeleton visible={loading}>
           <Group>
@@ -184,9 +186,9 @@ export function Header() {
           </Group>
         </Skeleton>
         <SimpleGrid cols={2} mt="lg">
-          <Button variant="default" justify="left" onClick={() => { router.push('/account'); toggle(); }} leftSection={<IconHome size={16} />}>Dashboard</Button>
-          <Button variant="default" justify="left" onClick={() => { router.push('/settings'); toggle(); }} leftSection={<IconSettings size={16} />}>Settings</Button>
-          <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout size={16} />}>Sign out</Button>
+          <Button variant="default" justify="left" onClick={() => { router.push('/account'); toggle(); }} leftSection={<IconHome size={16} />}>{t('common.dashboard')}</Button>
+          <Button variant="default" justify="left" onClick={() => { router.push('/settings'); toggle(); }} leftSection={<IconSettings size={16} />}>{t('common.settings')}</Button>
+          <Button variant="default" justify="left" onClick={handleSignOut} leftSection={<IconLogout size={16} />}>{t('common.signOut')}</Button>
         </SimpleGrid>
       </Drawer>
     </header>

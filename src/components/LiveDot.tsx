@@ -1,10 +1,14 @@
+'use client';
+
 import React, { useEffect, useState } from 'react';
 import { useMantineTheme, useComputedColorScheme } from '@mantine/core';
+import { useTranslations } from 'next-intl';
 
 const LiveDot = () => {
   const [visible, setVisible] = useState(true);
   const theme = useMantineTheme();
   const colorScheme = useComputedColorScheme();
+  const t = useTranslations('status');
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -32,7 +36,7 @@ const LiveDot = () => {
       height: 'fit-content',
       padding: '0.2rem 0.6rem'
     }}>
-      <span style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}>Live</span>
+      <span style={{ marginRight: '0.4rem', fontSize: '0.9rem' }}>{t('live')}</span>
       <div
         style={{
           width: '0.6rem',

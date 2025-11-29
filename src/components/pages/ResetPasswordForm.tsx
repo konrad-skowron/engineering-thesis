@@ -14,10 +14,12 @@ import { useAuth } from '@/components/AuthProvider';
 import classes from './AuthForm.module.css';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
+import { useTranslations } from 'next-intl';
 
 export default function ResetPasswordForm() {
   const { user, resetPassword } = useAuth();
   const router = useRouter();
+  const t = useTranslations('auth');
 
   useEffect(() => {
     if (user) {
@@ -31,7 +33,7 @@ export default function ResetPasswordForm() {
     },
 
     validate: {
-      email: (val) => (/^\S+@\S+$/.test(val) ? null : 'Invalid email')
+      email: (val) => (/^\S+@\S+$/.test(val) ? null : t('invalidEmail'))
     },
   });
 
@@ -40,17 +42,17 @@ export default function ResetPasswordForm() {
       return;
     }
     resetPassword(form.values.email);
-    alert('Password reset instructions have been sent to your email.');
+    alert(t('passwordResetSent'));
     router.replace('/login');
   };
 
   return (
     <Container size={480} my={40}>
       <Title ta="center" className={classes.title}>
-        Forgot your password?
+        {t('forgotPasswordTitle')}
       </Title>
       <Text c="dimmed" size="sm" ta="center" mt={5}>
-        You can set a new one.
+        {t('forgotPasswordSubtitle')}
       </Text>
 
       <Paper withBorder shadow="md" p={30} mt={30} radius="md">
@@ -60,18 +62,18 @@ export default function ResetPasswordForm() {
               label="Email"
               value={form.values.email}
               onChange={(event) => form.setFieldValue('email', event.currentTarget.value)}
-              error={form.errors.email && 'Invalid email'}
+              error={form.errors.email && t('invalidEmail')}
               radius="md"
             />
 
             <Text size="sm" mt="xs">
-              Please enter your email address to get instructions on how to set up a new password for your account.
+              {t('forgotPasswordInstructions')}
             </Text>
           </Stack>
 
           <Group justify="space-between" mb="lg" mt="xl">
             <Button type="submit" radius="xl" fullWidth onClick={() => handleForgotPassword()}>
-              Reset password
+              {t('resetPassword')}
             </Button>
           </Group>
         </form>

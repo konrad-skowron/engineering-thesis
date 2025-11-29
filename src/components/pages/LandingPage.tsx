@@ -1,28 +1,31 @@
+'use client';
+
 import { Container, Text, Button, Group, ThemeIcon, SimpleGrid, rem } from '@mantine/core';
 import { IconBrandOpenSource, IconShieldCheck, IconAdCircleOff } from '@tabler/icons-react';
 import classes from './LandingPage.module.css';
 import Link from 'next/link';
-
-const features = [
-  {
-    icon: IconBrandOpenSource,
-    title: 'Free and open source',
-    description: 'No hidden costs or subscription fees. The source code is available on GitHub',
-  },
-  {
-    icon: IconShieldCheck,
-    title: 'Privacy-focused',
-    description: 'No intrusive tracking or analytics-prioritizing user privacy and providing fluent survey experience',
-  },
-  {
-    icon: IconAdCircleOff,
-    title: 'No annoying ads',
-    description:
-      'Enjoy a clean, distraction-free experience with absolutely no advertisements',
-  }
-];
+import { useTranslations } from 'next-intl';
 
 export function LandingPage() {
+  const t = useTranslations('landing');
+
+  const features = [
+    {
+      icon: IconBrandOpenSource,
+      title: t('features.openSource.title'),
+      description: t('features.openSource.description'),
+    },
+    {
+      icon: IconShieldCheck,
+      title: t('features.privacy.title'),
+      description: t('features.privacy.description'),
+    },
+    {
+      icon: IconAdCircleOff,
+      title: t('features.noAds.title'),
+      description: t('features.noAds.description'),
+    }
+  ];
 
   const items = features.map((feature) => (
     <div key={feature.title} className={classes.icon}>
@@ -51,17 +54,15 @@ export function LandingPage() {
     <div className={classes.wrapper}>
       <Container className={classes.inner} id='about'>
         <h1 className={classes.title}>
-          Conduct surveys using a{' '}
+          {t('title')}{' '}
           <Text component="span" variant="gradient" gradient={{ from: 'blue', to: 'cyan' }} inherit>
-            continuous
+            {t('titleHighlight')}
           </Text>
-          {' '}Likert scale
+          {' '}{t('titleEnd')}
         </h1>
 
         <Text className={classes.description} c="placeholder">
-          Build fully functional and accessible web surveys with ease. 
-          The service includes all of the needed tools for conducting surveys 
-          using a continuous as well as a discrete Likert scale.
+          {t('description')}
         </Text>
 
         <SimpleGrid cols={3} spacing="xl" mt="xl" visibleFrom='sm'>
@@ -80,7 +81,7 @@ export function LandingPage() {
               gradient={{ from: 'blue', to: 'cyan' }}
               radius='md'
             >
-              Get started
+              {t('getStarted')}
             </Button>
           </Link>
         </Group>
