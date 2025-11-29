@@ -96,7 +96,8 @@ export default function SurveyCreator() {
     };
     init();
     return () => { ignore = true; };
-  }, [surveyId, user, t, router]);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [surveyId, user]);
 
   const addQuestion = () => {
     setQuestions([...questions, { type: 'text', question: '', rangeEnabled: false, required: false }]);

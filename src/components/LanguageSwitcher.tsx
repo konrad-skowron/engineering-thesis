@@ -1,6 +1,7 @@
 'use client';
 
 import { useLocale } from 'next-intl';
+import { useRouter } from 'next/navigation';
 import { ActionIcon, Menu, rem } from '@mantine/core';
 import { IconLanguage } from '@tabler/icons-react';
 
@@ -11,10 +12,12 @@ const locales = [
 
 export function LanguageSwitcher() {
   const currentLocale = useLocale();
+  const router = useRouter();
 
   const handleLocaleChange = (newLocale: string) => {
     document.cookie = `NEXT_LOCALE=${newLocale}; path=/; max-age=31536000`;
-    window.location.reload();
+    // Refresh the page to apply the new locale from the server
+    router.refresh();
   };
 
   return (
