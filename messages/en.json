@@ -82,6 +82,8 @@
     "close": "Close",
     "reopen": "Reopen",
     "share": "Share",
+    "exportCsv": "Export CSV",
+    "exportJson": "Export JSON",
     "deleteSurvey": "Delete survey",
     "deleteConfirm": "Are you sure you want to delete this survey?",
     "linkCopied": "Survey link copied to clipboard",
@@ -106,6 +108,15 @@
     "discreteScale": "Discrete Scale",
     "continuousScale": "Continuous Scale",
     "dropdownList": "Dropdown List",
+    "typeTooltips": {
+      "textResponse": "Free text answer field",
+      "numberResponse": "Numeric input field",
+      "singleChoice": "Select one option from multiple choices",
+      "multipleChoice": "Select multiple options from a list",
+      "discreteScale": "Rate on a discrete scale (e.g., 1-5) with predefined values",
+      "continuousScale": "Rate on a continuous slider (0-100)",
+      "dropdownList": "Select one option from a dropdown menu"
+    },
     "required": "Required",
     "enableRanges": "Enable selecting ranges",
     "values": "Values",
@@ -143,7 +154,9 @@
     "showResults": "Show results",
     "copyLink": "Copy link",
     "responseRecorded": "Your response has been recorded. You can fill out this form only once.",
-    "provideResponse": "Please provide a response for question"
+    "provideResponse": "Please provide a response for question",
+    "increaseValue": "Increase value",
+    "decreaseValue": "Decrease value"
   },
   "results": {
     "by": "by",
@@ -163,7 +176,9 @@
     "summarize": "Summarize",
     "thinking": "Thinking...",
     "generateCsv": "Generate .csv",
-    "generateJson": "Generate .json"
+    "generateJson": "Generate .json",
+    "closeSurvey": "Close survey",
+    "closeSurveyConfirm": "Are you sure you want to close this survey? No more responses will be accepted."
   },
   "settings": {
     "title": "Settings",

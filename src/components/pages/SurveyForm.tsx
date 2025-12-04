@@ -232,27 +232,57 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </>
           );
         } else {
+          const currentValue = responses[index] ?? discreteScaleDv(question.options?.length || 1);
+          const maxValue = (question.options?.length || 1) - 1;
+          
           return (
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
-              <Slider
-                label={(value) => question.options?.[value] || value + 1}
-                marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
-                min={0}
-                max={(question.options?.length || 1) - 1}
-                value={responses[index] ?? discreteScaleDv(question.options?.length || 1)}
-                onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
-                color="default"
-                p="8%"
-                mb="xl"
-                styles={{
-                  markLabel: {
-                    whiteSpace: 'pre-wrap',
-                    display: 'block',
-                    textAlign: 'center'
-                  }
-                }}
-              />
+              <Box>
+                <Slider
+                  label={(value) => question.options?.[value] || value + 1}
+                  marks={question.options?.map((opt, i) => ({ 
+                    value: i, 
+                    label: opt.split(' ').join('\n')
+                  }))}
+                  min={0}
+                  max={maxValue}
+                  value={currentValue}
+                  onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                  color="default"
+                  p="8%"
+                  mb="xs"
+                  styles={{
+                    markLabel: {
+                      whiteSpace: 'pre-wrap',
+                      display: 'block',
+                      textAlign: 'center',
+                      cursor: fieldsDisabled ? 'default' : 'pointer'
+                    }
+                  }}
+                  onMarkClick={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                />
+                <Group justify="center" gap="xs" mt="md" hiddenFrom="sm">
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.max(0, currentValue - 1))}
+                    disabled={fieldsDisabled || currentValue === 0}
+                    aria-label={t('decreaseValue')}
+                  >
+                    -
+                  </ActionIcon>
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.min(maxValue, currentValue + 1))}
+                    disabled={fieldsDisabled || currentValue === maxValue}
+                    aria-label={t('increaseValue')}
+                  >
+                    +
+                  </ActionIcon>
+                </Group>
+              </Box>
             </>
           );
         }
@@ -293,6 +323,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </>
           );
         } else {
+          const currentValue = responses[index] ?? continuousScaleDv;
+          
           return (
             <>
               <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
@@ -301,25 +333,73 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   visibleFrom='xs'
                   style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
                   p="5%">
-                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm' 
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 0)}
+                  >
+                    {question.options?.[0]}
+                  </Text>
                   <Slider
-                    value={responses[index] ?? continuousScaleDv}
+                    value={currentValue}
                     onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                     color="default"
                   />
-                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm'
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 100)}
+                  >
+                    {question.options?.[1]}
+                  </Text>
                 </Group>
                 <Group
                   hiddenFrom='xs'
                   style={{ display: 'grid', gridTemplateColumns: '1fr 3fr 1fr' }}
                   p="5%">
-                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm'
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 0)}
+                  >
+                    {question.options?.[0]}
+                  </Text>
                   <Slider
-                    value={responses[index] ?? continuousScaleDv}
+                    value={currentValue}
                     onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                     color="default"
                   />
-                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm'
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 100)}
+                  >
+                    {question.options?.[1]}
+                  </Text>
+                </Group>
+                <Group justify="center" gap="xs" mt="sm" hiddenFrom="sm">
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.max(0, currentValue - 5))}
+                    disabled={fieldsDisabled || currentValue === 0}
+                    aria-label={t('decreaseValue')}
+                  >
+                    -
+                  </ActionIcon>
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.min(100, currentValue + 5))}
+                    disabled={fieldsDisabled || currentValue === 100}
+                    aria-label={t('increaseValue')}
+                  >
+                    +
+                  </ActionIcon>
                 </Group>
               </Stack>
             </>

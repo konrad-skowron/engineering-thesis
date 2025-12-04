@@ -1,17 +1,18 @@
 'use client'
 import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchSurvey } from '@/lib/firebase/firestore';
+import { fetchSurvey, setSurveyActive } from '@/lib/firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { Loading } from '@/components/Loading';
 import { Survey, Response } from '@/lib/types';
 import { Popover, Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useComputedColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
+import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown, IconLock } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON, geminiSummary, GEMINI_ERROR_MSG } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
 import { useTranslations } from 'next-intl';
+import { useAuth } from '@/components/AuthProvider';
 // import { TableOfContents } from '../TableOfContents';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
@@ -30,6 +31,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   const [aiSummary, setAiSummary] = useState<string | null>(null);
   const t = useTranslations('results');
   const tCommon = useTranslations('common');
+  const { user } = useAuth();
 
   useEffect(() => {
     const getData = async () => {
@@ -70,6 +72,13 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
     if (!survey || aiSummary) return;
     const fetchedSummary = await geminiSummary(survey, responses);
     setAiSummary(fetchedSummary || null);
+  };
+
+  const handleCloseSurvey = async () => {
+    if (confirm(t('closeSurveyConfirm'))) {
+      await setSurveyActive(params.surveyId, false);
+      setSurvey(prev => prev ? { ...prev, active: false } : null);
+    }
   };
 
   // const links = survey?.questions.map((question, index) => ({
@@ -372,6 +381,16 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 >
                   {t('exportResults')}
                 </Button>
+                {user && user.uid === survey?.author && survey?.active && (
+                  <Button
+                    leftSection={<IconLock size={16} />}
+                    variant='default'
+                    color="red"
+                    onClick={handleCloseSurvey}
+                  >
+                    {t('closeSurvey')}
+                  </Button>
+                )}
               </Group>
               <Group justify='end'>
                 <Popover width='20rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
@@ -424,6 +443,18 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   </Popover.Dropdown>
                 </Popover>
               </Group>
+              {user && user.uid === survey?.author && survey?.active && (
+                <Group grow mt='md'>
+                  <Button
+                    leftSection={<IconLock size={16} />}
+                    variant='default'
+                    color="red"
+                    onClick={handleCloseSurvey}
+                  >
+                    {t('closeSurvey')}
+                  </Button>
+                </Group>
+              )}
             </Box>
 
             <Modal

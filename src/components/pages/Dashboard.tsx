@@ -5,9 +5,9 @@ import { useAuth } from '@/components/AuthProvider';
 import { Container, Button, Group, Text, Menu, ActionIcon, Title, useComputedColorScheme, Box } from '@mantine/core';
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
-import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive, fetchSurvey, saveSurvey } from '@/lib/firebase/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit, IconCopyPlus } from '@tabler/icons-react';
-import { formatTimestamp } from "@/lib/utils";
+import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive, fetchSurvey, saveSurvey, fetchSurveyResults } from '@/lib/firebase/firestore';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit, IconCopyPlus, IconFileTypeCsv, IconFileTypeJson } from '@tabler/icons-react';
+import { formatTimestamp, exportToCSV, exportToJSON } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
 import Completed from "../Completed";
@@ -97,6 +97,26 @@ export default function Dashboard() {
     const link = window.location.href.replace(window.location.pathname, `/${surveyId}`);
     navigator.clipboard.writeText(link);
     alert(t('linkCopied'));
+  };
+
+  const handleExportCSV = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const survey = await fetchSurvey(surveyId);
+    const responses = await fetchSurveyResults(surveyId);
+    if (survey && responses) {
+      exportToCSV(survey, responses);
+    }
+  };
+
+  const handleExportJSON = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
+    e.preventDefault();
+    e.stopPropagation();
+    const survey = await fetchSurvey(surveyId);
+    const responses = await fetchSurveyResults(surveyId);
+    if (survey && responses) {
+      exportToJSON(survey, responses);
+    }
   };
 
   const handleDeleteSurvey = async (e: React.MouseEvent<HTMLButtonElement>, surveyId: string) => {
@@ -210,6 +230,14 @@ export default function Dashboard() {
                       <Menu.Item leftSection={<IconShare size={14} />}
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
                         {t('share')}
+                      </Menu.Item>
+                      <Menu.Item leftSection={<IconFileTypeCsv size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleExportCSV(e, survey.id)}>
+                        {t('exportCsv')}
+                      </Menu.Item>
+                      <Menu.Item leftSection={<IconFileTypeJson size={14} />}
+                        onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleExportJSON(e, survey.id)}>
+                        {t('exportJson')}
                       </Menu.Item>
 
                       <Menu.Divider />

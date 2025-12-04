@@ -20,9 +20,10 @@ import {
   Checkbox,
   Radio,
   Switch,
-  Divider
+  Divider,
+  Tooltip
 } from '@mantine/core';
-import { IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconX, IconInfoCircle } from '@tabler/icons-react';
 import RouteProtector from '@/components/RouteProtector';
 import { Loading } from '@/components/Loading';
 import { useTranslations } from 'next-intl';
@@ -249,22 +250,54 @@ export default function SurveyCreator() {
                     required
                   />
 
-                  <Select
-                    label={t('type')}
-                    allowDeselect={false}
-                    placeholder={t('selectType')}
-                    value={q.type}
-                    onChange={(value: any) => updateQuestion(index, 'type', value)}
-                    data={[
-                      { value: 'text', label: t('textResponse') },
-                      { value: 'number', label: t('numberResponse') },
-                      { value: 'singleChoice', label: t('singleChoice') },
-                      { value: 'multipleChoice', label: t('multipleChoice') },
-                      { value: 'discreteScale', label: t('discreteScale') },
-                      { value: 'continousScale', label: t('continuousScale') },
-                      { value: 'dropdownList', label: t('dropdownList') },
-                    ]}
-                  />
+                  <Box style={{ position: 'relative' }}>
+                    <Select
+                      label={t('type')}
+                      allowDeselect={false}
+                      placeholder={t('selectType')}
+                      value={q.type}
+                      onChange={(value: any) => updateQuestion(index, 'type', value)}
+                      data={[
+                        { value: 'text', label: t('textResponse') },
+                        { value: 'number', label: t('numberResponse') },
+                        { value: 'singleChoice', label: t('singleChoice') },
+                        { value: 'multipleChoice', label: t('multipleChoice') },
+                        { value: 'discreteScale', label: t('discreteScale') },
+                        { value: 'continousScale', label: t('continuousScale') },
+                        { value: 'dropdownList', label: t('dropdownList') },
+                      ]}
+                    />
+                    {q.type && (
+                      <Tooltip 
+                        label={t(`typeTooltips.${
+                          q.type === 'text' ? 'textResponse' :
+                          q.type === 'number' ? 'numberResponse' :
+                          q.type === 'singleChoice' ? 'singleChoice' :
+                          q.type === 'multipleChoice' ? 'multipleChoice' :
+                          q.type === 'discreteScale' ? 'discreteScale' :
+                          q.type === 'continousScale' ? 'continuousScale' :
+                          'dropdownList'
+                        }`)}
+                        multiline
+                        width={220}
+                        position="right"
+                        withArrow
+                      >
+                        <ActionIcon
+                          variant="subtle"
+                          color="gray"
+                          size="sm"
+                          style={{
+                            position: 'absolute',
+                            right: -30,
+                            top: 28
+                          }}
+                        >
+                          <IconInfoCircle size={16} />
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
+                  </Box>
 
                   <ActionIcon
                     color="red"
