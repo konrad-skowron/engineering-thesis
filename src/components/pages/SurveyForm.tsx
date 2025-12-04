@@ -6,7 +6,7 @@ import { fetchSurvey, saveSurveyResponse } from '@/lib/firebase/firestore';
 import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
-import { IconArrowRight, IconChartBar } from '@tabler/icons-react';
+import { IconArrowRight, IconChartBar, IconMinus, IconPlus } from '@tabler/icons-react';
 import {
   Input,
   Center,
@@ -25,7 +25,8 @@ import {
   RangeSlider,
   Slider,
   Box,
-  NumberInput
+  NumberInput,
+  ActionIcon
 } from '@mantine/core';
 import { ButtonCopy } from '../ButtonCopy';
 import { useTranslations } from 'next-intl';
@@ -270,7 +271,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     disabled={fieldsDisabled || currentValue === 0}
                     aria-label={t('decreaseValue')}
                   >
-                    -
+                    <IconMinus size={18} />
                   </ActionIcon>
                   <ActionIcon 
                     size="lg" 
@@ -279,7 +280,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     disabled={fieldsDisabled || currentValue === maxValue}
                     aria-label={t('increaseValue')}
                   >
-                    +
+                    <IconPlus size={18} />
                   </ActionIcon>
                 </Group>
               </Box>
@@ -389,7 +390,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     disabled={fieldsDisabled || currentValue === 0}
                     aria-label={t('decreaseValue')}
                   >
-                    -
+                    <IconMinus size={18} />
                   </ActionIcon>
                   <ActionIcon 
                     size="lg" 
@@ -398,7 +399,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     disabled={fieldsDisabled || currentValue === 100}
                     aria-label={t('increaseValue')}
                   >
-                    +
+                    <IconPlus size={18} />
                   </ActionIcon>
                 </Group>
               </Stack>
