@@ -1,16 +1,18 @@
 'use client'
 import { use, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import { fetchSurvey } from '@/lib/firebase/firestore';
+import { fetchSurvey, setSurveyActive } from '@/lib/firebase/firestore';
 import { db } from '@/lib/firebase/config';
 import { doc, onSnapshot } from 'firebase/firestore';
 import { Loading } from '@/components/Loading';
 import { Survey, Response } from '@/lib/types';
 import { Popover, Container, Box, Paper, Title, Text, Group, RangeSlider, Slider, Select, Stack, Button, SimpleGrid, Pagination, Input, Textarea, Modal, RadioGroup, Radio, Tabs, useComputedColorScheme, useMantineTheme, Center, Checkbox, ActionIcon, Flex, NumberInput } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
-import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown } from '@tabler/icons-react';
+import { IconFileDownload, IconArrowLeft, IconArrowBarUp, IconArrowBarDown, IconLock } from '@tabler/icons-react';
 import { exportToCSV, exportToJSON, geminiSummary, GEMINI_ERROR_MSG } from '@/lib/utils';
 import { BarChart, LineChart } from '@mantine/charts';
+import { useTranslations } from 'next-intl';
+import { useAuth } from '@/components/AuthProvider';
 // import { TableOfContents } from '../TableOfContents';
 
 export default function Results(props: { params: Promise<{ surveyId: string }> }) {
@@ -27,6 +29,9 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
   const [expandedQuestions, setExpandedQuestions] = useState<Record<number, boolean>>({});
   const colors = ['indigo', 'yellow', 'teal', 'gray', 'red', 'pink', 'grape', 'violet', 'blue', 'cyan', 'green', 'lime', 'orange'];
   const [aiSummary, setAiSummary] = useState<string | null>(null);
+  const t = useTranslations('results');
+  const tCommon = useTranslations('common');
+  const { user } = useAuth();
 
   useEffect(() => {
     const getData = async () => {
@@ -69,6 +74,13 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
     setAiSummary(fetchedSummary || null);
   };
 
+  const handleCloseSurvey = async () => {
+    if (confirm(t('closeSurveyConfirm'))) {
+      await setSurveyActive(params.surveyId, false);
+      setSurvey(prev => prev ? { ...prev, active: false } : null);
+    }
+  };
+
   // const links = survey?.questions.map((question, index) => ({
   //   label: question.question,
   //   link: `#question-${index}`,
@@ -84,7 +96,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
       <Box bg={colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0]} pb="lg" pt='xl'>
         <Container>
           <Title order={1}>{survey?.title}</Title>
-          <Text c={'dimmed'} size='sm'>by {survey?.authorName}</Text>
+          <Text c={'dimmed'} size='sm'>{t('by')} {survey?.authorName}</Text>
         </Container>
       </Box>
 
@@ -96,13 +108,13 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 bg={summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
                 onClick={() => setSummaryOpen(true)}
                 style={{ borderBottomColor: !summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
-                Summary
+                {t('summary')}
               </Tabs.Tab>
               <Tabs.Tab value="individual"
                 bg={!summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[7] : 'white') : (colorScheme === 'dark' ? theme.colors.dark[8] : theme.colors.gray[0])}
                 onClick={() => setSummaryOpen(false)}
                 style={{ borderBottomColor: summaryOpen ? (colorScheme === 'dark' ? theme.colors.dark[5] : theme.colors.gray[3]) : 'transparent' }}>
-                Individual
+                {t('individual')}
               </Tabs.Tab>
             </Group>
           </Container>
@@ -138,7 +150,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     result = (
                       <Group align='flex-start' grow wrap="nowrap">
                         <Text>
-                          Average number: {average}
+                          {t('averageNumber')}: {average}
                         </Text>
                         <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
                           <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
@@ -251,7 +263,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       const secondElementAverage = (questionResponses.reduce((sum, [, second]) => sum + second, 0) / questionResponses.length).toFixed(2);
                       result = (
                         <Text>
-                          Average response: {firstElementAverage} - {secondElementAverage}
+                          {t('averageResponse')}: {firstElementAverage} - {secondElementAverage}
                         </Text>
                       );
 
@@ -273,7 +285,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       result = (
                         <Group align='flex-start' grow wrap="nowrap">
                           <Text>
-                            Average response: {discreteAverage}
+                            {t('averageResponse')}: {discreteAverage}
                           </Text>
                           <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
                             <BarChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
@@ -290,7 +302,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       const secondElementAverage = (questionResponses.reduce((sum, [, second]) => sum + second, 0) / questionResponses.length).toFixed(2);
                       result = (
                         <Text>
-                          Average response: {firstElementAverage} - {secondElementAverage}
+                          {t('averageResponse')}: {firstElementAverage} - {secondElementAverage}
                         </Text>
                       );
                     } else {
@@ -310,7 +322,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       result = (
                         <Group align='flex-start' grow wrap="nowrap">
                           <Text>
-                            Average response: {continousAverage} / 100
+                            {t('averageResponse')}: {continousAverage} / 100
                           </Text>
                           <Box w="100%" style={{ overflow: 'hidden' }} mb='sm' mr='md'>
                             <LineChart h={200} dataKey='name' series={[{ name: 'Count', color: colors[index < colors.length ? index : index % colors.length] }]} gridAxis="xy"
@@ -322,11 +334,11 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                     break;
 
                   default:
-                    result = <Text c="red">No data available for this question type.</Text>;
+                    result = <Text c="red">{t('noData')}</Text>;
                 }
 
                 if (questionResponses.length === 0) {
-                  result = <Text c="dimmed">No responses yet.</Text>;
+                  result = <Text c="dimmed">{t('noResponses')}</Text>;
                 }
 
                 return (
@@ -335,18 +347,18 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       <Box>
                         <Title order={4}>{question.question}</Title>
                         <Text c="dimmed" size="sm" mb="md">
-                          Total responses: {questionResponses.length}
+                          {t('totalResponses')}: {questionResponses.length}
                         </Text>
                       </Box>
                       <ActionIcon variant='transparent' color='gray' c='dimmed' onClick={() => toggleExpand(index)}>
-                        {expandedQuestions[index] ? <IconArrowBarUp size={18} title='Collapse responses' /> : <IconArrowBarDown size={18} title='Expand responses' />}
+                        {expandedQuestions[index] ? <IconArrowBarUp size={18} title={t('collapseResponses')} /> : <IconArrowBarDown size={18} title={t('expandResponses')} />}
                       </ActionIcon>
                     </Group>
                     {expandedQuestions[index] ?
                       result :
                       <Center mb='-1rem' mt='-0.5rem'>
                         <Button size='sm' color="indigo" variant='transparent' onClick={() => toggleExpand(index)} style={{ fontWeight: 'normal' }}>
-                          Expand responses
+                          {t('expandResponses')}
                         </Button>
                       </Center>}
                   </Paper>
@@ -360,15 +372,25 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   onClick={() => router.push(`/${params.surveyId}`)}
                   leftSection={<IconArrowLeft size={16} />}
                 >
-                  Back to survey
+                  {t('backToSurvey')}
                 </Button>
                 <Button
                   leftSection={<IconFileDownload size={16} />}
                   variant='default'
                   onClick={open}
                 >
-                  Export results
+                  {t('exportResults')}
                 </Button>
+                {user && user.uid === survey?.author && survey?.active && (
+                  <Button
+                    leftSection={<IconLock size={16} />}
+                    variant='default'
+                    color="red"
+                    onClick={handleCloseSurvey}
+                  >
+                    {t('closeSurvey')}
+                  </Button>
+                )}
               </Group>
               <Group justify='end'>
                 <Popover width='20rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
@@ -377,11 +399,11 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       leftSection="✨"
                       variant='default'
                     >
-                      Summarize with AI
+                      {t('summarizeWithAI')}
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    {!aiSummary ? <Center>Thinking...</Center> : (
+                    {!aiSummary ? <Center>{t('thinking')}</Center> : (
                       aiSummary === GEMINI_ERROR_MSG ?
                         <Center c='red'>{aiSummary}</Center> : <Center>{aiSummary}</Center>)}
                   </Popover.Dropdown>
@@ -394,7 +416,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   onClick={() => router.push(`/${params.surveyId}`)}
                   leftSection={<IconArrowLeft size={16} />}
                 >
-                  Back to survey
+                  {t('backToSurvey')}
                 </Button>
               </Group>
               <Group grow mt='md'>
@@ -403,7 +425,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                   variant='default'
                   onClick={open}
                 >
-                  Export results
+                  {t('exportResults')}
                 </Button>
                 <Popover width='15rem' position="top-end" withArrow shadow="md" onOpen={getSummary} arrowPosition='center' offset={{ mainAxis: 8, crossAxis: -8 }}>
                   <Popover.Target>
@@ -411,22 +433,34 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       leftSection="✨"
                       variant='default'
                     >
-                      Summarize
+                      {t('summarize')}
                     </Button>
                   </Popover.Target>
                   <Popover.Dropdown>
-                    {!aiSummary ? <Center>Thinking...</Center> : (
+                    {!aiSummary ? <Center>{t('thinking')}</Center> : (
                       aiSummary === GEMINI_ERROR_MSG ?
                         <Center c='red'>{aiSummary}</Center> : <Center>{aiSummary}</Center>)}
                   </Popover.Dropdown>
                 </Popover>
               </Group>
+              {user && user.uid === survey?.author && survey?.active && (
+                <Group grow mt='md'>
+                  <Button
+                    leftSection={<IconLock size={16} />}
+                    variant='default'
+                    color="red"
+                    onClick={handleCloseSurvey}
+                  >
+                    {t('closeSurvey')}
+                  </Button>
+                </Group>
+              )}
             </Box>
 
             <Modal
               opened={opened}
               onClose={close}
-              title={<Flex gap='xs'><IconFileDownload size={17} />Export results</Flex>}
+              title={<Flex gap='xs'><IconFileDownload size={17} />{t('exportResults')}</Flex>}
               overlayProps={{ blur: 6, backgroundOpacity: 0.3 }}
               centered
             >
@@ -434,12 +468,12 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 <Button
                   onClick={() => survey && responses && exportToCSV(survey, responses)}
                 >
-                  Generate .csv
+                  {t('generateCsv')}
                 </Button>
                 <Button
                   onClick={() => survey && responses && exportToJSON(survey, responses)}
                 >
-                  Generate .json
+                  {t('generateJson')}
                 </Button>
               </Group>
             </Modal>
@@ -449,7 +483,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
         <Tabs.Panel value="individual">
           <Container>
             <Stack gap="lg" mt={'lg'}>
-              {responses.length === 0 && <Text c="dimmed">No responses yet.</Text>}
+              {responses.length === 0 && <Text c="dimmed">{t('noResponses')}</Text>}
               {survey?.questions.map((question, index) => {
                 if (!responses[activePage - 1]) return null;
 
@@ -457,7 +491,7 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                 let result;
 
                 if (questionResponses[index] === undefined || questionResponses[index] === null || questionResponses[index] === '') {
-                  result = <Text c="dimmed">No response.</Text>;
+                  result = <Text c="dimmed">{t('noResponse')}</Text>;
                 } else {
 
                   switch (question.type) {
@@ -630,13 +664,13 @@ export default function Results(props: { params: Promise<{ surveyId: string }> }
                       break;
 
                     default:
-                      result = <Text c="red">No data available for this question type.</Text>;
+                      result = <Text c="red">{t('noData')}</Text>;
                   }
                 }
 
                 return (
                   <Paper key={index} p="md" withBorder>
-                    <Title order={4} mb='md'>{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Title>
+                    <Title order={4} mb='md'>{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Title>
                     {result}
                   </Paper>
                 );

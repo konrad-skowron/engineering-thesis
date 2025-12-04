@@ -20,11 +20,13 @@ import {
   Checkbox,
   Radio,
   Switch,
-  Divider
+  Divider,
+  Tooltip
 } from '@mantine/core';
-import { IconPlus, IconTrash, IconX } from '@tabler/icons-react';
+import { IconPlus, IconTrash, IconX, IconInfoCircle } from '@tabler/icons-react';
 import RouteProtector from '@/components/RouteProtector';
 import { Loading } from '@/components/Loading';
+import { useTranslations } from 'next-intl';
 
 export default function SurveyCreator() {
   const router = useRouter();
@@ -37,6 +39,8 @@ export default function SurveyCreator() {
   const [canEdit, setCanEdit] = useState(true);
   const [editError, setEditError] = useState<string | null>(null);
   const surveyId = params?.surveyId as string | undefined;
+  const t = useTranslations('surveyCreator');
+  const tCommon = useTranslations('common');
 
   useEffect(() => {
     let ignore = false;
@@ -46,7 +50,7 @@ export default function SurveyCreator() {
         const survey = await fetchSurvey(surveyId);
         if (!survey) {
           if (!ignore) {
-            setEditError('Survey not found.');
+            setEditError(t('surveyNotFound'));
             setCanEdit(false);
             setLoading(false);
           }
@@ -54,7 +58,7 @@ export default function SurveyCreator() {
         }
         if (survey.author !== user?.uid) {
           if (!ignore) {
-            setEditError('You are not the author of this survey.');
+            setEditError(t('notAuthor'));
             setCanEdit(false);
             setLoading(false);
           }
@@ -64,7 +68,7 @@ export default function SurveyCreator() {
         const participants = participantsMap[surveyId] || 0;
         if (participants > 0) {
           if (!ignore) {
-            setEditError('Survey already has responses.');
+            setEditError(t('hasResponses'));
             setCanEdit(false);
             setLoading(false);
           }
@@ -85,7 +89,7 @@ export default function SurveyCreator() {
       const surveys = await fetchUserSurveys(user);
       const surveysCount = surveys.length;
       if (surveysCount >= 10) {
-        alert('You have reached the limit of 10 surveys. Delete an existing survey to create a new one.');
+        alert(t('surveyLimitReached'));
         router.replace('/account');
         return;
       }
@@ -93,6 +97,7 @@ export default function SurveyCreator() {
     };
     init();
     return () => { ignore = true; };
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveyId, user]);
 
   const addQuestion = () => {
@@ -119,7 +124,13 @@ export default function SurveyCreator() {
     if (type === 'singleChoice' || type === 'multipleChoice' || type === 'dropdownList') {
       return [''];
     } else if (type === 'discreteScale') {
-      return ['Strongly Disagree', 'Disagree', 'Neutral', 'Agree', 'Strongly Agree'];
+      return [
+        t('defaultScaleOptions.stronglyDisagree'),
+        t('defaultScaleOptions.disagree'),
+        t('defaultScaleOptions.neutral'),
+        t('defaultScaleOptions.agree'),
+        t('defaultScaleOptions.stronglyAgree')
+      ];
     } else if (type === 'continousScale') {
       return ['', ''];
     } else {
@@ -165,12 +176,12 @@ export default function SurveyCreator() {
   const saveAndRedirect = async () => {
     if (!user) return;
     if (!surveyTitle) {
-      alert('Please enter a survey title.');
+      alert(t('enterTitle'));
       return;
     }
     for (let i = 0; i < questions.length; i++) {
       if (!questions[i].question) {
-        alert('Please fill each required field.');
+        alert(t('fillFields'));
         return;
       }
     }
@@ -192,7 +203,7 @@ export default function SurveyCreator() {
       <RouteProtector>
         <Container pt="xl" pb="xl">
           <Paper shadow="xs" p="md" withBorder>
-            <Title order={2} c="red">Access Denied</Title>
+            <Title order={2} c="red">{t('accessDenied')}</Title>
             <Text mt='xs'>{editError}</Text>
           </Paper>
         </Container>
@@ -203,23 +214,23 @@ export default function SurveyCreator() {
   return (
     <RouteProtector>
       <Container pt="xl" pb="xl">
-        <Title order={2}>Create a Survey</Title>
-        <Text c="dimmed" mb="lg">Complete the below fields to create your survey.</Text>
+        <Title order={2}>{t('title')}</Title>
+        <Text c="dimmed" mb="lg">{t('subtitle')}</Text>
         <Stack gap="lg">
 
           <Paper shadow="xs" p="md" withBorder>
             <Stack gap="md">
               <TextInput
                 size='md'
-                label="Title"
-                placeholder="Enter survey title"
+                label={t('surveyTitle')}
+                placeholder={t('surveyTitlePlaceholder')}
                 value={surveyTitle}
                 onChange={(e) => setSurveyTitle(e.target.value)}
                 required
               />
 
               <Textarea
-                label="Description"
+                label={t('description')}
                 value={surveyDescription}
                 onChange={(e) => setSurveyDescription(e.target.value)}
                 resize="vertical"
@@ -232,29 +243,61 @@ export default function SurveyCreator() {
               <Stack gap="md">
                 <Group justify='space-between' style={{ display: 'grid', gridTemplateColumns: 'minmax(auto, 100%) auto auto' }}>
                   <TextInput
-                    label={`Question ${index + 1}`}
-                    placeholder="Enter your question"
+                    label={`${t('question')} ${index + 1}`}
+                    placeholder={t('questionPlaceholder')}
                     value={q.question}
                     onChange={(e) => updateQuestion(index, 'question', e.target.value)}
                     required
                   />
 
-                  <Select
-                    label="Type"
-                    allowDeselect={false}
-                    placeholder="Select question type"
-                    value={q.type}
-                    onChange={(value: any) => updateQuestion(index, 'type', value)}
-                    data={[
-                      { value: 'text', label: 'Text Response' },
-                      { value: 'number', label: 'Number Response' },
-                      { value: 'singleChoice', label: 'Single Choice' },
-                      { value: 'multipleChoice', label: 'Multiple Choice' },
-                      { value: 'discreteScale', label: 'Discrete Scale' },
-                      { value: 'continousScale', label: 'Continuous Scale' },
-                      { value: 'dropdownList', label: 'Dropdown List' },
-                    ]}
-                  />
+                  <Box style={{ position: 'relative' }}>
+                    <Select
+                      label={t('type')}
+                      allowDeselect={false}
+                      placeholder={t('selectType')}
+                      value={q.type}
+                      onChange={(value: any) => updateQuestion(index, 'type', value)}
+                      data={[
+                        { value: 'text', label: t('textResponse') },
+                        { value: 'number', label: t('numberResponse') },
+                        { value: 'singleChoice', label: t('singleChoice') },
+                        { value: 'multipleChoice', label: t('multipleChoice') },
+                        { value: 'discreteScale', label: t('discreteScale') },
+                        { value: 'continousScale', label: t('continuousScale') },
+                        { value: 'dropdownList', label: t('dropdownList') },
+                      ]}
+                    />
+                    {q.type && (
+                      <Tooltip 
+                        label={t(`typeTooltips.${
+                          q.type === 'text' ? 'textResponse' :
+                          q.type === 'number' ? 'numberResponse' :
+                          q.type === 'singleChoice' ? 'singleChoice' :
+                          q.type === 'multipleChoice' ? 'multipleChoice' :
+                          q.type === 'discreteScale' ? 'discreteScale' :
+                          q.type === 'continousScale' ? 'continuousScale' :
+                          'dropdownList'
+                        }`)}
+                        multiline
+                        width={220}
+                        position="right"
+                        withArrow
+                      >
+                        <ActionIcon
+                          variant="subtle"
+                          color="gray"
+                          size="sm"
+                          style={{
+                            position: 'absolute',
+                            right: -30,
+                            top: 28
+                          }}
+                        >
+                          <IconInfoCircle size={16} />
+                        </ActionIcon>
+                      </Tooltip>
+                    )}
+                  </Box>
 
                   <ActionIcon
                     color="red"
@@ -275,14 +318,14 @@ export default function SurveyCreator() {
                 <Divider />
 
                 <Switch
-                  label="Required"
+                  label={t('required')}
                   checked={q.required}
                   onChange={(e) => updateQuestion(index, 'required', e.target.checked)}
                 />
 
                 {(q.type === 'discreteScale' || q.type === 'continousScale') && (
                   <Switch
-                    label="Enable selecting ranges"
+                    label={t('enableRanges')}
                     checked={q.rangeEnabled}
                     onChange={(e) => updateQuestion(index, 'rangeEnabled', e.target.checked)}
                   />
@@ -293,7 +336,7 @@ export default function SurveyCreator() {
                     {q.type !== 'continousScale' ? (
                       <>
                         <Title order={6} mb="xs">
-                          {q.type === 'discreteScale' ? 'Values' : 'Options'}
+                          {q.type === 'discreteScale' ? t('values') : t('options')}
                         </Title>
                         <Stack gap="xs">
                           {q.options?.map((option, optionIndex) => (
@@ -304,7 +347,7 @@ export default function SurveyCreator() {
                               {q.type === 'discreteScale' && <Text>{optionIndex}</Text>}
                               <TextInput
                                 style={{ flex: 1 }}
-                                placeholder={q.type === 'discreteScale' ? `Label (optional)` : `Option ${optionIndex + 1}`}
+                                placeholder={q.type === 'discreteScale' ? t('labelOptional') : `${t('option')} ${optionIndex + 1}`}
                                 value={option}
                                 onChange={(e) => updateOption(index, optionIndex, e.target.value)}
                               />
@@ -324,19 +367,19 @@ export default function SurveyCreator() {
                             mt='xs'
                             size='xs'
                           >
-                            Add {q.type === 'discreteScale' ? 'value' : 'option'}
+                            {q.type === 'discreteScale' ? t('addValue') : t('addOption')}
                           </Button>
                         </Stack>
                       </>) : (
                       <Group grow>
                         <TextInput
-                          label='Left label'
-                          placeholder={`Label (optional)`}
+                          label={t('leftLabel')}
+                          placeholder={t('labelOptional')}
                           onChange={(e) => updateOption(index, 0, e.target.value)}
                         />
                         <TextInput
-                          label='Right label'
-                          placeholder={`Label (optional)`}
+                          label={t('rightLabel')}
+                          placeholder={t('labelOptional')}
                           onChange={(e) => updateOption(index, 1, e.target.value)}
                         />
                       </Group>
@@ -353,7 +396,7 @@ export default function SurveyCreator() {
               leftSection={<IconPlus size={16} />}
               onClick={addQuestion}
             >
-              Add question
+              {t('addQuestion')}
             </Button>
 
             {surveyId ? (
@@ -362,13 +405,13 @@ export default function SurveyCreator() {
                   color="blue"
                   onClick={saveAndRedirect}
                 >
-                  Save survey
+                  {t('saveSurvey')}
                 </Button>
                 <Button
                   variant="default"
                   onClick={router.back}
                 >
-                  Cancel
+                  {tCommon('cancel')}
                 </Button>
               </Group>
             ) :
@@ -377,7 +420,7 @@ export default function SurveyCreator() {
                   color="blue"
                   onClick={saveAndRedirect}
                 >
-                  Create survey
+                  {t('createSurvey')}
                 </Button>
               </Group>
             }
@@ -389,14 +432,14 @@ export default function SurveyCreator() {
               leftSection={<IconPlus size={16} />}
               onClick={addQuestion}
             >
-              Add question
+              {t('addQuestion')}
             </Button>
 
             <Button
               color="blue"
               onClick={saveAndRedirect}
             >
-              {surveyId ? 'Save survey' : 'Create survey'}
+              {surveyId ? t('saveSurvey') : t('createSurvey')}
             </Button>
           </Group>
         </Stack>

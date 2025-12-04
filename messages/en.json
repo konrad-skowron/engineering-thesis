@@ -1,0 +1,202 @@
+{
+  "common": {
+    "appName": "Survey Maker",
+    "logIn": "Log in",
+    "signUp": "Sign up",
+    "signOut": "Sign out",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "create": "Create",
+    "close": "Close",
+    "back": "Back",
+    "next": "Next",
+    "loading": "Loading...",
+    "required": "required",
+    "settings": "Settings",
+    "dashboard": "Dashboard"
+  },
+  "header": {
+    "createSurvey": "Create Survey"
+  },
+  "footer": {
+    "copyright": "© 2025 Survey Maker. Build by Konrad Skowron.",
+    "sourceCode": "Source code",
+    "lightMode": "Light mode",
+    "darkMode": "Dark mode"
+  },
+  "landing": {
+    "title": "Conduct surveys using a",
+    "titleHighlight": "continuous",
+    "titleEnd": "Likert scale",
+    "description": "Build fully functional and accessible web surveys with ease. The service includes all of the needed tools for conducting surveys using a continuous as well as a discrete Likert scale.",
+    "getStarted": "Get started",
+    "features": {
+      "openSource": {
+        "title": "Free and open source",
+        "description": "No hidden costs or subscription fees. The source code is available on GitHub"
+      },
+      "privacy": {
+        "title": "Privacy-focused",
+        "description": "No intrusive tracking or analytics-prioritizing user privacy and providing fluent survey experience"
+      },
+      "noAds": {
+        "title": "No annoying ads",
+        "description": "Enjoy a clean, distraction-free experience with absolutely no advertisements"
+      }
+    }
+  },
+  "auth": {
+    "welcomeTitle": "Welcome to Survey Maker",
+    "noAccount": "Don't have an account yet?",
+    "hasAccount": "Already have an account?",
+    "emailPlaceholder": "example@domain.com",
+    "passwordPlaceholder": "Your password",
+    "invalidEmail": "Invalid email",
+    "passwordMinLength": "Password should include at least 6 characters",
+    "rememberMe": "Remember me",
+    "forgotPassword": "Forgot password?",
+    "orContinueWith": "Or continue with",
+    "google": "Google",
+    "forgotPasswordTitle": "Forgot your password?",
+    "forgotPasswordSubtitle": "You can set a new one.",
+    "forgotPasswordInstructions": "Please enter your email address to get instructions on how to set up a new password for your account.",
+    "resetPassword": "Reset password",
+    "passwordResetSent": "Password reset instructions have been sent to your email."
+  },
+  "dashboard": {
+    "title": "Dashboard",
+    "createSurvey": "Create survey",
+    "survey": "Survey",
+    "participants": "Participants",
+    "status": "Status",
+    "noSurveys": "You have not created any surveys yet.",
+    "surveyLimitReached": "You have reached the limit of 10 surveys",
+    "showResults": "Show results",
+    "edit": "Edit",
+    "duplicate": "Duplicate",
+    "close": "Close",
+    "reopen": "Reopen",
+    "share": "Share",
+    "exportCsv": "Export CSV",
+    "exportJson": "Export JSON",
+    "deleteSurvey": "Delete survey",
+    "deleteConfirm": "Are you sure you want to delete this survey?",
+    "linkCopied": "Survey link copied to clipboard",
+    "duplicateFailed": "Failed to duplicate survey.",
+    "cannotEditWithParticipants": "Cannot edit survey with participants",
+    "copy": "(Copy)"
+  },
+  "surveyCreator": {
+    "title": "Create a Survey",
+    "subtitle": "Complete the below fields to create your survey.",
+    "surveyTitle": "Title",
+    "surveyTitlePlaceholder": "Enter survey title",
+    "description": "Description",
+    "question": "Question",
+    "questionPlaceholder": "Enter your question",
+    "type": "Type",
+    "selectType": "Select question type",
+    "textResponse": "Text Response",
+    "numberResponse": "Number Response",
+    "singleChoice": "Single Choice",
+    "multipleChoice": "Multiple Choice",
+    "discreteScale": "Discrete Scale",
+    "continuousScale": "Continuous Scale",
+    "dropdownList": "Dropdown List",
+    "typeTooltips": {
+      "textResponse": "Free text answer field",
+      "numberResponse": "Numeric input field",
+      "singleChoice": "Select one option from multiple choices",
+      "multipleChoice": "Select multiple options from a list",
+      "discreteScale": "Rate on a discrete scale (e.g., 1-5) with predefined values",
+      "continuousScale": "Rate on a continuous slider (0-100)",
+      "dropdownList": "Select one option from a dropdown menu"
+    },
+    "required": "Required",
+    "enableRanges": "Enable selecting ranges",
+    "values": "Values",
+    "options": "Options",
+    "labelOptional": "Label (optional)",
+    "option": "Option",
+    "addValue": "Add value",
+    "addOption": "Add option",
+    "leftLabel": "Left label",
+    "rightLabel": "Right label",
+    "addQuestion": "Add question",
+    "saveSurvey": "Save survey",
+    "createSurvey": "Create survey",
+    "enterTitle": "Please enter a survey title.",
+    "fillFields": "Please fill each required field.",
+    "accessDenied": "Access Denied",
+    "surveyNotFound": "Survey not found.",
+    "notAuthor": "You are not the author of this survey.",
+    "hasResponses": "Survey already has responses.",
+    "surveyLimitReached": "You have reached the limit of 10 surveys. Delete an existing survey to create a new one.",
+    "defaultScaleOptions": {
+      "stronglyDisagree": "Strongly Disagree",
+      "disagree": "Disagree",
+      "neutral": "Neutral",
+      "agree": "Agree",
+      "stronglyAgree": "Strongly Agree"
+    }
+  },
+  "surveyForm": {
+    "surveyClosed": "This survey has been closed.",
+    "success": "Success",
+    "thankYou": "Your responses have been saved. Thank you for participating in this survey.",
+    "enterNumber": "Enter a number",
+    "pickValue": "Pick value",
+    "showResults": "Show results",
+    "copyLink": "Copy link",
+    "responseRecorded": "Your response has been recorded. You can fill out this form only once.",
+    "provideResponse": "Please provide a response for question",
+    "increaseValue": "Increase value",
+    "decreaseValue": "Decrease value"
+  },
+  "results": {
+    "by": "by",
+    "summary": "Summary",
+    "individual": "Individual",
+    "totalResponses": "Total responses",
+    "noResponses": "No responses yet.",
+    "noResponse": "No response.",
+    "noData": "No data available for this question type.",
+    "averageNumber": "Average number",
+    "averageResponse": "Average response",
+    "expandResponses": "Expand responses",
+    "collapseResponses": "Collapse responses",
+    "backToSurvey": "Back to survey",
+    "exportResults": "Export results",
+    "summarizeWithAI": "Summarize with AI",
+    "summarize": "Summarize",
+    "thinking": "Thinking...",
+    "generateCsv": "Generate .csv",
+    "generateJson": "Generate .json",
+    "closeSurvey": "Close survey",
+    "closeSurveyConfirm": "Are you sure you want to close this survey? No more responses will be accepted."
+  },
+  "settings": {
+    "title": "Settings",
+    "deleteAccount": "Delete account",
+    "deleteConfirm": "Are you sure you want to delete your account?",
+    "accountDeleted": "Account successfully deleted"
+  },
+  "notFound": {
+    "title": "Nothing to see here",
+    "description": "Page you are trying to open does not exist. You may have mistyped the address, or the page has been moved to another URL. If you think this is an error contact support.",
+    "backHome": "Take me back to home page"
+  },
+  "status": {
+    "live": "Live",
+    "completed": "Completed"
+  },
+  "copyButton": {
+    "copyLink": "Copy link",
+    "copied": "Copied"
+  }
+}

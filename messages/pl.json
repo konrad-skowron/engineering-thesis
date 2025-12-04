@@ -1,0 +1,202 @@
+{
+  "common": {
+    "appName": "Survey Maker",
+    "logIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "signOut": "Wyloguj się",
+    "email": "Email",
+    "password": "Hasło",
+    "submit": "Wyślij",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "create": "Utwórz",
+    "close": "Zamknij",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "loading": "Ładowanie...",
+    "required": "wymagane",
+    "settings": "Ustawienia",
+    "dashboard": "Panel główny"
+  },
+  "header": {
+    "createSurvey": "Utwórz ankietę"
+  },
+  "footer": {
+    "copyright": "© 2025 Survey Maker. Stworzony przez Konrada Skowrona.",
+    "sourceCode": "Kod źródłowy",
+    "lightMode": "Tryb jasny",
+    "darkMode": "Tryb ciemny"
+  },
+  "landing": {
+    "title": "Przeprowadzaj ankiety używając",
+    "titleHighlight": "ciągłej",
+    "titleEnd": "skali Likerta",
+    "description": "Twórz w pełni funkcjonalne i dostępne ankiety internetowe z łatwością. Usługa zawiera wszystkie niezbędne narzędzia do przeprowadzania ankiet przy użyciu ciągłej oraz dyskretnej skali Likerta.",
+    "getStarted": "Rozpocznij",
+    "features": {
+      "openSource": {
+        "title": "Darmowe i open source",
+        "description": "Brak ukrytych kosztów ani opłat subskrypcyjnych. Kod źródłowy jest dostępny na GitHubie"
+      },
+      "privacy": {
+        "title": "Skupione na prywatności",
+        "description": "Bez natrętnego śledzenia i analityki - priorytetem jest prywatność użytkownika i płynne doświadczenie ankiety"
+      },
+      "noAds": {
+        "title": "Bez irytujących reklam",
+        "description": "Ciesz się czystym, wolnym od rozpraszaczy doświadczeniem bez żadnych reklam"
+      }
+    }
+  },
+  "auth": {
+    "welcomeTitle": "Witaj w Survey Maker",
+    "noAccount": "Nie masz jeszcze konta?",
+    "hasAccount": "Masz już konto?",
+    "emailPlaceholder": "przyklad@domena.pl",
+    "passwordPlaceholder": "Twoje hasło",
+    "invalidEmail": "Nieprawidłowy email",
+    "passwordMinLength": "Hasło powinno zawierać co najmniej 6 znaków",
+    "rememberMe": "Zapamiętaj mnie",
+    "forgotPassword": "Zapomniałeś hasła?",
+    "orContinueWith": "Lub kontynuuj z",
+    "google": "Google",
+    "forgotPasswordTitle": "Zapomniałeś hasła?",
+    "forgotPasswordSubtitle": "Możesz ustawić nowe.",
+    "forgotPasswordInstructions": "Proszę podać adres email, aby otrzymać instrukcje dotyczące ustawienia nowego hasła do konta.",
+    "resetPassword": "Zresetuj hasło",
+    "passwordResetSent": "Instrukcje resetowania hasła zostały wysłane na Twój email."
+  },
+  "dashboard": {
+    "title": "Panel główny",
+    "createSurvey": "Utwórz ankietę",
+    "survey": "Ankieta",
+    "participants": "Uczestnicy",
+    "status": "Status",
+    "noSurveys": "Nie utworzyłeś jeszcze żadnych ankiet.",
+    "surveyLimitReached": "Osiągnąłeś limit 10 ankiet",
+    "showResults": "Pokaż wyniki",
+    "edit": "Edytuj",
+    "duplicate": "Duplikuj",
+    "close": "Zamknij",
+    "reopen": "Otwórz ponownie",
+    "share": "Udostępnij",
+    "exportCsv": "Eksportuj CSV",
+    "exportJson": "Eksportuj JSON",
+    "deleteSurvey": "Usuń ankietę",
+    "deleteConfirm": "Czy na pewno chcesz usunąć tę ankietę?",
+    "linkCopied": "Link do ankiety skopiowany do schowka",
+    "duplicateFailed": "Nie udało się zduplikować ankiety.",
+    "cannotEditWithParticipants": "Nie można edytować ankiety z uczestnikami",
+    "copy": "(Kopia)"
+  },
+  "surveyCreator": {
+    "title": "Utwórz ankietę",
+    "subtitle": "Wypełnij poniższe pola, aby utworzyć ankietę.",
+    "surveyTitle": "Tytuł",
+    "surveyTitlePlaceholder": "Wprowadź tytuł ankiety",
+    "description": "Opis",
+    "question": "Pytanie",
+    "questionPlaceholder": "Wprowadź pytanie",
+    "type": "Typ",
+    "selectType": "Wybierz typ pytania",
+    "textResponse": "Odpowiedź tekstowa",
+    "numberResponse": "Odpowiedź liczbowa",
+    "singleChoice": "Jednokrotny wybór",
+    "multipleChoice": "Wielokrotny wybór",
+    "discreteScale": "Skala dyskretna",
+    "continuousScale": "Skala ciągła",
+    "dropdownList": "Lista rozwijana",
+    "typeTooltips": {
+      "textResponse": "Pole z odpowiedzią tekstową",
+      "numberResponse": "Pole z odpowiedzią liczbową",
+      "singleChoice": "Wybór jednej opcji z wielu możliwości",
+      "multipleChoice": "Wybór wielu opcji z listy",
+      "discreteScale": "Ocena w skali dyskretnej (np. 1-5) z predefiniowanymi wartościami",
+      "continuousScale": "Ocena na suwaku ciągłym (0-100)",
+      "dropdownList": "Wybór jednej opcji z menu rozwijanego"
+    },
+    "required": "Wymagane",
+    "enableRanges": "Włącz wybieranie zakresów",
+    "values": "Wartości",
+    "options": "Opcje",
+    "labelOptional": "Etykieta (opcjonalnie)",
+    "option": "Opcja",
+    "addValue": "Dodaj wartość",
+    "addOption": "Dodaj opcję",
+    "leftLabel": "Etykieta lewa",
+    "rightLabel": "Etykieta prawa",
+    "addQuestion": "Dodaj pytanie",
+    "saveSurvey": "Zapisz ankietę",
+    "createSurvey": "Utwórz ankietę",
+    "enterTitle": "Proszę wprowadzić tytuł ankiety.",
+    "fillFields": "Proszę wypełnić wszystkie wymagane pola.",
+    "accessDenied": "Odmowa dostępu",
+    "surveyNotFound": "Nie znaleziono ankiety.",
+    "notAuthor": "Nie jesteś autorem tej ankiety.",
+    "hasResponses": "Ankieta ma już odpowiedzi.",
+    "surveyLimitReached": "Osiągnąłeś limit 10 ankiet. Usuń istniejącą ankietę, aby utworzyć nową.",
+    "defaultScaleOptions": {
+      "stronglyDisagree": "Zdecydowanie nie zgadzam się",
+      "disagree": "Nie zgadzam się",
+      "neutral": "Neutralnie",
+      "agree": "Zgadzam się",
+      "stronglyAgree": "Zdecydowanie zgadzam się"
+    }
+  },
+  "surveyForm": {
+    "surveyClosed": "Ta ankieta została zamknięta.",
+    "success": "Sukces",
+    "thankYou": "Twoje odpowiedzi zostały zapisane. Dziękujemy za udział w tej ankiecie.",
+    "enterNumber": "Wprowadź liczbę",
+    "pickValue": "Wybierz wartość",
+    "showResults": "Pokaż wyniki",
+    "copyLink": "Kopiuj link",
+    "responseRecorded": "Twoja odpowiedź została zapisana. Możesz wypełnić ten formularz tylko raz.",
+    "provideResponse": "Proszę odpowiedzieć na pytanie",
+    "increaseValue": "Zwiększ wartość",
+    "decreaseValue": "Zmniejsz wartość"
+  },
+  "results": {
+    "by": "autor",
+    "summary": "Podsumowanie",
+    "individual": "Indywidualne",
+    "totalResponses": "Łączna liczba odpowiedzi",
+    "noResponses": "Brak odpowiedzi.",
+    "noResponse": "Brak odpowiedzi.",
+    "noData": "Brak danych dla tego typu pytania.",
+    "averageNumber": "Średnia liczba",
+    "averageResponse": "Średnia odpowiedź",
+    "expandResponses": "Rozwiń odpowiedzi",
+    "collapseResponses": "Zwiń odpowiedzi",
+    "backToSurvey": "Wróć do ankiety",
+    "exportResults": "Eksportuj wyniki",
+    "summarizeWithAI": "Podsumuj z AI",
+    "summarize": "Podsumuj",
+    "thinking": "Myślę...",
+    "generateCsv": "Generuj .csv",
+    "generateJson": "Generuj .json",
+    "closeSurvey": "Zamknij ankietę",
+    "closeSurveyConfirm": "Czy na pewno chcesz zamknąć tę ankietę? Nie będzie można dodawać kolejnych odpowiedzi."
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "deleteAccount": "Usuń konto",
+    "deleteConfirm": "Czy na pewno chcesz usunąć swoje konto?",
+    "accountDeleted": "Konto zostało pomyślnie usunięte"
+  },
+  "notFound": {
+    "title": "Nic tu nie ma",
+    "description": "Strona, którą próbujesz otworzyć, nie istnieje. Być może wpisałeś błędny adres lub strona została przeniesiona pod inny URL. Jeśli uważasz, że to błąd, skontaktuj się z pomocą techniczną.",
+    "backHome": "Zabierz mnie na stronę główną"
+  },
+  "status": {
+    "live": "Aktywna",
+    "completed": "Zakończona"
+  },
+  "copyButton": {
+    "copyLink": "Kopiuj link",
+    "copied": "Skopiowano"
+  }
+}

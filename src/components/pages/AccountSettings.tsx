@@ -5,17 +5,19 @@ import { Container, Button, Title } from '@mantine/core';
 import { IconTrash } from '@tabler/icons-react';
 import RouteProtector from '@/components/RouteProtector';
 import { deleteAllUserData } from '@/lib/firebase/firestore';
+import { useTranslations } from 'next-intl';
 
 export default function AccountSettings() {
   const { user, deleteAccount } = useAuth();
   const router = useRouter();
+  const t = useTranslations('settings');
 
   const handleDeleteAccount = () => {
-    if (confirm('Are you sure you want to delete your account?') && user) {
+    if (confirm(t('deleteConfirm')) && user) {
       deleteAllUserData(user);
       deleteAccount();
       router.push("/");
-      alert("Account successfully deleted");
+      alert(t('accountDeleted'));
     }
   };
 
@@ -23,8 +25,8 @@ export default function AccountSettings() {
     <RouteProtector>
       <Container pt="xl" pb="xl">
         <div>
-          <Title order={2}>Settings</Title>
-          <Button variant="light" color="red" mt="lg" leftSection={<IconTrash size={16} />} onClick={handleDeleteAccount}>Delete account</Button>
+          <Title order={2}>{t('title')}</Title>
+          <Button variant="light" color="red" mt="lg" leftSection={<IconTrash size={16} />} onClick={handleDeleteAccount}>{t('deleteAccount')}</Button>
         </div>
       </Container>
     </RouteProtector>

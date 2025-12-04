@@ -143,6 +143,18 @@ export const setSurveyActive = async (surveyId: string, isActive: boolean) => {
   }
 }
 
+export const fetchSurveyResults = async (surveyId: string): Promise<any[] | null> => {
+  try {
+    const docSnap = await getDoc(doc(db, 'results', surveyId));
+    if (docSnap.exists()) {
+      return docSnap.data().responses || [];
+    }
+  } catch (error) {
+    console.error('Error fetching survey results: ', error);
+  }
+  return null;
+};
+
 export const updateSurvey = async (
   surveyId: string,
   surveyTitle: string,

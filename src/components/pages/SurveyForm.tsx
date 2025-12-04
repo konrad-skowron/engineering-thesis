@@ -6,7 +6,7 @@ import { fetchSurvey, saveSurveyResponse } from '@/lib/firebase/firestore';
 import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
-import { IconArrowRight, IconChartBar } from '@tabler/icons-react';
+import { IconArrowRight, IconChartBar, IconMinus, IconPlus } from '@tabler/icons-react';
 import {
   Input,
   Center,
@@ -25,9 +25,11 @@ import {
   RangeSlider,
   Slider,
   Box,
-  NumberInput
+  NumberInput,
+  ActionIcon
 } from '@mantine/core';
 import { ButtonCopy } from '../ButtonCopy';
+import { useTranslations } from 'next-intl';
 // import { TableOfContents } from '../TableOfContents';
 
 export default function SurveyForm(props: { params: Promise<{ surveyId: string }> }) {
@@ -39,6 +41,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const [submitted, setSubmitted] = useState(false);
   const [fieldsDisabled, setFieldsDisabled] = useState(false);
   const router = useRouter();
+  const t = useTranslations('surveyForm');
+  const tCommon = useTranslations('common');
 
   const discreteScaleDv = (length: number) => Math.floor(length / 2);
   const discreteScaleRangeDv = (length: number) => [Math.floor(length * 1 / 4) * 10, Math.floor(length * 3 / 4) * 10] as [number, number];
@@ -92,7 +96,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       }
 
       if (question.required && !newResponses[index]) {
-        alert(`Please provide a response for question "${question.question}"`);
+        alert(`${t('provideResponse')} "${question.question}"`);
         return;
       }
     }
@@ -108,7 +112,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'text':
         return (
           <>
-            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
             <Textarea
               value={responses[index] || ''}
               onChange={(e) => updateResponse(index, e.target.value)}
@@ -122,9 +126,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'number':
         return (
           <>
-            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
             <NumberInput
-              placeholder="Enter a number"
+              placeholder={t('enterNumber')}
               value={responses[index] || ''}
               onChange={(value) => updateResponse(index, value)}
               required={question.required}
@@ -137,7 +141,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'singleChoice':
         return (
           <>
-            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
             <RadioGroup
               value={responses[index] || ''}
               onChange={(value) => updateResponse(index, value)}
@@ -160,7 +164,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'multipleChoice':
         return (
           <>
-            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
             <Checkbox.Group
               value={responses[index] || []}
               onChange={(value) => updateResponse(index, value)}
@@ -183,9 +187,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
       case 'dropdownList':
         return (
           <>
-            <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+            <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
             <Select
-              placeholder="Pick value"
+              placeholder={t('pickValue')}
               data={question.options || []}
               value={responses[index] || null}
               onChange={(value) => updateResponse(index, value)}
@@ -200,7 +204,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
           const getScale = (v: number) => v / 10;
           return (
             <>
-              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
               <Stack>
                 <RangeSlider
                   scale={getScale}
@@ -229,27 +233,57 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </>
           );
         } else {
+          const currentValue = responses[index] ?? discreteScaleDv(question.options?.length || 1);
+          const maxValue = (question.options?.length || 1) - 1;
+          
           return (
             <>
-              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
-              <Slider
-                label={(value) => question.options?.[value] || value + 1}
-                marks={question.options?.map((opt, i) => ({ value: i, label: opt.split(' ').join('\n') }))}
-                min={0}
-                max={(question.options?.length || 1) - 1}
-                value={responses[index] ?? discreteScaleDv(question.options?.length || 1)}
-                onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
-                color="default"
-                p="8%"
-                mb="xl"
-                styles={{
-                  markLabel: {
-                    whiteSpace: 'pre-wrap',
-                    display: 'block',
-                    textAlign: 'center'
-                  }
-                }}
-              />
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
+              <Box>
+                <Slider
+                  label={(value) => question.options?.[value] || value + 1}
+                  marks={question.options?.map((opt, i) => ({ 
+                    value: i, 
+                    label: opt.split(' ').join('\n')
+                  }))}
+                  min={0}
+                  max={maxValue}
+                  value={currentValue}
+                  onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                  color="default"
+                  p="8%"
+                  mb="xs"
+                  styles={{
+                    markLabel: {
+                      whiteSpace: 'pre-wrap',
+                      display: 'block',
+                      textAlign: 'center',
+                      cursor: fieldsDisabled ? 'default' : 'pointer'
+                    }
+                  }}
+                  onMarkClick={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                />
+                <Group justify="center" gap="xs" mt="md" hiddenFrom="sm">
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.max(0, currentValue - 1))}
+                    disabled={fieldsDisabled || currentValue === 0}
+                    aria-label={t('decreaseValue')}
+                  >
+                    <IconMinus size={18} />
+                  </ActionIcon>
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.min(maxValue, currentValue + 1))}
+                    disabled={fieldsDisabled || currentValue === maxValue}
+                    aria-label={t('increaseValue')}
+                  >
+                    <IconPlus size={18} />
+                  </ActionIcon>
+                </Group>
+              </Box>
             </>
           );
         }
@@ -258,7 +292,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
         if (question.rangeEnabled) {
           return (
             <>
-              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
               <Stack>
                 <Group
                   visibleFrom='xs'
@@ -290,33 +324,83 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
             </>
           );
         } else {
+          const currentValue = responses[index] ?? continuousScaleDv;
+          
           return (
             <>
-              <Text mb="xs">{question.question} {question.required && <Input.Label required title='required'></Input.Label>}</Text>
+              <Text mb="xs">{question.question} {question.required && <Input.Label required title={tCommon('required')}></Input.Label>}</Text>
               <Stack>
                 <Group
                   visibleFrom='xs'
                   style={{ display: 'grid', gridTemplateColumns: 'auto 1fr auto' }}
                   p="5%">
-                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm' 
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 0)}
+                  >
+                    {question.options?.[0]}
+                  </Text>
                   <Slider
-                    value={responses[index] ?? continuousScaleDv}
+                    value={currentValue}
                     onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                     color="default"
                   />
-                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm'
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 100)}
+                  >
+                    {question.options?.[1]}
+                  </Text>
                 </Group>
                 <Group
                   hiddenFrom='xs'
                   style={{ display: 'grid', gridTemplateColumns: '1fr 3fr 1fr' }}
                   p="5%">
-                  <Text c="dimmed" size='sm'>{question.options?.[0]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm'
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 0)}
+                  >
+                    {question.options?.[0]}
+                  </Text>
                   <Slider
-                    value={responses[index] ?? continuousScaleDv}
+                    value={currentValue}
                     onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                     color="default"
                   />
-                  <Text c="dimmed" size='sm'>{question.options?.[1]}</Text>
+                  <Text 
+                    c="dimmed" 
+                    size='sm'
+                    style={{ cursor: fieldsDisabled ? 'default' : 'pointer' }}
+                    onClick={() => !fieldsDisabled && updateResponse(index, 100)}
+                  >
+                    {question.options?.[1]}
+                  </Text>
+                </Group>
+                <Group justify="center" gap="xs" mt="sm" hiddenFrom="sm">
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.max(0, currentValue - 5))}
+                    disabled={fieldsDisabled || currentValue === 0}
+                    aria-label={t('decreaseValue')}
+                  >
+                    <IconMinus size={18} />
+                  </ActionIcon>
+                  <ActionIcon 
+                    size="lg" 
+                    variant="default"
+                    onClick={() => !fieldsDisabled && updateResponse(index, Math.min(100, currentValue + 5))}
+                    disabled={fieldsDisabled || currentValue === 100}
+                    aria-label={t('increaseValue')}
+                  >
+                    <IconPlus size={18} />
+                  </ActionIcon>
                 </Group>
               </Stack>
             </>
@@ -340,7 +424,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     return (
       <Container p='xl'>
         <Center>
-          This survey has been closed.
+          {t('surveyClosed')}
         </Center>
       </Container>
     );
@@ -350,8 +434,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
     return (
       <Container pt="xl" pb="xl">
         <Paper shadow="xs" p="md" withBorder>
-          <Title order={2} c='green'>Success</Title>
-          <Text mt='xs'>Your responses have been saved. Thank you for participating in this survey.</Text>
+          <Title order={2} c='green'>{t('success')}</Title>
+          <Text mt='xs'>{t('thankYou')}</Text>
         </Paper>
       </Container>
     );
@@ -377,12 +461,12 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
               <Group style={{ display: 'grid', gridTemplateColumns: '1fr auto' }} visibleFrom='xs'>
                 <Group wrap="nowrap">
                   <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-                    Submit
+                    {tCommon('submit')}
                   </Button>
                   {user && user.uid === survey?.author &&
                     <Link href={`/${params.surveyId}/results`}>
                       <Button variant='default' leftSection={<IconChartBar size={16} />}>
-                        Show results
+                        {t('showResults')}
                       </Button>
                     </Link>}
                 </Group>
@@ -395,19 +479,19 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <Box>
                     <Group grow>
                       <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-                        Submit
+                        {tCommon('submit')}
                       </Button>
                     </Group>
                     <Group grow mt="md">
                       <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
-                        Show results
+                        {t('showResults')}
                       </Button>
                       <ButtonCopy url={window.location.href} />
                     </Group>
                   </Box>) : (
                   <Group grow>
                     <Button onClick={handleSubmit} rightSection={<IconArrowRight size={16} />}>
-                      Submit
+                      {tCommon('submit')}
                     </Button>
                     <ButtonCopy url={window.location.href} />
                   </Group>
@@ -420,19 +504,19 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                 {user && user.uid === survey?.author &&
                   <Link href={`/${params.surveyId}/results`}>
                     <Button variant='default' leftSection={<IconChartBar size={16} />}>
-                      Show results
+                      {t('showResults')}
                     </Button>
                   </Link>}
               </Group>
               <Group hiddenFrom='xs' grow>
                 {user && user.uid === survey?.author &&
                   <Button variant='default' leftSection={<IconChartBar size={16} />} onClick={() => router.push(`/${params.surveyId}/results`)}>
-                    Show results
+                    {t('showResults')}
                   </Button>}
               </Group>
               {!user || user.uid !== survey?.author ? (
                 <Center mb='xs'>
-                  <Text c="dimmed" size='sm'>Your response has been recorded. You can fill out this form only once.</Text>
+                  <Text c="dimmed" size='sm'>{t('responseRecorded')}</Text>
                 </Center>) : null}
             </>)}
         </Stack>
