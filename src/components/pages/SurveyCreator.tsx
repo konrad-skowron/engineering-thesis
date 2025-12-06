@@ -279,7 +279,7 @@ export default function SurveyCreator() {
                           'dropdownList'
                         }`)}
                         multiline
-                        width={220}
+                        w={220}
                         position="right"
                         withArrow
                       >

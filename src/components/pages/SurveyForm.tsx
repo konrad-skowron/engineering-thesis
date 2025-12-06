@@ -257,11 +257,9 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     markLabel: {
                       whiteSpace: 'pre-wrap',
                       display: 'block',
-                      textAlign: 'center',
-                      cursor: fieldsDisabled ? 'default' : 'pointer'
+                      textAlign: 'center'
                     }
                   }}
-                  onMarkClick={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
                 />
                 <Group justify="center" gap="xs" mt="md" hiddenFrom="sm">
                   <ActionIcon 
