@@ -3,6 +3,8 @@ import '@mantine/charts/styles.css';
 import { ColorSchemeScript, MantineProvider } from '@mantine/core';
 import { AuthProvider } from '@/components/AuthProvider';
 import { Metadata } from 'next';
+import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: {
@@ -43,6 +45,8 @@ export default function RootLayout({
             {children}
           </AuthProvider>
         </MantineProvider>
+        <SpeedInsights/>
+        <Analytics/>
       </body>
     </html>
   );
