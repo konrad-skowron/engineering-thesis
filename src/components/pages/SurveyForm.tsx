@@ -255,7 +255,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   labelAlwaysOn={activeThumb === `discrete-${index}`}
                   color="default"
                   p="8%"
-                  mb="xs"
+                  mb="xl"
                   styles={{
                     markLabel: {
                       whiteSpace: 'pre-wrap',
@@ -273,8 +273,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                         if (!fieldsDisabled) {
                           const newValue = Math.max(0, currentValue - 1);
                           updateResponse(index, newValue);
-                          setActiveThumb(`discrete-${index}`);
-                          setTimeout(() => setActiveThumb(null), 1000);
                         }
                       }}
                       disabled={fieldsDisabled || currentValue === 0}
@@ -292,8 +290,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                         if (!fieldsDisabled) {
                           const newValue = Math.min(maxValue, currentValue + 1);
                           updateResponse(index, newValue);
-                          setActiveThumb(`discrete-${index}`);
-                          setTimeout(() => setActiveThumb(null), 1000);
                         }
                       }}
                       disabled={fieldsDisabled || currentValue === maxValue}
@@ -417,8 +413,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                         if (!fieldsDisabled) {
                           const newValue = Math.max(0, currentValue - 1);
                           updateResponse(index, newValue);
-                          setActiveThumb(`continuous-${index}`);
-                          setTimeout(() => setActiveThumb(null), 1000);
                         }
                       }}
                       disabled={fieldsDisabled || currentValue === 0}
@@ -436,8 +430,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                         if (!fieldsDisabled) {
                           const newValue = Math.min(100, currentValue + 1);
                           updateResponse(index, newValue);
-                          setActiveThumb(`continuous-${index}`);
-                          setTimeout(() => setActiveThumb(null), 1000);
                         }
                       }}
                       disabled={fieldsDisabled || currentValue === 100}

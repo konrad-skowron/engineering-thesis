@@ -232,7 +232,7 @@ export default function Dashboard() {
                         {t('share')}
                       </Menu.Item>
                       <Menu
-                        trigger="hover"
+                        trigger="click-hover"
                         position="right-start"
                         offset={5}
                       >
