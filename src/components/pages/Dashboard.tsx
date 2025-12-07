@@ -241,6 +241,7 @@ export default function Dashboard() {
                             leftSection={<IconFileExport size={14} />}
                             disabled={!participants[survey.id] || participants[survey.id] === 0}
                             onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                              // Prevent Link navigation while allowing Menu to open submenu
                               e.preventDefault();
                             }}
                           >
