@@ -6,7 +6,7 @@ import { fetchSurvey, saveSurveyResponse } from '@/lib/firebase/firestore';
 import { Survey, Question } from '@/lib/types';
 import { Loading } from '@/components/Loading';
 import { useAuth } from '@/components/AuthProvider';
-import { IconArrowRight, IconChartBar, IconMinus, IconPlus } from '@tabler/icons-react';
+import { IconArrowRight, IconChartBar, IconMinus, IconPlus, IconChevronDown, IconChevronUp } from '@tabler/icons-react';
 import {
   Input,
   Center,
@@ -255,7 +255,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   labelAlwaysOn={activeThumb === `discrete-${index}`}
                   color="default"
                   p="8%"
-                  mb="xs"
+                  mb="xl"
                   styles={{
                     markLabel: {
                       whiteSpace: 'pre-wrap',
@@ -264,39 +264,40 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     }
                   }}
                 />
-                <Group justify="center" gap="xs" mt="md" hiddenFrom="sm">
-                  <ActionIcon 
-                    size="lg" 
-                    variant="default"
-                    onClick={() => {
-                      if (!fieldsDisabled) {
-                        const newValue = Math.max(0, currentValue - 1);
-                        updateResponse(index, newValue);
-                        setActiveThumb(`discrete-${index}`);
-                        setTimeout(() => setActiveThumb(null), 1000);
-                      }
-                    }}
-                    disabled={fieldsDisabled || currentValue === 0}
-                    aria-label={t('decreaseValue')}
-                  >
-                    <IconMinus size={18} />
-                  </ActionIcon>
-                  <ActionIcon 
-                    size="lg" 
-                    variant="default"
-                    onClick={() => {
-                      if (!fieldsDisabled) {
-                        const newValue = Math.min(maxValue, currentValue + 1);
-                        updateResponse(index, newValue);
-                        setActiveThumb(`discrete-${index}`);
-                        setTimeout(() => setActiveThumb(null), 1000);
-                      }
-                    }}
-                    disabled={fieldsDisabled || currentValue === maxValue}
-                    aria-label={t('increaseValue')}
-                  >
-                    <IconPlus size={18} />
-                  </ActionIcon>
+                <Group justify="center" mt="xl" hiddenFrom="sm">
+                  <Button.Group>
+                    <Button 
+                      variant="default" 
+                      radius="md" 
+                      onClick={() => {
+                        if (!fieldsDisabled) {
+                          const newValue = Math.max(0, currentValue - 1);
+                          updateResponse(index, newValue);
+                        }
+                      }}
+                      disabled={fieldsDisabled || currentValue === 0}
+                      aria-label={t('decreaseValue')}
+                    >
+                      <IconChevronDown color="var(--mantine-color-red-text)" />
+                    </Button>
+                    <Button.GroupSection variant="default" bg="var(--mantine-color-body)" miw={80}>
+                      {currentValue}
+                    </Button.GroupSection>
+                    <Button 
+                      variant="default" 
+                      radius="md" 
+                      onClick={() => {
+                        if (!fieldsDisabled) {
+                          const newValue = Math.min(maxValue, currentValue + 1);
+                          updateResponse(index, newValue);
+                        }
+                      }}
+                      disabled={fieldsDisabled || currentValue === maxValue}
+                      aria-label={t('increaseValue')}
+                    >
+                      <IconChevronUp color="var(--mantine-color-teal-text)" />
+                    </Button>
+                  </Button.Group>
                 </Group>
               </Box>
             </>
@@ -403,39 +404,40 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     {question.options?.[1]}
                   </Text>
                 </Group>
-                <Group justify="center" gap="xs" mt="sm" hiddenFrom="sm">
-                  <ActionIcon 
-                    size="lg" 
-                    variant="default"
-                    onClick={() => {
-                      if (!fieldsDisabled) {
-                        const newValue = Math.max(0, currentValue - 1);
-                        updateResponse(index, newValue);
-                        setActiveThumb(`continuous-${index}`);
-                        setTimeout(() => setActiveThumb(null), 1000);
-                      }
-                    }}
-                    disabled={fieldsDisabled || currentValue === 0}
-                    aria-label={t('decreaseValue')}
-                  >
-                    <IconMinus size={18} />
-                  </ActionIcon>
-                  <ActionIcon 
-                    size="lg" 
-                    variant="default"
-                    onClick={() => {
-                      if (!fieldsDisabled) {
-                        const newValue = Math.min(100, currentValue + 1);
-                        updateResponse(index, newValue);
-                        setActiveThumb(`continuous-${index}`);
-                        setTimeout(() => setActiveThumb(null), 1000);
-                      }
-                    }}
-                    disabled={fieldsDisabled || currentValue === 100}
-                    aria-label={t('increaseValue')}
-                  >
-                    <IconPlus size={18} />
-                  </ActionIcon>
+                <Group justify="center" mt="sm" hiddenFrom="sm">
+                  <Button.Group>
+                    <Button 
+                      variant="default" 
+                      radius="md" 
+                      onClick={() => {
+                        if (!fieldsDisabled) {
+                          const newValue = Math.max(0, currentValue - 1);
+                          updateResponse(index, newValue);
+                        }
+                      }}
+                      disabled={fieldsDisabled || currentValue === 0}
+                      aria-label={t('decreaseValue')}
+                    >
+                      <IconChevronDown color="var(--mantine-color-red-text)" />
+                    </Button>
+                    <Button.GroupSection variant="default" bg="var(--mantine-color-body)" miw={80}>
+                      {currentValue}
+                    </Button.GroupSection>
+                    <Button 
+                      variant="default" 
+                      radius="md" 
+                      onClick={() => {
+                        if (!fieldsDisabled) {
+                          const newValue = Math.min(100, currentValue + 1);
+                          updateResponse(index, newValue);
+                        }
+                      }}
+                      disabled={fieldsDisabled || currentValue === 100}
+                      aria-label={t('increaseValue')}
+                    >
+                      <IconChevronUp color="var(--mantine-color-teal-text)" />
+                    </Button>
+                  </Button.Group>
                 </Group>
               </Stack>
             </>

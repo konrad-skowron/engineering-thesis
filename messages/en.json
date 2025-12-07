@@ -170,6 +170,7 @@
     "close": "Close",
     "reopen": "Reopen",
     "share": "Share",
+    "export": "Export",
     "exportCsv": "Export CSV",
     "exportJson": "Export JSON",
     "deleteSurvey": "Delete survey",
