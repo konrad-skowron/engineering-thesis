@@ -6,6 +6,7 @@ import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
 import { SpeedInsights } from "@vercel/speed-insights/next"
+import { Analytics } from "@vercel/analytics/next"
 
 export const metadata: Metadata = {
   title: {
@@ -52,6 +53,7 @@ export default async function RootLayout({
           </NextIntlClientProvider>
         </MantineProvider>
         <SpeedInsights/>
+        <Analytics/>
       </body>
     </html>
   );
