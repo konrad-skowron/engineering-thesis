@@ -5,6 +5,7 @@ import { AuthProvider } from '@/components/AuthProvider';
 import { Metadata } from 'next';
 import { NextIntlClientProvider } from 'next-intl';
 import { getLocale, getMessages } from 'next-intl/server';
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 export const metadata: Metadata = {
   title: {
@@ -50,6 +51,7 @@ export default async function RootLayout({
             </AuthProvider>
           </NextIntlClientProvider>
         </MantineProvider>
+        <SpeedInsights/>
       </body>
     </html>
   );
