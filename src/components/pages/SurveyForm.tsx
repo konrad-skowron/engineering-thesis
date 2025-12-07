@@ -447,7 +447,6 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     </Button>
                   </Button.Group>
                 </Group>
-                </Group>
               </Stack>
             </>
           );
