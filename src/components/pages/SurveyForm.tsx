@@ -260,14 +260,11 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     markLabel: {
                       whiteSpace: 'pre-wrap',
                       display: 'block',
-                      textAlign: 'center',
-                      '@media (max-width: 48em)': {
-                        marginBottom: '2rem'
-                      }
+                      textAlign: 'center'
                     }
                   }}
                 />
-                <Group justify="center" mt="md" hiddenFrom="sm">
+                <Group justify="center" mt="xl" hiddenFrom="sm">
                   <Button.Group>
                     <Button 
                       variant="default" 
