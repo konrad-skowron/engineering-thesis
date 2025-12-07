@@ -170,6 +170,7 @@
     "close": "Zamknij",
     "reopen": "Otwórz ponownie",
     "share": "Udostępnij",
+    "export": "Eksportuj",
     "exportCsv": "Eksportuj CSV",
     "exportJson": "Eksportuj JSON",
     "deleteSurvey": "Usuń ankietę",
