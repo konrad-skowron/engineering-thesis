@@ -260,7 +260,10 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     markLabel: {
                       whiteSpace: 'pre-wrap',
                       display: 'block',
-                      textAlign: 'center'
+                      textAlign: 'center',
+                      '@media (max-width: 48em)': {
+                        marginBottom: '2rem'
+                      }
                     }
                   }}
                 />

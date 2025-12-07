@@ -237,7 +237,14 @@ export default function Dashboard() {
                         offset={5}
                       >
                         <Menu.Target>
-                          <Menu.Item leftSection={<IconFileExport size={14} />}>
+                          <Menu.Item 
+                            leftSection={<IconFileExport size={14} />}
+                            disabled={!participants[survey.id] || participants[survey.id] === 0}
+                            onClick={(e: React.MouseEvent<HTMLButtonElement>) => {
+                              e.preventDefault();
+                              e.stopPropagation();
+                            }}
+                          >
                             {t('export')}
                           </Menu.Item>
                         </Menu.Target>
