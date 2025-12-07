@@ -48,6 +48,94 @@
         "title": "No annoying ads",
         "description": "Enjoy a clean, distraction-free experience with absolutely no advertisements"
       }
+    },
+    "howItWorks": {
+      "title": "How it works",
+      "step1": {
+        "title": "Create an account",
+        "description": "Sign up for free to access the survey creator"
+      },
+      "step2": {
+        "title": "Build your survey",
+        "description": "Add questions using continuous or discrete Likert scales with customizable labels"
+      },
+      "step3": {
+        "title": "Share and collect",
+        "description": "Share the link with participants and watch responses come in real-time"
+      },
+      "step4": {
+        "title": "Analyze results",
+        "description": "View statistics, charts, and export data in CSV or JSON format"
+      }
+    },
+    "useCases": {
+      "title": "Perfect for",
+      "research": {
+        "title": "Academic research",
+        "description": "Collect data for scientific papers and social studies"
+      },
+      "employee": {
+        "title": "Employee surveys",
+        "description": "Measure team satisfaction and organizational culture"
+      },
+      "education": {
+        "title": "Student feedback",
+        "description": "Evaluate courses and teaching methods"
+      },
+      "customer": {
+        "title": "Customer satisfaction",
+        "description": "Measure satisfaction with products and services"
+      }
+    },
+    "questionTypes": {
+      "title": "Supported question types",
+      "continuous": {
+        "title": "Continuous scale",
+        "description": "Allows participants to select any value on a smooth slider for precise feedback"
+      },
+      "discrete": {
+        "title": "Discrete scale",
+        "description": "Traditional Likert scale with fixed points (e.g., 1-5 or 1-7)"
+      },
+      "text": {
+        "title": "Text input",
+        "description": "Open-ended questions allowing free-form text responses"
+      },
+      "number": {
+        "title": "Number input",
+        "description": "Numeric responses for quantitative data collection"
+      },
+      "singleChoice": {
+        "title": "Single choice",
+        "description": "Radio buttons for selecting one option from multiple choices"
+      },
+      "multipleChoice": {
+        "title": "Multiple choice",
+        "description": "Checkboxes allowing participants to select multiple options"
+      },
+      "dropdown": {
+        "title": "Dropdown list",
+        "description": "Space-saving dropdown menu for selecting from many options"
+      }
+    },
+    "capabilities": {
+      "title": "Key capabilities",
+      "realTime": {
+        "title": "Real-time responses",
+        "description": "Watch survey responses update live as participants submit their answers"
+      },
+      "customizable": {
+        "title": "Fully customizable",
+        "description": "Set custom labels, adjust scale ranges, and personalize your survey design"
+      },
+      "export": {
+        "title": "Multiple export formats",
+        "description": "Download results as CSV or JSON for further analysis in your preferred tools"
+      },
+      "analytics": {
+        "title": "Built-in analytics",
+        "description": "View mean, median, standard deviation, and visual charts automatically"
+      }
     }
   },
   "auth": {

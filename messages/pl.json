@@ -48,6 +48,94 @@
         "title": "Bez irytujących reklam",
         "description": "Ciesz się czystym, wolnym od rozpraszaczy doświadczeniem bez żadnych reklam"
       }
+    },
+    "howItWorks": {
+      "title": "Jak to działa",
+      "step1": {
+        "title": "Załóż konto",
+        "description": "Zarejestruj się za darmo, aby uzyskać dostęp do kreatora ankiet"
+      },
+      "step2": {
+        "title": "Stwórz ankietę",
+        "description": "Dodaj pytania używając ciągłej lub dyskretnej skali Likerta z konfigurowalnymi etykietami"
+      },
+      "step3": {
+        "title": "Udostępnij i zbieraj",
+        "description": "Udostępnij link uczestnikom i obserwuj odpowiedzi napływające w czasie rzeczywistym"
+      },
+      "step4": {
+        "title": "Analizuj wyniki",
+        "description": "Przeglądaj statystyki, wykresy i eksportuj dane w formacie CSV lub JSON"
+      }
+    },
+    "useCases": {
+      "title": "Idealne do",
+      "research": {
+        "title": "Badań naukowych",
+        "description": "Zbieraj dane do prac naukowych i badań społecznych"
+      },
+      "employee": {
+        "title": "Ankiet pracowniczych",
+        "description": "Mierz satysfakcję zespołu i kulturę organizacyjną"
+      },
+      "education": {
+        "title": "Feedbacku od uczniów",
+        "description": "Oceniaj kursy i metody nauczania"
+      },
+      "customer": {
+        "title": "Satysfakcji klientów",
+        "description": "Mierz zadowolenie z produktów i usług"
+      }
+    },
+    "questionTypes": {
+      "title": "Obsługiwane typy pytań",
+      "continuous": {
+        "title": "Skala ciągła",
+        "description": "Pozwala uczestnikom wybrać dowolną wartość na płynnym suwaku dla precyzyjnych opinii"
+      },
+      "discrete": {
+        "title": "Skala dyskretna",
+        "description": "Tradycyjna skala Likerta ze stałymi punktami (np. 1-5 lub 1-7)"
+      },
+      "text": {
+        "title": "Pole tekstowe",
+        "description": "Pytania otwarte umożliwiające dowolne odpowiedzi tekstowe"
+      },
+      "number": {
+        "title": "Pole numeryczne",
+        "description": "Odpowiedzi liczbowe do zbierania danych ilościowych"
+      },
+      "singleChoice": {
+        "title": "Wybór pojedynczy",
+        "description": "Przyciski opcji do wyboru jednej odpowiedzi z wielu możliwości"
+      },
+      "multipleChoice": {
+        "title": "Wybór wielokrotny",
+        "description": "Pola wyboru pozwalające na zaznaczenie wielu opcji"
+      },
+      "dropdown": {
+        "title": "Lista rozwijana",
+        "description": "Oszczędzające miejsce menu rozwijane do wyboru z wielu opcji"
+      }
+    },
+    "capabilities": {
+      "title": "Kluczowe możliwości",
+      "realTime": {
+        "title": "Odpowiedzi w czasie rzeczywistym",
+        "description": "Obserwuj na żywo jak aktualizują się odpowiedzi podczas wypełniania ankiety"
+      },
+      "customizable": {
+        "title": "Pełna personalizacja",
+        "description": "Ustaw własne etykiety, dostosuj zakresy skal i spersonalizuj wygląd ankiety"
+      },
+      "export": {
+        "title": "Wiele formatów eksportu",
+        "description": "Pobieraj wyniki jako CSV lub JSON do dalszej analizy w preferowanych narzędziach"
+      },
+      "analytics": {
+        "title": "Wbudowana analityka",
+        "description": "Zobacz średnią, medianę, odchylenie standardowe i wykresy automatycznie"
+      }
     }
   },
   "auth": {
