@@ -188,7 +188,7 @@ export function Header() {
         <SimpleGrid cols={2} mt="lg">
           <Button variant="default" justify="left" onClick={() => { router.push('/account'); toggle(); }} leftSection={<IconHome size={16} />}>{t('common.dashboard')}</Button>
           <Button variant="default" justify="left" onClick={() => { router.push('/settings'); toggle(); }} leftSection={<IconSettings size={16} />}>{t('common.settings')}</Button>
-          <Button variant="light" color="red" justify="left" onClick={handleSignOut} leftSection={<IconLogout size={16} />}>{t('common.signOut')}</Button>
+          <Button variant="filled" color="red" justify="left" onClick={handleSignOut} leftSection={<IconLogout size={16} />}>{t('common.signOut')}</Button>
         </SimpleGrid>
       </Drawer>
     </header>

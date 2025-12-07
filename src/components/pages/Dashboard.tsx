@@ -6,7 +6,7 @@ import { Container, Button, Group, Text, Menu, ActionIcon, Title, useComputedCol
 import { useState, useEffect } from "react";
 import RouteProtector from '@/components/RouteProtector';
 import { fetchUserSurveys, fetchAllSurveyParticipants, deleteSurvey, setSurveyActive, fetchSurvey, saveSurvey, fetchSurveyResults } from '@/lib/firebase/firestore';
-import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit, IconCopyPlus, IconFileTypeCsv, IconJson } from '@tabler/icons-react';
+import { IconDots, IconTrash, IconShare, IconUsers, IconPlus, IconChartBar, IconLockOpen, IconLock, IconEdit, IconCopyPlus, IconCsv, IconJson } from '@tabler/icons-react';
 import { formatTimestamp, exportToCSV, exportToJSON } from "@/lib/utils";
 import classes from './Dashboard.module.css';
 import LiveDot from "../LiveDot";
@@ -231,7 +231,7 @@ export default function Dashboard() {
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => copyLink(e, survey.id)}>
                         {t('share')}
                       </Menu.Item>
-                      <Menu.Item leftSection={<IconFileTypeCsv size={14} />}
+                      <Menu.Item leftSection={<IconCsv size={14} />}
                         onClick={(e: React.MouseEvent<HTMLButtonElement>) => handleExportCSV(e, survey.id)}>
                         {t('exportCsv')}
                       </Menu.Item>

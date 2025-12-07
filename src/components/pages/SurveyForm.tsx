@@ -40,6 +40,7 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
   const [responses, setResponses] = useState<{ [index: number]: any }>({});
   const [submitted, setSubmitted] = useState(false);
   const [fieldsDisabled, setFieldsDisabled] = useState(false);
+  const [activeThumb, setActiveThumb] = useState<string | null>(null);
   const router = useRouter();
   const t = useTranslations('surveyForm');
   const tCommon = useTranslations('common');
@@ -250,6 +251,8 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   max={maxValue}
                   value={currentValue}
                   onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                  onChangeEnd={() => setActiveThumb(null)}
+                  labelAlwaysOn={activeThumb === `discrete-${index}`}
                   color="default"
                   p="8%"
                   mb="xs"
@@ -265,7 +268,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <ActionIcon 
                     size="lg" 
                     variant="default"
-                    onClick={() => !fieldsDisabled && updateResponse(index, Math.max(0, currentValue - 1))}
+                    onClick={() => {
+                      if (!fieldsDisabled) {
+                        const newValue = Math.max(0, currentValue - 1);
+                        updateResponse(index, newValue);
+                        setActiveThumb(`discrete-${index}`);
+                        setTimeout(() => setActiveThumb(null), 1000);
+                      }
+                    }}
                     disabled={fieldsDisabled || currentValue === 0}
                     aria-label={t('decreaseValue')}
                   >
@@ -274,7 +284,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <ActionIcon 
                     size="lg" 
                     variant="default"
-                    onClick={() => !fieldsDisabled && updateResponse(index, Math.min(maxValue, currentValue + 1))}
+                    onClick={() => {
+                      if (!fieldsDisabled) {
+                        const newValue = Math.min(maxValue, currentValue + 1);
+                        updateResponse(index, newValue);
+                        setActiveThumb(`discrete-${index}`);
+                        setTimeout(() => setActiveThumb(null), 1000);
+                      }
+                    }}
                     disabled={fieldsDisabled || currentValue === maxValue}
                     aria-label={t('increaseValue')}
                   >
@@ -341,8 +358,11 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     {question.options?.[0]}
                   </Text>
                   <Slider
+                    label={(value) => value}
                     value={currentValue}
                     onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                    onChangeEnd={() => setActiveThumb(null)}
+                    labelAlwaysOn={activeThumb === `continuous-${index}`}
                     color="default"
                   />
                   <Text 
@@ -367,8 +387,11 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                     {question.options?.[0]}
                   </Text>
                   <Slider
+                    label={(value) => value}
                     value={currentValue}
                     onChange={fieldsDisabled ? undefined : (value) => updateResponse(index, value)}
+                    onChangeEnd={() => setActiveThumb(null)}
+                    labelAlwaysOn={activeThumb === `continuous-${index}`}
                     color="default"
                   />
                   <Text 
@@ -384,7 +407,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <ActionIcon 
                     size="lg" 
                     variant="default"
-                    onClick={() => !fieldsDisabled && updateResponse(index, Math.max(0, currentValue - 5))}
+                    onClick={() => {
+                      if (!fieldsDisabled) {
+                        const newValue = Math.max(0, currentValue - 1);
+                        updateResponse(index, newValue);
+                        setActiveThumb(`continuous-${index}`);
+                        setTimeout(() => setActiveThumb(null), 1000);
+                      }
+                    }}
                     disabled={fieldsDisabled || currentValue === 0}
                     aria-label={t('decreaseValue')}
                   >
@@ -393,7 +423,14 @@ export default function SurveyForm(props: { params: Promise<{ surveyId: string }
                   <ActionIcon 
                     size="lg" 
                     variant="default"
-                    onClick={() => !fieldsDisabled && updateResponse(index, Math.min(100, currentValue + 5))}
+                    onClick={() => {
+                      if (!fieldsDisabled) {
+                        const newValue = Math.min(100, currentValue + 1);
+                        updateResponse(index, newValue);
+                        setActiveThumb(`continuous-${index}`);
+                        setTimeout(() => setActiveThumb(null), 1000);
+                      }
+                    }}
                     disabled={fieldsDisabled || currentValue === 100}
                     aria-label={t('increaseValue')}
                   >

@@ -97,7 +97,7 @@ export default function SurveyCreator() {
     };
     init();
     return () => { ignore = true; };
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [surveyId, user]);
 
   const addQuestion = () => {
@@ -251,52 +251,52 @@ export default function SurveyCreator() {
                   />
 
                   <Box style={{ position: 'relative' }}>
-                    <Select
-                      label={t('type')}
-                      allowDeselect={false}
-                      placeholder={t('selectType')}
-                      value={q.type}
-                      onChange={(value: any) => updateQuestion(index, 'type', value)}
-                      data={[
-                        { value: 'text', label: t('textResponse') },
-                        { value: 'number', label: t('numberResponse') },
-                        { value: 'singleChoice', label: t('singleChoice') },
-                        { value: 'multipleChoice', label: t('multipleChoice') },
-                        { value: 'discreteScale', label: t('discreteScale') },
-                        { value: 'continousScale', label: t('continuousScale') },
-                        { value: 'dropdownList', label: t('dropdownList') },
-                      ]}
-                    />
-                    {q.type && (
-                      <Tooltip 
-                        label={t(`typeTooltips.${
-                          q.type === 'text' ? 'textResponse' :
-                          q.type === 'number' ? 'numberResponse' :
-                          q.type === 'singleChoice' ? 'singleChoice' :
-                          q.type === 'multipleChoice' ? 'multipleChoice' :
-                          q.type === 'discreteScale' ? 'discreteScale' :
-                          q.type === 'continousScale' ? 'continuousScale' :
-                          'dropdownList'
-                        }`)}
-                        multiline
-                        w={220}
-                        position="right"
-                        withArrow
-                      >
-                        <ActionIcon
-                          variant="subtle"
-                          color="gray"
-                          size="sm"
-                          style={{
-                            position: 'absolute',
-                            right: -30,
-                            top: 28
-                          }}
+                    <Group gap="xs" align="flex-end">
+                      <Select
+                        label={t('type')}
+                        allowDeselect={false}
+                        placeholder={t('selectType')}
+                        value={q.type}
+                        onChange={(value: any) => updateQuestion(index, 'type', value)}
+                        style={{ flex: 1 }}
+                        data={[
+                          { value: 'text', label: t('textResponse') },
+                          { value: 'number', label: t('numberResponse') },
+                          { value: 'singleChoice', label: t('singleChoice') },
+                          { value: 'multipleChoice', label: t('multipleChoice') },
+                          { value: 'discreteScale', label: t('discreteScale') },
+                          { value: 'continousScale', label: t('continuousScale') },
+                          { value: 'dropdownList', label: t('dropdownList') },
+                        ]}
+                      />
+                      {q.type && (
+                        <Tooltip
+                          label={t(`typeTooltips.${q.type === 'text' ? 'textResponse' :
+                            q.type === 'number' ? 'numberResponse' :
+                              q.type === 'singleChoice' ? 'singleChoice' :
+                                q.type === 'multipleChoice' ? 'multipleChoice' :
+                                  q.type === 'discreteScale' ? 'discreteScale' :
+                                    q.type === 'continousScale' ? 'continuousScale' :
+                                      'dropdownList'
+                            }`)}
+                          multiline
+                          w={220}
+                          position="right"
+                          withArrow
                         >
-                          <IconInfoCircle size={16} />
-                        </ActionIcon>
-                      </Tooltip>
-                    )}
+                          <ActionIcon
+                            variant="subtle"
+                            color="gray"
+                            size="sm"
+                            mb="0.4rem"
+                            ml="-0.4rem"
+                            mr="-0.4rem"  
+                          >
+                            <IconInfoCircle size={16} opacity={0.5} />
+                          </ActionIcon>
+                        </Tooltip>
+                      )}
+                    </Group>
                   </Box>
 
                   <ActionIcon
